@@ -3,45 +3,47 @@ title: "Holgers Börsentacho"
 output: html_document
 ---
 
-## Der RSL-Ansatz
+### Der RSL-Ansatz
 
 Dies ist das Ergebnis der Implementierung von __"Holgers Börsen-Tacho"__ in R, einem Statistik-Tool. Dabei wurde der Ansatz vollständig kopiert - es ging lediglich um eine alternative Implementierung zu Excel. 
 
-Der Ansatz ist folgender - Dank and Holger!:
-Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.
-**Wann immer im folgenden vom RSL gesprochen wird, handelt es sich um den geglätteten RSL!**
-
+Der Ansatz ist folgender - Dank and Holger!:  
+Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.  
+**Wann immer im folgenden vom RSL gesprochen wird, handelt es sich um den geglätteten RSL!**  
+Der Mittelwert über diese einzelnen (Länder)-RSLs ist der "Marktindikator".
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 library(googleVis)
+library(zoo)
+library(reshape2)
+library(ggplot2)
+
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+
 op <- options(gvis.plot.tag='chart')
+
+load(file = "Indices_Data.RData") # loads the indices data
 ```
 
 
-### Das Tachometer
+#### Das Tachometer
 
 ```{r gauge, results='asis'}
 ### Create the gauge
 gauge.df <- as.data.frame(round(tail(rsl.all.zoo,1),4))
 gauge.df$Type <- c("latest RSL all")
-colnames(gauge.df) <- c("RSL_all", "Type")
+colnames(gauge.df) <- c("RSL_Welt", "Type")
 Gauge1 <- gvisGauge(gauge.df, options=list(min=0.9, max=1.1, greenFrom=1.02,
                                            greenTo=1.1, yellowFrom=0.98, yellowTo=1.02,
                                            redFrom=0.9, redTo=.98, height=250))
-print(Gauge1, tag="chart", file="Gauge.html")
-plot(Gauge1)
-```
 
-
-#### Als Zeitreihe
-
-```{r timeseries, results='asis'}
 Time <- gvisAnnotationChart(data=data.frame(Date=index(rsl.all.zoo),Value=coredata(rsl.all.zoo)),
                               datevar="Date", numvar="Value", options=list(width=700, height=400))
 
-plot(Time)
+GaugeTime <- gvisMerge(Gauge1, Time, horizontal = TRUE)
+plot(GaugeTime)
 ```
+
 
 
 #### In einer Kartenübersicht
