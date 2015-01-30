@@ -45,5 +45,5 @@ rsl.all.zoo <- zoo(rowMeans(rsl.gd.zoo), order.by=as.Date(index(rsl.gd.zoo)))
 
 
 ### Save data
-save(rsl.gd.zoo, rsl.all.zoo, file="Indices_Data.RData")
+save(indices.zoo, rsl.gd.zoo, rsl.all.zoo, file="Indices_Data.RData")
 
