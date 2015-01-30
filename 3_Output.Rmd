@@ -37,8 +37,9 @@ Gauge1 <- gvisGauge(gauge.df, options=list(min=0.9, max=1.1, greenFrom=1.02,
                                            greenTo=1.1, yellowFrom=0.98, yellowTo=1.02,
                                            redFrom=0.9, redTo=.98, height=250))
 
-Time <- gvisAnnotationChart(data=data.frame(Date=index(rsl.all.zoo),Value=coredata(rsl.all.zoo)),
-                              datevar="Date", numvar="Value", options=list(width=700, height=400))
+Time <- gvisAnnotationChart(data=data.frame(Date=index(rsl.all.zoo),Value=100*coredata(rsl.all.zoo)),
+                              datevar="Date", numvar="Value", 
+                            options=list(width=700, height=400, vAxis="{format:'#.###'}"))
 
 GaugeTime <- gvisMerge(Gauge1, Time, horizontal = TRUE)
 plot(GaugeTime)
@@ -49,7 +50,7 @@ plot(GaugeTime)
 #### In einer Kartenübersicht
 
 ```{r map, results='asis'}
-map.data <- melt(data=coredata(tail(rsl.zoo,1)), value.name="RSL")[,-1]
+map.data <- melt(data=coredata(tail(rsl.gd.zoo,1)), value.name="RSL")[,-1]
 
 Geo=gvisGeoChart(map.data, locationvar="Var2", colorvar="RSL",
                  options=list(colorAxis="{values:[0.95,1.05],
@@ -60,13 +61,22 @@ plot(Geo)
 
 #### Alle Einzel-RSL als Zeitreihe
 
+```{r wrapped}
+rsl.df <- as.data.frame(rsl.gd.zoo)
+rsl.df$Date <- index(rsl.gd.zoo)
+rsl.m <- melt(rsl.df, id.vars="Date", variable.name="Country", value.name="RSL")
+#ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01"))) + geom_line(aes(x=Date, y=RSL, color=Country, group=Country))
+ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country) + geom_hline(yintercept=1, color="darkgrey") + theme_light() + theme(panel.grid=element_blank())
+```
+
+
 ```{r timeseries2, results='asis'}
 myStateSettings <- '
   {"orderedByY":false,"dimensions":{"iconDimensions":["dim0"]},"iconKeySettings":[],"xAxisOption":"_TIME","uniColorForNonSelected":false,"yLambda":1,"showTrails":false,"xZoomedDataMin":1170720000000,"nonSelectedAlpha":0.3,"playDuration":15000,"sizeOption":"_UNISIZE","xZoomedIn":false,"xLambda":1,"colorOption":"_UNIQUE_COLOR","yZoomedIn":false,"xZoomedDataMax":1422403200000,"iconType":"LINE","orderedByX":false,"yAxisOption":"2","yZoomedDataMin":0,"duration":{"timeUnit":"D","multiplier":1},"yZoomedDataMax":1.3}
 '
-line.data <- melt(data=coredata(rsl.zoo), id=c("Date"), value.name="RSL")
-line.data$Var1 <- as.Date(line.data$Var1)
-Line2 <- gvisMotionChart(subset(line.data, Var1>as.Date("2014-01-01")), idvar="Var2", timevar="Var1",
+line.data <- melt(data=data.frame(Date=index(rsl.gd.zoo), coredata(rsl.gd.zoo)), id=c("Date"), value.name="RSL", variable.name="Country")
+line.data$Date <- as.Date(line.data$Date)
+Line2 <- gvisMotionChart(subset(line.data, Date>as.Date("2014-01-01")), idvar="Country", timevar="Date",
                          options=list(state=myStateSettings, width=800, height=500))
 plot(Line2)
 ```
