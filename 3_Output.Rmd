@@ -17,6 +17,7 @@ library(googleVis)
 library(zoo)
 library(reshape2)
 library(ggplot2)
+library(knitr)
 
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
@@ -24,6 +25,12 @@ op <- options(gvis.plot.tag='chart')
 
 load(file = "Indices_Data.RData") # loads the indices data
 ```
+
+Untenstehend die letzten 5 Datensätze zu Kontrollzwecken.
+```{r showdata, results='asis'}
+kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
+```
+
 
 
 #### Das Tachometer
@@ -66,7 +73,7 @@ rsl.df <- as.data.frame(rsl.gd.zoo)
 rsl.df$Date <- index(rsl.gd.zoo)
 rsl.m <- melt(rsl.df, id.vars="Date", variable.name="Country", value.name="RSL")
 #ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01"))) + geom_line(aes(x=Date, y=RSL, color=Country, group=Country))
-ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country) + geom_hline(yintercept=1, color="darkgrey") + theme_light() + theme(panel.grid=element_blank())
+ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_light() + theme(panel.grid=element_blank())
 ```
 
 
