@@ -44,3 +44,6 @@ rsl.all.zoo <- zoo(rowMeans(rsl.gd.zoo), order.by=as.Date(index(rsl.gd.zoo)))
 #plot(tail(rsl.all.zoo, 40), type="b")
 
 
+### Save data
+save(rsl.gd.zoo, rsl.all.zoo, file="Indices_Data.RData")
+
