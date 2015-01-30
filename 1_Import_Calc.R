@@ -22,6 +22,8 @@ colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "U
 
 indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
+rm(list=setdiff(ls(), "indices.zoo")) # remove all raw data, just keep indices.zoo
+
 ### Check missing data
 #   check.df <- data.frame(is.na(data.frame(coredata(indices.zoo))))
 #   check.df$Date <- index(indices.zoo)
