@@ -1,16 +1,39 @@
 ---
 title: "Holgers Börsentacho"
-output: html_document
+output: 
+    html_document:
+        theme: readable
 ---
+
+Letzte Ausführung: `r Sys.time()`
+Letzte Daten: `r tail(index(indices.zoo),1)`  
+  
+> Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtlich ihres _Momentums_ dar.  
+> Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
+
 
 ### Der RSL-Ansatz
 
-Dies ist das Ergebnis der Implementierung von __"Holgers Börsen-Tacho"__ in R, einem Statistik-Tool. Dabei wurde der Ansatz vollständig kopiert - es ging lediglich um eine alternative Implementierung zu Excel. 
-
-Der Ansatz ist folgender - Dank and Holger!:  
+Die Implementierung geht zurück auf den Ansatz von Holger:   
 Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.  
-**Wann immer im folgenden vom RSL gesprochen wird, handelt es sich um den geglätteten RSL!**  
+Dies ergibt den ***HBT-Wert*** für einen bestimmten Index:
+
+$$
+RSL_{INDEX}=\frac{Close_{t}}{\frac{1}{27}\sum_{i=0}^{26}Close(t-i)}   
+HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}Close(t-i)
+$$
+
 Der Mittelwert über diese einzelnen (Länder)-RSLs ist der "Marktindikator".
+
+### Die Daten  
+
+Die folgenden Indizes werden ausgewertet:
+....
+....
+....
+
+Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
+
 
 ```{r setup, include=FALSE}
 library(googleVis)
@@ -23,18 +46,14 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
 op <- options(gvis.plot.tag='chart')
 
-load(file = "Indices_Data.RData") # loads the indices data
-```
-
-Untenstehend die letzten 5 Datensätze zu Kontrollzwecken.
-```{r showdata, results='asis'}
-kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
+load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the indices data
 ```
 
 
+### Das Welt-Tachometer
 
-#### Das Tachometer
-
+Das Welt-Taschometer stellt den Durchschnitt über alle Weltindizes dar. Ebenfalls dargestellt ist die Historie als Zeitreihe.  
+  
 ```{r gauge, results='asis'}
 ### Create the gauge
 gauge.df <- as.data.frame(round(tail(rsl.all.zoo,1),4))
@@ -44,17 +63,20 @@ Gauge1 <- gvisGauge(gauge.df, options=list(min=0.9, max=1.1, greenFrom=1.02,
                                            greenTo=1.1, yellowFrom=0.98, yellowTo=1.02,
                                            redFrom=0.9, redTo=.98, height=250))
 
+plot(Gauge1)
+
 Time <- gvisAnnotationChart(data=data.frame(Date=index(rsl.all.zoo),Value=100*coredata(rsl.all.zoo)),
                               datevar="Date", numvar="Value", 
                             options=list(width=700, height=400, vAxis="{format:'#.###'}"))
 
-GaugeTime <- gvisMerge(Gauge1, Time, horizontal = TRUE)
-plot(GaugeTime)
+plot(Time)
 ```
 
 
 
-#### In einer Kartenübersicht
+### Die Einzelindizes in einer Kartenübersicht  
+
+Dargestellt sind die Werte der Einzelindizes als Weltkarte.  
 
 ```{r map, results='asis'}
 map.data <- melt(data=coredata(tail(rsl.gd.zoo,1)), value.name="RSL")[,-1]
@@ -66,7 +88,9 @@ Geo=gvisGeoChart(map.data, locationvar="Var2", colorvar="RSL",
 plot(Geo)
 ```
 
-#### Alle Einzel-RSL als Zeitreihe
+### Alle Einzel-HBT als Zeitreihe
+
+Der historische Verlauf aller Einzelwerte mit ihrem HBT-Wert.  
 
 ```{r wrapped}
 rsl.df <- as.data.frame(rsl.gd.zoo)
@@ -75,6 +99,10 @@ rsl.m <- melt(rsl.df, id.vars="Date", variable.name="Country", value.name="RSL")
 #ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01"))) + geom_line(aes(x=Date, y=RSL, color=Country, group=Country))
 ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_light() + theme(panel.grid=element_blank())
 ```
+
+Ebenfalls dargestellt sind die Einzelwerte in einem dynamischen Chart. Dieser erlaubt  
+- die Einzelauswahl von bestimmten Indizes,
+- eine Balkendarstellung aktueller und historischer Werte  
 
 
 ```{r timeseries2, results='asis'}
@@ -88,3 +116,17 @@ Line2 <- gvisMotionChart(subset(line.data, Date>as.Date("2014-01-01")), idvar="C
 plot(Line2)
 ```
 
+-------
+
+
+### Anhang: Die letzten Daten
+
+Die letzten fünf Einträge der Indexdaten **bereinigt**. Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
+ 
+```{r showdata, results='asis'}
+kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
+```
+
+-----
+
+END OF FILE
