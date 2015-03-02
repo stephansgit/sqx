@@ -29,7 +29,7 @@ Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtli
 Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
 
 
-### Der RSL-Ansatz
+### Der Ansatz
 
 Die Implementierung geht zurück auf den Ansatz von Holger: 
   
@@ -42,7 +42,10 @@ $$HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}RSL(t-i)$$
 > Der Mittelwert über diese einzelnen (Länder)-HBTs ist der "HBT-Weltindikator".
 
 Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
-Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
+Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.    
+
+> **Beachten:**  
+> Momentan lieferr Yahoo! für Italien und Russland keine aktualisierten Werte. Daher ist das Ergebnis verzerrt. Ich versuche alternative Datenquellen zu finden.
 
 
 ### Das Welt-Tachometer
