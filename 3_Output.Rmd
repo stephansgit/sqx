@@ -41,38 +41,8 @@ $$HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}RSL(t-i)$$
 
 > Der Mittelwert über diese einzelnen (Länder)-HBTs ist der "HBT-Weltindikator".
 
-
-
-
-### Die Daten  
-
-Die folgenden Indizes werden ausgewertet:
-
-Land   |   Index
--------|--------
-USA          | Dow Jones Industrial Average
-Australia    | All Ordinaries
-Austria      | ATX
-Brasil       | IBOVESPA
-France       | CAC-40
-UK           | FTSE
-Italy        | FTSE MIB
-Germany      | DAX
-Canada       | TSE Composite
-HongKong     | Hang-Seng
-Spain        | IBEX
-Argentina    | Merval
-Mexico       | IPC
-Japan        | Nikkei
-Russia       | RTS  
-China        | SSE Composite
-Switzerland  | SMI
-Singapore    | Straight Times
-
-
 Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
-
-
+Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
 
 
 ### Das Welt-Tachometer
@@ -147,7 +117,9 @@ plot(Line2)
 -------
 
 
-### Anhang: Die letzten Daten
+### Anhang 
+
+#### Die letzten Daten
 
 Die letzten fünf Einträge der Indexdaten **bereinigt**. Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
  
@@ -155,6 +127,34 @@ Die letzten fünf Einträge der Indexdaten **bereinigt**. Fehlende Werte werden 
 kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
 #tail(indices.zoo)
 ```
+
+#### Die Indizes
+
+Die folgenden Indizes werden ausgewertet:
+
+Land   |   Index
+-------|--------
+USA          | Dow Jones Industrial Average
+Australia    | All Ordinaries
+Austria      | ATX
+Brasil       | IBOVESPA
+France       | CAC-40
+UK           | FTSE
+Italy        | FTSE MIB
+Germany      | DAX
+Canada       | TSE Composite
+HongKong     | Hang-Seng
+Spain        | IBEX
+Argentina    | Merval
+Mexico       | IPC
+Japan        | Nikkei
+Russia       | RTS  
+China        | SSE Composite
+Switzerland  | SMI
+Singapore    | Straight Times
+
+
+Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
 
 -----
 
