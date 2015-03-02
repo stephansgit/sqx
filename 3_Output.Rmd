@@ -11,6 +11,7 @@ library(zoo)
 library(reshape2)
 library(ggplot2)
 library(knitr)
+library(scales)
 
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
@@ -21,26 +22,26 @@ load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the in
 
 ```
 
-
-Letzte Ausführung: `r Sys.time()`
-Letzte Daten: `r tail(index(indices.zoo),1)`  
+```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
+```Letzte Ausführung: `r Sys.time()` ```   
   
-> Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtlich ihres _Momentums_ dar.  
-> Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
+Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtlich ihres _Momentums_ dar.  
+Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
 
 
 ### Der RSL-Ansatz
 
-Die Implementierung geht zurück auf den Ansatz von Holger:   
-Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.  
-Dies ergibt den ***HBT-Wert*** (**H**olgers **B**örsen**T**acho_) für einen bestimmten Index:
+Die Implementierung geht zurück auf den Ansatz von Holger: 
+  
+> Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.  
+> Dies ergibt den HBT-Wert (**H**olgers **B**örsen**T**acho) für einen bestimmten Index:
 
-$$
-RSL_{INDEX}=\frac{Close_{t}}{\frac{1}{27}\sum_{i=0}^{26}Close(t-i)}   
-HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}Close(t-i)
-$$
+$$RSL_{INDEX}=\frac{Close_{t}}{\frac{1}{27}\sum_{i=0}^{26}Close(t-i)}$$
+$$HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}RSL(t-i)$$
 
-Der Mittelwert über diese einzelnen (Länder)-RSLs ist der "Marktindikator".
+> Der Mittelwert über diese einzelnen (Länder)-HBTs ist der "HBT-Weltindikator".
+
+
 
 
 ### Die Daten  
@@ -72,15 +73,17 @@ Singapore    | Straight Times
 Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
 
 
+
+
 ### Das Welt-Tachometer
 
-Das Welt-Taschometer stellt den Durchschnitt über alle Weltindizes dar. Ebenfalls dargestellt ist die Historie als Zeitreihe.  
+Das Welt-Taschometer stellt den Durchschnitt über alle Weltindizes dar. Ebenfalls dargestellt ist die Historie als Zeitreihe (hierbei ist der HBT mit 100 multipliziert zur besseren Lesbarkeit).  
   
 ```{r gauge, results='asis'}
 ### Create the gauge
 gauge.df <- as.data.frame(round(tail(rsl.all.zoo,1),4))
 gauge.df$Type <- c("latest RSL all")
-colnames(gauge.df) <- c("RSL_Welt", "Type")
+colnames(gauge.df) <- c("HBT_Welt", "Type")
 Gauge1 <- gvisGauge(gauge.df, options=list(min=0.9, max=1.1, greenFrom=1.02,
                                            greenTo=1.1, yellowFrom=0.98, yellowTo=1.02,
                                            redFrom=0.9, redTo=.98, height=250))
@@ -114,15 +117,18 @@ plot(Geo)
 
 Der historische Verlauf aller Einzelwerte mit ihrem HBT-Wert.  
 
-```{r wrapped, fig.width=10, fig.height=10}
+```{r wrapped, fig.width=10, fig.height=8}
 rsl.df <- as.data.frame(rsl.gd.zoo)
 rsl.df$Date <- index(rsl.gd.zoo)
 rsl.m <- melt(rsl.df, id.vars="Date", variable.name="Country", value.name="RSL")
 #ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01"))) + geom_line(aes(x=Date, y=RSL, color=Country, group=Country))
-ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_light() + theme(panel.grid=element_blank())
+ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_light() + theme(panel.grid=element_blank()) + scale_x_date(labels=date_format("%m/%y"), breaks=date_breaks("year"))
 ```
 
-Ebenfalls dargestellt sind die Einzelwerte in einem dynamischen Chart. Dieser erlaubt  
+### Der dynamische Chart
+
+Dargestellt sind die Einzelwerte in einem dynamischen Chart. Dieser erlaubt  
+
 - die Einzelauswahl von bestimmten Indizes,
 - eine Balkendarstellung aktueller und historischer Werte.  
 
@@ -147,6 +153,7 @@ Die letzten fünf Einträge der Indexdaten **bereinigt**. Fehlende Werte werden 
  
 ```{r showdata, results='asis'}
 kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
+#tail(indices.zoo)
 ```
 
 -----
