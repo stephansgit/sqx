@@ -5,36 +5,6 @@ output:
         theme: readable
 ---
 
-Letzte Ausführung: `r Sys.time()`
-Letzte Daten: `r tail(index(indices.zoo),1)`  
-  
-> Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtlich ihres _Momentums_ dar.  
-> Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
-
-
-### Der RSL-Ansatz
-
-Die Implementierung geht zurück auf den Ansatz von Holger:   
-Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.  
-Dies ergibt den ***HBT-Wert*** für einen bestimmten Index:
-
-$$
-RSL_{INDEX}=\frac{Close_{t}}{\frac{1}{27}\sum_{i=0}^{26}Close(t-i)}   
-HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}Close(t-i)
-$$
-
-Der Mittelwert über diese einzelnen (Länder)-RSLs ist der "Marktindikator".
-
-### Die Daten  
-
-Die folgenden Indizes werden ausgewertet:
-....
-....
-....
-
-Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
-
-
 ```{r setup, include=FALSE}
 library(googleVis)
 library(zoo)
@@ -47,7 +17,59 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 op <- options(gvis.plot.tag='chart')
 
 load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the indices data
+#load(file = "Indices_Data.RData") # loads the indices data
+
 ```
+
+
+Letzte Ausführung: `r Sys.time()`
+Letzte Daten: `r tail(index(indices.zoo),1)`  
+  
+> Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtlich ihres _Momentums_ dar.  
+> Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
+
+
+### Der RSL-Ansatz
+
+Die Implementierung geht zurück auf den Ansatz von Holger:   
+Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.  
+Dies ergibt den ***HBT-Wert*** (**H**olgers **B**örsen**T**acho_) für einen bestimmten Index:
+
+$$
+RSL_{INDEX}=\frac{Close_{t}}{\frac{1}{27}\sum_{i=0}^{26}Close(t-i)}   
+HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}Close(t-i)
+$$
+
+Der Mittelwert über diese einzelnen (Länder)-RSLs ist der "Marktindikator".
+
+
+### Die Daten  
+
+Die folgenden Indizes werden ausgewertet:
+
+Land   |   Index
+-------|--------
+USA          | Dow Jones Industrial Average
+Australia    | All Ordinaries
+Austria      | ATX
+Brasil       | IBOVESPA
+France       | CAC-40
+UK           | FTSE
+Italy        | FTSE MIB
+Germany      | DAX
+Canada       | TSE Composite
+HongKong     | Hang-Seng
+Spain        | IBEX
+Argentina    | Merval
+Mexico       | IPC
+Japan        | Nikkei
+Russia       | RTS  
+China        | SSE Composite
+Switzerland  | SMI
+Singapore    | Straight Times
+
+
+Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
 
 
 ### Das Welt-Tachometer
@@ -92,7 +114,7 @@ plot(Geo)
 
 Der historische Verlauf aller Einzelwerte mit ihrem HBT-Wert.  
 
-```{r wrapped}
+```{r wrapped, fig.width=10, fig.height=10}
 rsl.df <- as.data.frame(rsl.gd.zoo)
 rsl.df$Date <- index(rsl.gd.zoo)
 rsl.m <- melt(rsl.df, id.vars="Date", variable.name="Country", value.name="RSL")
@@ -102,7 +124,7 @@ ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom
 
 Ebenfalls dargestellt sind die Einzelwerte in einem dynamischen Chart. Dieser erlaubt  
 - die Einzelauswahl von bestimmten Indizes,
-- eine Balkendarstellung aktueller und historischer Werte  
+- eine Balkendarstellung aktueller und historischer Werte.  
 
 
 ```{r timeseries2, results='asis'}
