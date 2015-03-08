@@ -21,6 +21,7 @@ indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE), 
 colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "UK", "Italy", "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "Russia", "China", "Switzerland", "Singapore")      
 tail(indices.zoo)
 
+Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
 indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
 rm(list=setdiff(ls(), "indices.zoo")) # remove all raw data, just keep indices.zoo
