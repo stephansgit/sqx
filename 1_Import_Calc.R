@@ -3,8 +3,9 @@
 ### Load packages and set options
 
 options(scipen = 0, digits = 5) # set options to avoid scientific notation
+options("getSymbols.warning4.0"=FALSE)
 Sys.setenv(TZ="America/Chicago") # needs to be done in order to make sure, getSymbols works properly.
-
+suppressPackageStartupMessages(library(googleVis))
 
 library(googleVis)
 library(ggplot2)
