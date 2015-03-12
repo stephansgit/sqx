@@ -25,7 +25,7 @@ load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the in
 ```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
 ```Letzte Ausführung: `r Sys.time()` ```   
   
-> **NEWS 12.03.2015**:
+> **NEWS 12.03.2015**:  
 > Update: Russische Daten werden nun ergänzt um Daten der Moskauer Börse, um Datenlücken bei Yahoo zu füllen.
 > Für Italien noch keine Lösung gefunden - hier fehlen die letzten Daten i.d.R. und wurden mit dem letzten verfügbaren Wert fortgeschrieben.
 
