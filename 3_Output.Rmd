@@ -25,6 +25,12 @@ load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the in
 ```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
 ```Letzte Ausführung: `r Sys.time()` ```   
   
+> **NEWS 12.03.2015**:
+> Update: Russische Daten werden nun ergänzt um Daten der Moskauer Börse, um Datenlücken bei Yahoo zu füllen.
+> Für Italien noch keine Lösung gefunden - hier fehlen die letzten Daten i.d.R. und wurden mit dem letzten verfügbaren Wert fortgeschrieben.
+
+-----
+
 Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtlich ihres _Momentums_ dar.  
 Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
 
@@ -43,9 +49,6 @@ $$HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}RSL(t-i)$$
 
 Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
 Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.    
-
-> **Beachten:**  
-> Momentan lieferr Yahoo! für Italien und Russland keine aktualisierten Werte. Daher ist das Ergebnis verzerrt. Ich versuche alternative Datenquellen zu finden.
 
 
 ### Das Welt-Tachometer
