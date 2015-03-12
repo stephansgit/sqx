@@ -25,8 +25,23 @@ tail(indices.zoo)
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
 indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
+  #--Download Russian data----------------------------
+  URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2015-03-11&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
+  download.file(URL, destfile="rtsi.csv")
+  rtsi <- read.csv(file="rtsi.csv", header=TRUE, skip=2, sep=";")
+  rtsi <- rtsi[,c("TRADEDATE", "CLOSE")] # drop irrelevant columns
+  library(lubridate)
+  rtsi$TRADEDATE <- ymd(rtsi$TRADEDATE) #convert to POSIXct
+  rtsi$TRADEDATE <- as.Date(rtsi$TRADEDATE) # convert to as.Date
+  ind <- data.frame(Date=index(indices.zoo$Russia),indices.zoo$Russia) # create new, temporary dataframe for Russia only
+  ind.m <- merge(x=ind, y=rtsi, by.x="Date", by.y="TRADEDATE", all.x=TRUE) # merge the Yahoo and the RTS data
+  ind.m$Russia[is.na(ind.m$Russia)] <- ind.m$CLOSE[is.na(ind.m$Russia)] # replace the NA data from yahoo with data from RTS
+  indices.zoo$Russia <- ind.m$Russia # add the new Russia data to the bigger data frame 
+  #--------
+
 rm(list=setdiff(ls(), "indices.zoo")) # remove all raw data, just keep indices.zoo
 
+write.csv2(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_raw.csv", row.names=FALSE)
 ### Check missing data
 #   check.df <- data.frame(is.na(data.frame(coredata(indices.zoo))))
 #   check.df$Date <- index(indices.zoo)
@@ -37,6 +52,8 @@ rm(list=setdiff(ls(), "indices.zoo")) # remove all raw data, just keep indices.z
 indices.zoo <- na.approx(zoo(indices.zoo), na.rm=TRUE) # interpolation happens for NAs
 indices.zoo <- na.locf(indices.zoo) # any remaining NAs are being replaced by simple "roll forward"
 
+write.csv2(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_cleaned.csv", row.names=FALSE)
+
 
 ### calculate RSL
 #RSL=Close/MovingAverage
@@ -45,6 +62,8 @@ rsl.zoo <- indices.zoo / mean.zoo
 rsl.gd.zoo <- rollapply(rsl.zoo, width=10, FUN=mean, na.rm=T, align="right") # we add a 10-day SMA
 rsl.all.zoo <- zoo(rowMeans(rsl.gd.zoo), order.by=as.Date(index(rsl.gd.zoo)))
 #plot(tail(rsl.all.zoo, 40), type="b")
+
+write.csv2(rsl.gd.zoo, file="/home/fibo/scripts/Boersentacho/hbt.csv", row.names=FALSE)
 
 
 ### Save data
