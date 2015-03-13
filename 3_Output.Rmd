@@ -17,8 +17,8 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
 op <- options(gvis.plot.tag='chart')
 
-load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the indices data
-#load(file = "Indices_Data.RData") # loads the indices data
+#load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the indices data
+load(file = "Indices_Data.RData") # loads the indices data
 
 ```
 
@@ -27,6 +27,7 @@ load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the in
 
 > **NEWS 13.03.2015**:  
 > CSV-Dateien mit Rohdaten werden exportiert: Links stehen unten im "Anhang".  
+> die aktuellen Einzelwert werden auch als Tabelle ausgegeben (Bereich Karte).  
 >   
 > **NEWS 12.03.2015**:  
 > Update: Russische Daten werden nun ergänzt um Daten der Moskauer Börse, um Datenlücken bei Yahoo zu füllen.
@@ -90,6 +91,16 @@ Geo=gvisGeoChart(map.data, locationvar="Var2", colorvar="RSL",
                                  colors:[\'red', \'blue']}",
                               projection="kavrayskiy-vii"))
 plot(Geo)
+
+latest <- t(tail(rsl.gd.zoo,1)) # prepare data for table
+rownames(latest) <- NULL
+colnames(latest) <- NULL
+Table <- gvisTable(
+                    data.frame(
+                      Country=names(tail(rsl.gd.zoo,1)),          
+                      HBT=latest),
+                    formats=list(HBT='0.0000'))
+plot(Table)
 ```
 
 ### Alle Einzel-HBT als Zeitreihe
