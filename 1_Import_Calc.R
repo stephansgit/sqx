@@ -19,7 +19,7 @@ library(gridExtra)
 getSymbols(c( "DJIA", "^GDAXI", "^FTSE", "^FCHI", "^SSMI", "^IBEX", "^SSEC", "^STI", "^MXX", "^N225", "^AORD", "RTS.RS", "^ATX", "FTSEMIB.MI", "^GSPTSE", "^HSI", "^BVSP", "^MERV"), warnings=FALSE)
 
 indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE), Ad(FTSEMIB.MI), Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(RTS.RS), Ad(SSEC), Ad(SSMI), Ad(STI))
-colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "England", "Italy", "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "Russia", "China", "Switzerland", "Singapore")      
+colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom", "Italy", "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "Russia", "China", "Switzerland", "Singapore")      
 tail(indices.zoo)
 
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
