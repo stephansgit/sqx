@@ -26,7 +26,7 @@ Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deleti
 indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
   #--Download Russian data----------------------------
-  URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2015-03-11&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
+  URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2016-12-31&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
   download.file(URL, destfile="rtsi.csv")
   rtsi <- read.csv(file="rtsi.csv", header=TRUE, skip=2, sep=";")
   rtsi <- rtsi[,c("TRADEDATE", "CLOSE")] # drop irrelevant columns
@@ -41,7 +41,7 @@ indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, becau
 
 rm(list=setdiff(ls(), "indices.zoo")) # remove all raw data, just keep indices.zoo
 
-write.csv2(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_raw.csv", row.names=FALSE)
+write.zoo(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_raw.csv", row.names=FALSE)
 ### Check missing data
 #   check.df <- data.frame(is.na(data.frame(coredata(indices.zoo))))
 #   check.df$Date <- index(indices.zoo)
@@ -52,7 +52,7 @@ write.csv2(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_raw.csv", 
 indices.zoo <- na.approx(zoo(indices.zoo), na.rm=TRUE) # interpolation happens for NAs
 indices.zoo <- na.locf(indices.zoo) # any remaining NAs are being replaced by simple "roll forward"
 
-write.csv2(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_cleaned.csv", row.names=FALSE)
+write.zoo(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_cleaned.csv", row.names=FALSE)
 
 
 ### calculate RSL
@@ -63,7 +63,7 @@ rsl.gd.zoo <- rollapply(rsl.zoo, width=10, FUN=mean, na.rm=T, align="right") # w
 rsl.all.zoo <- zoo(rowMeans(rsl.gd.zoo), order.by=as.Date(index(rsl.gd.zoo)))
 #plot(tail(rsl.all.zoo, 40), type="b")
 
-write.csv2(rsl.gd.zoo, file="/home/fibo/scripts/Boersentacho/hbt.csv", row.names=FALSE)
+write.zoo(rsl.gd.zoo, file="/home/fibo/scripts/Boersentacho/hbt.csv", row.names=FALSE)
 
 
 ### Save data

@@ -24,7 +24,10 @@ load(file = "/home/fibo/scripts/Boersentacho/Indices_Data.RData") # loads the in
 
 ```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
 ```Letzte Ausführung: `r Sys.time()` ```   
-  
+
+> **NEWS 13.03.2015**:  
+> CSV-Dateien mit Rohdaten werden exportiert: Links stehen unten im "Anhang".  
+>   
 > **NEWS 12.03.2015**:  
 > Update: Russische Daten werden nun ergänzt um Daten der Moskauer Börse, um Datenlücken bei Yahoo zu füllen.
 > Für Italien noch keine Lösung gefunden - hier fehlen die letzten Daten i.d.R. und wurden mit dem letzten verfügbaren Wert fortgeschrieben.
@@ -127,12 +130,23 @@ plot(Line2)
 
 #### Die letzten Daten
 
-Die letzten fünf Einträge der Indexdaten **bereinigt**. Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
+Die letzten fünf **bereinigten** Einträge der Indexdaten. Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
  
 ```{r showdata, results='asis'}
 kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
 #tail(indices.zoo)
 ```
+
+#### Datenexport
+
+Die folgenden Daten sind auch als .csv-File exportiert:  
+[Rohdaten der Indexwerte von yahoo](http://himbeere.noip.me/hbt/indices_raw.csv)  
+[bereinigte Indexwerte](http://himbeere.noip.me/hbt/indices_cleaned.csv)  
+[HBT-Werte für Einzelindizes](http://himbeere.noip.me/hbt/hbt.csv)  
+.
+Die Werte sind durch Leerzeichen getrennt. Dezimaltrennzeichen ist der Punkt (also amerikanisches Format).
+
+
 
 #### Die Indizes
 
