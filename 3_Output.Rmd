@@ -26,7 +26,7 @@ load(file = "Indices_Data.RData") # loads the indices data
 ```Letzte Ausführung: `r Sys.time()` ```   
 
 > **NEWS 13.03.2015**:  
-> CSV-Dateien mit Rohdaten werden exportiert: Links stehen unten im "Anhang".  
+> csv-Dateien mit Rohdaten werden exportiert: Links stehen unten im "Anhang".  
 > die aktuellen Einzelwert werden auch als Tabelle ausgegeben (Bereich Karte).  
 >   
 > **NEWS 12.03.2015**:  
