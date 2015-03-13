@@ -27,7 +27,7 @@ load(file = "Indices_Data.RData") # loads the indices data
 
 > **NEWS 13.03.2015**:  
 > csv-Dateien mit Rohdaten werden exportiert: Links stehen unten im "Anhang".  
-> die aktuellen Einzelwert werden auch als Tabelle ausgegeben (Bereich Karte).  
+> Die aktuellen Einzelwert werden nun auch als Tabelle ausgegeben (siehe Bereich "Karte").  
 >   
 > **NEWS 12.03.2015**:  
 > Update: Russische Daten werden nun ergänzt um Daten der Moskauer Börse, um Datenlücken bei Yahoo zu füllen.
@@ -154,7 +154,7 @@ Die folgenden Daten sind auch als .csv-File exportiert:
 [Rohdaten der Indexwerte von yahoo](http://himbeere.noip.me/hbt/indices_raw.csv)  
 [bereinigte Indexwerte](http://himbeere.noip.me/hbt/indices_cleaned.csv)  
 [HBT-Werte für Einzelindizes](http://himbeere.noip.me/hbt/hbt.csv)  
-.
+.  
 Die Werte sind durch Leerzeichen getrennt. Dezimaltrennzeichen ist der Punkt (also amerikanisches Format).
 
 
