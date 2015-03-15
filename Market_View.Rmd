@@ -27,7 +27,7 @@ In dieser Arbeitsmappe wird das Trendverhalten bestimmter Assetklassen dargestel
 
 ```{r load}
 #Set variables####
-start <- "01.01.2007"
+start <- "01.01.2012"
 end <- format(Sys.Date(), "%d.%m.%Y")
 
 ariva.import <- function(symbol) 
@@ -66,22 +66,38 @@ gold <- paste0("http://www.ariva.de/quote/historic/historic.csv?secu=32119&boers
 	dax <- ariva.import(dax)
 
 # Kreiere einen Data-Frame
-data <- cbind(dax$Schlusskurs, sp500$Schlusskurs, silver$Schlusskurs, 
+assets.zoo <- cbind(dax$Schlusskurs, sp500$Schlusskurs, silver$Schlusskurs, 
 	              gold$Schlusskurs, brent$Schlusskurs, eurusd$Schlusskurs)
-colnames(data) <- c("DAX", "S&P500", "Silber","Gold", 
+colnames(assets.zoo) <- c("DAX", "S&P500", "Silber","Gold", 
 		"Brent", "EURUSD")
 
 # Cleaning
-wevector <- which(wday(data)==1 | wday(data)==7)
-data <- data[-wevector,] # filters weekends out of dataset; on some weekends there are some quotes...
-data <- na.locf(data,na.rm=F)
+wevector <- which(wday(assets.zoo)==1 | wday(assets.zoo)==7)
+assets.zoo <- assets.zoo[-wevector,] # filters weekends out of dataset; on some weekends there are some quotes...
+assets.zoo <- na.locf(assets.zoo,na.rm=F)
 
 # Calculate the HBT
-mean.zoo <- rollapply(data, width=27, FUN=mean, na.rm=T, align="right")
-rsl.zoo <- data / mean.zoo
+mean.zoo <- rollapply(assets.zoo, width=27, FUN=mean, na.rm=T, align="right")
+rsl.zoo <- assets.zoo / mean.zoo
 hbt.zoo <- rollapply(rsl.zoo, width=10, FUN=mean, na.rm=T, align="right") # we add a 10-day SMA
 
 ```
+
+
+```Letzte Daten: `r tail(index(hbt.zoo),1)` ```    
+```Letzte Ausführung: `r Sys.time()` ```   
+
+Die untersuchten Assetklassen sind
+
+- DAX
+- S&P 500
+- Silber in USD
+- Gold in USD
+- Brent-Öl
+- Euro zu US-Dollar
+
+
+### Tachostand
 
 ```{r gauge, results='asis'}
 ### Create the gauge
@@ -91,4 +107,29 @@ Gauge1 <- gvisGauge(gauge.df, options=list(min=0.9, max=1.1, greenFrom=1.02,
                                            redFrom=0.9, redTo=.98, height=250))
 
 plot(Gauge1)
+```
 
+### Zeitreihe der HBT-Werte
+
+```{r zeitreihe, results='asis'}
+hbt.m <- data.frame(Date=index(hbt.zoo),100*coredata(hbt.zoo))
+hbt.m <- melt(hbt.m, id.vars="Date", variable.name="Asset", value.name="HBT")
+Time <- gvisAnnotationChart(data=hbt.m,
+                              datevar="Date", numvar="HBT", idvar="Asset",
+                            options=list(width=900, height=400, vAxis="{format:'#.###'}"))
+
+plot(Time)
+```
+
+### Tabelle der HBT-Werte
+
+Dargestellt die letzten 20 Werte (sortieren durch Klicken auf die Spaltenköpfe):  
+
+```{r table, results='asis'}
+hbt.df <- data.frame(Date=index(hbt.zoo),round(coredata(hbt.zoo),3))
+Table <- gvisTable(data=tail(hbt.df,20))
+plot(Table)
+```
+
+-----
+END OF FILE
