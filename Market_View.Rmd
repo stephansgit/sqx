@@ -16,6 +16,7 @@ library(scales)
 library(quantmod)
 library(gridExtra)
 library(lubridate)
+library(bdscale)
 
 options(scipen = 0, digits = 5) # set options to avoid scientific notation
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
@@ -76,6 +77,10 @@ wevector <- which(wday(assets.zoo)==1 | wday(assets.zoo)==7)
 assets.zoo <- assets.zoo[-wevector,] # filters weekends out of dataset; on some weekends there are some quotes...
 assets.zoo <- na.locf(assets.zoo,na.rm=F)
 
+assets.zoo <- window(assets.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs or useless interpolated values.
+
+
+
 # Calculate the HBT
 mean.zoo <- rollapply(assets.zoo, width=27, FUN=mean, na.rm=T, align="right")
 rsl.zoo <- assets.zoo / mean.zoo
@@ -131,5 +136,20 @@ Table <- gvisTable(data=tail(hbt.df,20))
 plot(Table)
 ```
 
+### HBT-Werte als Mosaikplot
+
+```{r moasic}
+ggplot(data=hbt.m) + geom_tile(aes(x=Date, y=Asset, fill=HBT/100)) + scale_x_bd(business.dates=yahoo('SPY')) + scale_fill_gradient2("HBT",midpoint = 1, low=muted('red'), high=muted('green')) + theme_minimal() + ggtitle("Mosaikplot der HBT-Stände")# uses business days of S&P traded
+```
+
+
+
+### Indexwerte und HBT-Werte: Analyse
+
+_To Do:_
+_Plotte die Indexwerte und den HBT-Wert, so dass man graphisch die Korrelationen beobachten kann._
+_- Indexwerte farblich in Abhängigkeit des HBT-Wertes_
+
+  
 -----
 END OF FILE
