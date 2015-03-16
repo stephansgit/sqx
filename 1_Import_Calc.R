@@ -13,13 +13,14 @@ library(quantmod)
 library(reshape2)
 library(scales)
 library(gridExtra)
+library(Quandl)
 
 
 ### Import
-getSymbols(c( "DJIA", "^GDAXI", "^FTSE", "^FCHI", "^SSMI", "^IBEX", "^SSEC", "^STI", "^MXX", "^N225", "^AORD", "RTS.RS", "^ATX", "FTSEMIB.MI", "^GSPTSE", "^HSI", "^BVSP", "^MERV"), warnings=FALSE)
+getSymbols(c( "DJIA", "^GDAXI", "^FTSE", "^FCHI", "^SSMI", "^IBEX", "^SSEC", "^STI", "^MXX", "^N225", "^AORD", "RTS.RS", "^ATX", "^GSPTSE", "^HSI", "^BVSP", "^MERV"), warnings=FALSE)
 
-indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE), Ad(FTSEMIB.MI), Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(RTS.RS), Ad(SSEC), Ad(SSMI), Ad(STI))
-colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom", "Italy", "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "Russia", "China", "Switzerland", "Singapore")      
+indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(RTS.RS), Ad(SSEC), Ad(SSMI), Ad(STI))
+colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom",  "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "Russia", "China", "Switzerland", "Singapore")      
 tail(indices.zoo)
 
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
@@ -38,6 +39,15 @@ indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, becau
   ind.m$Russia[is.na(ind.m$Russia)] <- ind.m$CLOSE[is.na(ind.m$Russia)] # replace the NA data from yahoo with data from RTS
   indices.zoo$Russia <- ind.m$Russia # add the new Russia data to the bigger data frame 
   #--------
+
+
+  #---Download Italian data
+  mib <- Quandl("YAHOO/INDEX_FTSEMIB_MI", type="xts", start=start(indices.zoo))
+  mib.zoo <-  Ad(mib)
+  names(mib.zoo) <- "Italy"
+  indices.zoo <- merge(indices.zoo, mib.zoo)
+  #------------
+
 
 rm(list=setdiff(ls(), "indices.zoo")) # remove all raw data, just keep indices.zoo
 
