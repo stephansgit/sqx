@@ -25,6 +25,9 @@ load(file = "Indices_Data.RData") # loads the indices data
 ```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
 ```Letzte Ausführung: `r Sys.time()` ```   
 
+> **NEWS 15.03.2015**:  
+> Italienische Werte werden nun von Quandl bezogen. Somit sollte der Wert für Italien aktuell sein.
+>
 > **NEWS 13.03.2015**:  
 > csv-Dateien mit Rohdaten werden exportiert: Links stehen unten im "Anhang".  
 > Die aktuellen Einzelwert werden nun auch als Tabelle ausgegeben (siehe Bereich "Karte").  
@@ -51,7 +54,7 @@ $$HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}RSL(t-i)$$
 
 > Der Mittelwert über diese einzelnen (Länder)-HBTs ist der "HBT-Weltindikator".
 
-Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
+Abgerufen werden die Daten täglich von _Yahoo!_ (bzw. Börse Moskau und Quandl); die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
 Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.    
 
 
@@ -185,7 +188,7 @@ Switzerland  | SMI
 Singapore    | Straight Times
 
 
-Abgerufen werden die Daten täglich von _Yahoo!_; die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
+Abgerufen werden die Daten täglich von _Yahoo!_ (für Russland: Mischung aus Yahoo und Börse Moskau; Italien wird on Quandl geladen); die Kalkulation erfolgt nachts. Eine Schwierigkeit ist somit die Datenkonsistenz von Yahoo; sind die Daten fehlerhaft, wird auch das Börsentacho fehlerhaft berechnet.
 
 -----
 
