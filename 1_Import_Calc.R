@@ -81,5 +81,5 @@ write.zoo(rsl.gd.zoo, file="/home/fibo/scripts/Boersentacho/hbt.csv", row.names=
 
 
 ### Save data
-save(indices.zoo, rsl.gd.zoo, rsl.all.zoo, file="/home/fibo/scripts/Boersentacho/Indices_Data.RData")
+save(indices.zoo, rsl.gd.zoo, rsl.all.zoo, snp, file="/home/fibo/scripts/Boersentacho/Indices_Data.RData")
 

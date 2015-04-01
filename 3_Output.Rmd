@@ -12,6 +12,7 @@ library(reshape2)
 library(ggplot2)
 library(knitr)
 library(scales)
+library(xts)
 
 xts2df <- function(x) {
   tmp <- data.frame(Date=index(x), coredata(x))
@@ -32,17 +33,7 @@ load(file = "Indices_Data.RData") # loads the indices data
 
 > **NEWS 01.04.2015**:  
 > Jens' Wunsch nach einer Darstellung des HBT-Wertes und des S&P 500 ist umgesetzt - siehe unten.  
->
-> **NEWS 15.03.2015**:  
-> Italienische Werte werden nun von Quandl bezogen. Somit sollte der Wert für Italien aktuell sein.
->
-> **NEWS 13.03.2015**:  
-> csv-Dateien mit Rohdaten werden exportiert: Links stehen unten im "Anhang".  
-> Die aktuellen Einzelwert werden nun auch als Tabelle ausgegeben (siehe Bereich "Karte").  
->   
-> **NEWS 12.03.2015**:  
-> Update: Russische Daten werden nun ergänzt um Daten der Moskauer Börse, um Datenlücken bei Yahoo zu füllen.
-> Für Italien noch keine Lösung gefunden - hier fehlen die letzten Daten i.d.R. und wurden mit dem letzten verfügbaren Wert fortgeschrieben.
+>  
 
 -----
 
