@@ -23,6 +23,10 @@ indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE), 
 colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom",  "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "Russia", "China", "Switzerland", "Singapore")      
 tail(indices.zoo)
 
+
+getSymbols("^GSPC") #load S&P 500 data.
+snp <- Ad(GSPC)
+
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
 indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
@@ -49,7 +53,7 @@ indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, becau
   #------------
 
 
-rm(list=setdiff(ls(), "indices.zoo")) # remove all raw data, just keep indices.zoo
+rm(list=setdiff(ls(), c("indices.zoo", "snp"))) # remove all raw data, just keep indices.zoo and the S&P Data
 
 write.zoo(indices.zoo, file="/home/fibo/scripts/Boersentacho/indices_raw.csv", row.names=FALSE)
 ### Check missing data

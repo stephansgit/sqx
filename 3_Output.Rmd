@@ -13,6 +13,11 @@ library(ggplot2)
 library(knitr)
 library(scales)
 
+xts2df <- function(x) {
+  tmp <- data.frame(Date=index(x), coredata(x))
+  return(tmp)
+}
+
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
 op <- options(gvis.plot.tag='chart')
@@ -25,6 +30,9 @@ load(file = "Indices_Data.RData") # loads the indices data
 ```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
 ```Letzte Ausführung: `r Sys.time()` ```   
 
+> **NEWS 01.04.2015**:  
+> Jens' Wunsch nach einer Darstellung des HBT-Wertes und des S&P 500 ist umgesetzt - siehe unten.  
+>
 > **NEWS 15.03.2015**:  
 > Italienische Werte werden nun von Quandl bezogen. Somit sollte der Wert für Italien aktuell sein.
 >
@@ -115,7 +123,7 @@ rsl.df <- as.data.frame(rsl.gd.zoo)
 rsl.df$Date <- index(rsl.gd.zoo)
 rsl.m <- melt(rsl.df, id.vars="Date", variable.name="Country", value.name="RSL")
 #ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01"))) + geom_line(aes(x=Date, y=RSL, color=Country, group=Country))
-ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_light() + theme(panel.grid=element_blank()) + scale_x_date(labels=date_format("%m/%y"), breaks=date_breaks("year"))
+ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=RSL)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_grey() + theme(panel.grid=element_blank()) + scale_x_date(labels=date_format("%m/%y"), breaks=date_breaks("year"))
 ```
 
 ### Der dynamische Chart
@@ -137,6 +145,21 @@ Line2 <- gvisMotionChart(subset(line.data, Date>as.Date("2014-01-01")), idvar="C
 plot(Line2)
 ```
 
+
+### Der Welttacho und der S&P  
+
+Wie haben sich nun der HBT-Wert und die Indizes verhalten? Beispielhaft ist der HBT-Welt-Wert und der S&P-500 dargestellt. Im ersten Bild einfach übereinandergelegt, im zweiten ist der S&P-Wert farblich in Abhängigkeit des HBT-Welt-Wertes dargestellt. Interpretation überlasse ich mal euch.  
+
+
+```{r snp}
+snphbt <- merge(xts(rsl.all.zoo), snp)
+colnames(snphbt) <- c("HBT", "SnP500")
+snphbt.m <- melt(xts2df(snphbt), id.vars="Date", variable.name="Index", value.name="Value")
+ggplot(data=snphbt.m, aes(x=Date, y=Value)) + (geom_line(aes(color=Index))) + facet_wrap(~Index, nrow=2, scales="free_y") + theme_minimal() + scale_color_brewer(palette="Set1")
+ggplot(data=subset(snphbt.m, Date>=as.Date("2014-01-01")), aes(x=Date, y=Value)) + (geom_line(aes(color=Index))) + facet_wrap(~Index, nrow=2, scales="free_y") + theme_minimal() + scale_color_brewer(palette="Set1")
+ggplot(data=subset(xts2df(snphbt), Date>=as.Date("2014-01-01")), aes(x=Date, y=SnP500)) + geom_line(aes(color=HBT), size=.8) + scale_color_gradient2("HBT",midpoint = 1, low=('red'), high=('green'), mid='grey') +theme_classic()
+```
+
 -------
 
 
@@ -144,7 +167,7 @@ plot(Line2)
 
 #### Die letzten Daten
 
-Die letzten fünf **bereinigten** Einträge der Indexdaten. Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
+Die letzten fünf **bereinigten** Einträge der Indexdaten. Dienst zum kurzen Crosscheck, ob Yahoo die richtigen Werte zur Verfügung stellt. Fehlende Werte werden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
  
 ```{r showdata, results='asis'}
 kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
