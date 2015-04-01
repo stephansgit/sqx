@@ -28,7 +28,6 @@ getSymbols("^GSPC") #load S&P 500 data.
 snp <- Ad(GSPC)
 
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
-indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
   #--Download Russian data----------------------------
   URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2016-12-31&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
@@ -52,6 +51,7 @@ indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, becau
   indices.zoo <- merge(indices.zoo, mib.zoo)
   #------------
 
+indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
 rm(list=setdiff(ls(), c("indices.zoo", "snp"))) # remove all raw data, just keep indices.zoo and the S&P Data
 
