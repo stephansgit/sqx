@@ -1,0 +1,48 @@
+---
+title: "Volumen Breakout Monitor"
+output: 
+    html_document:
+        theme: readable
+---
+
+Dieses Projekt befindet sich ___beta Stadium___.
+
+# Idee  
+
+Die Idee ist fogende: Kreiere einen Report, der täglich (für das vorausgegange Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelvolumen gegeben hat.
+
+Der Trigger sei folgender: Wenn das Handelsvolumen 3-mal größer ist als das durchschnittliche Handelvolumen der letzten 12 Monate, dann generiere ein Signal.
+
+# Implementierung
+
+Zunächst sei das Monitoring für die 30 DAX Werte umgesetzt.
+
+
+```{r load}
+library(xts)
+library(quantmod)
+library(XML)
+
+#http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
+
+
+dax_url <- "http://finance.yahoo.com/q/cp?s=^GDAXI+Components"
+dax_tbl <- readHTMLTable(dax_url)
+#str(tables$yfncsumtab$V1)
+dax_list <- as.character(dax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
+StartDate <- as.Date("2013-01-01")
+stocks <- new.env()
+getSymbols(dax_list, from=StartDate, env=stocks)
+
+dax_vol <- eapply(stocks, Vo)
+dax_vol <- as.data.frame(do.call(merge, dax_vol))
+# adjust column names are re-order columns
+colnames(dax_vol) <- gsub(".DE.Volume","",colnames(dax_vol))
+
+```
+
+
+Next Steps
+- vllt xts statt DF?
+- Kürzel ersetzen mit richtigen Namen?
+- Berechne den aktuellen Status des "Signals"
