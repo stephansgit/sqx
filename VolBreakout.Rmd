@@ -5,20 +5,23 @@ output:
         theme: readable
 ---
 
-Dieses Projekt befindet sich ___beta Stadium___.
+Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwicklung___.
 
 # Idee  
 
-Die Idee ist fogende: Kreiere einen Report, der täglich (für das vorausgegange Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelvolumen gegeben hat.
+> Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
 
-Der Trigger sei folgender: Wenn das Handelsvolumen 3-mal größer ist als das durchschnittliche Handelvolumen der letzten 12 Monate, dann generiere ein Signal.
+Der Trigger sei folgender: Wenn das Handelsvolumen 3-mal größer ist als das durchschnittliche Handelvolumen der letzten 2 Monate, dann generiere ein Signal.
 
 # Implementierung
 
 Zunächst sei das Monitoring für die 30 DAX Werte umgesetzt.
 
 
-```{r load}
+```{r load, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+
+
 options("getSymbols.warning4.0"=FALSE)
 suppressPackageStartupMessages(library(googleVis))
 library(xts)
@@ -67,9 +70,16 @@ Table <- gvisTable(table)
 plot(Table)
 ```
 
+Die Kürzel sind die Kürzel auf http://finance.yahoo.com .
+
 # Nächste Schritte  
 
-Next Steps
-- vllt xts statt DF?
+_Next Steps:_
+
 - Kürzel ersetzen mit richtigen Namen?
-- Berechne den aktuellen Status des "Signals"
+- Berechne den aktuellen Status des "Signals" und weise nur "neue Werte" über eins aus.
+- füge Grafiken hinzu.
+
+-----
+
+END OF FILE
