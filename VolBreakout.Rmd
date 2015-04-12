@@ -7,6 +7,9 @@ output:
 
 Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwicklung___.
 
+```Letzte Ausführung: `r Sys.time()` ```   
+
+
 # Idee  
 
 > Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
