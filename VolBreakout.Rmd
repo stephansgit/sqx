@@ -19,9 +19,15 @@ Zunächst sei das Monitoring für die 30 DAX Werte umgesetzt.
 
 
 ```{r load}
+options("getSymbols.warning4.0"=FALSE)
+suppressPackageStartupMessages(library(googleVis))
 library(xts)
 library(quantmod)
 library(XML)
+library(googleVis)
+
+op <- options(gvis.plot.tag='chart')
+
 
 #http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
 
@@ -35,12 +41,33 @@ stocks <- new.env()
 getSymbols(dax_list, from=StartDate, env=stocks)
 
 dax_vol <- eapply(stocks, Vo)
-dax_vol <- as.data.frame(do.call(merge, dax_vol))
+dax_vol <- as.xts(do.call(merge, dax_vol))
 # adjust column names are re-order columns
-colnames(dax_vol) <- gsub(".DE.Volume","",colnames(dax_vol))
+colnames(dax_vol) <- gsub(".Volume","",colnames(dax_vol))
+dax_vol[dax_vol==0] <- NA # replace 0 with NA
+
+dax_vbt <- dax_vol / (3*rollapply(dax_vol, width=40, FUN=mean, na.rm=T, align="right"))
+
 
 ```
 
+Es wird der Volumen-Breakout-Wert berechnet als das letzte Volumen dividiert durch das dreifache Durchschnittsvolumen der letzten 40 Tage.   
+Ein Wert von größer als eins zeigt somit an, dass das letzte Volumen über 300% des Durschnittsvolumens (der letzten 40 Tage) betrug.
+
+# Ergebnisse  
+
+Die Tabelle zeigt genau diese Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann Werte über eins identifizieren.
+
+```{r plot_tbl, results='asis'}
+
+table <- data.frame(Share=names(tail(dax_vbt,1)),          
+                      t(tail(round(dax_vbt,2),5)))
+names(table)[-1] <- as.character(index(tail(dax_vbt,5)))
+Table <- gvisTable(table)
+plot(Table)
+```
+
+# Nächste Schritte  
 
 Next Steps
 - vllt xts statt DF?
