@@ -10,13 +10,13 @@ Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwickl
 ```Letzte Ausführung: `r Sys.time()` ```   
 
 
-# Idee  
+## Idee  
 
 > Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
 
 Der Trigger sei folgender: Wenn das Handelsvolumen 3-mal größer ist als das durchschnittliche Handelvolumen der letzten 2 Monate, dann generiere ein Signal.
 
-# Implementierung
+## Implementierung
 
 Zunächst sei das Monitoring für die 30 DAX Werte umgesetzt.
 
@@ -60,12 +60,24 @@ dax_vbt <- dax_vol / (3*rollapply(dax_vol, width=40, FUN=mean, na.rm=T, align="r
 Es wird der Volumen-Breakout-Wert berechnet als das letzte Volumen dividiert durch das dreifache Durchschnittsvolumen der letzten 40 Tage.   
 Ein Wert von größer als eins zeigt somit an, dass das letzte Volumen über 300% des Durschnittsvolumens (der letzten 40 Tage) betrug.
 
-# Ergebnisse  
+## Ergebnisse  
 
-Die Tabelle zeigt genau diese Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann Werte über eins identifizieren.
+```{r last}
+last <- t(tail(dax_vbt,1))
+last_stock <- rownames(last)[which(last>1)]
+info <- if(is.null(last_stock)) {
+  print("Keine Aktien hat ein Signal generiert")
+  }   else { last_stock}
+```
+
+Die folgenden Aktien haben am vergangen Closing einen entspechende Wert gezeigt:  
+`r info`  .
+
+(_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
+
+Die Tabelle zeigt die Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann Werte über eins identifizieren.
 
 ```{r plot_tbl, results='asis'}
-
 table <- data.frame(Share=names(tail(dax_vbt,1)),          
                       t(tail(round(dax_vbt,2),5)))
 names(table)[-1] <- as.character(index(tail(dax_vbt,5)))
@@ -73,15 +85,16 @@ Table <- gvisTable(table)
 plot(Table)
 ```
 
-Die Kürzel sind die Kürzel auf http://finance.yahoo.com .
+Die Kürzel sind die Kürzel auf http://finance.yahoo.com.
 
 # Nächste Schritte  
 
 _Next Steps:_
 
-- Kürzel ersetzen mit richtigen Namen?
 - Berechne den aktuellen Status des "Signals" und weise nur "neue Werte" über eins aus.
+- Füge weitere Akien hinzu - MDAX und SDAX(?)
 - füge Grafiken hinzu.
+- Kürzel ersetzen mit richtigen Namen?
 
 -----
 
