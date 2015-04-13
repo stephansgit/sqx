@@ -12,14 +12,15 @@ Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwickl
 
 ## Idee  
 
-> Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
+Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
 
-Der Trigger sei folgender: Wenn das Handelsvolumen 3-mal größer ist als das durchschnittliche Handelvolumen der letzten 2 Monate, dann generiere ein Signal.
+Der Indikator wird berechnet als Handelsvolumen am heutigen Tage $t$ dividiert durch das durschnittliche Handelsvolumen der letzten $k$ Tage. 
+
+$$VB_{t}=\frac{Vol_{t}}{\frac{1}{k}\sum_{n=0}^{k-1}Vol_{t-n}}$$
+
+Ein Signal wird bspw. dann generiert, wenn dieser Wert größer als _drei_ ist (was nichts anderes bedeutet, als dass das heutige Volumen dreimal größer als das durschnittliche Volumen ist).
 
 ## Implementierung
-
-Zunächst sei das Monitoring für die 30 DAX Werte umgesetzt.
-
 
 ```{r load, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
@@ -37,6 +38,11 @@ op <- options(gvis.plot.tag='chart')
 
 #http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
 
+###############
+# SET PARAMS
+lookback <- 40
+trigger <- 3
+##############
 
 dax_url <- "http://finance.yahoo.com/q/cp?s=^GDAXI+Components"
 dax_tbl <- readHTMLTable(dax_url)
@@ -52,30 +58,35 @@ dax_vol <- as.xts(do.call(merge, dax_vol))
 colnames(dax_vol) <- gsub(".Volume","",colnames(dax_vol))
 dax_vol[dax_vol==0] <- NA # replace 0 with NA
 
-dax_vbt <- dax_vol / (3*rollapply(dax_vol, width=40, FUN=mean, na.rm=T, align="right"))
+
+dax_vbt <- dax_vol / (rollapply(dax_vol, width=lookback, FUN=mean, na.rm=T, align="right"))
 
 
 ```
 
-Es wird der Volumen-Breakout-Wert berechnet als das letzte Volumen dividiert durch das dreifache Durchschnittsvolumen der letzten 40 Tage.   
-Ein Wert von größer als eins zeigt somit an, dass das letzte Volumen über 300% des Durschnittsvolumens (der letzten 40 Tage) betrug.
+
+Zunächst ist das Monitoring für die 30 DAX Werte umgesetzt.  
+Daten kommen von http://finance.yahoo.com.
+
+Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r lookback` Handelstage.
+
 
 ## Ergebnisse  
 
 ```{r last}
 last <- t(tail(dax_vbt,1))
-last_stock <- rownames(last)[which(last>1)]
+last_stock <- rownames(last)[which(last>trigger)]
 info <- if(is.null(last_stock)) {
   print("Keine Aktien hat ein Signal generiert")
   }   else { last_stock}
 ```
 
-Die folgenden Aktien haben am vergangen Closing einen entspechende Wert gezeigt:  
+Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht):  
 `r info`  .
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
-Die Tabelle zeigt die Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann Werte über eins identifizieren.
+Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
 ```{r plot_tbl, results='asis'}
 table <- data.frame(Share=names(tail(dax_vbt,1)),          
@@ -85,14 +96,13 @@ Table <- gvisTable(table)
 plot(Table)
 ```
 
-Die Kürzel sind die Kürzel auf http://finance.yahoo.com.
+Die Kürzel sind die Kürzel, die auf http://finance.yahoo.com verwendet werden.
 
 # Nächste Schritte  
 
 _Next Steps:_
 
-- Berechne den aktuellen Status des "Signals" und weise nur "neue Werte" über eins aus.
-- Füge weitere Akien hinzu - MDAX und SDAX(?)
+- Füge weitere Aktien hinzu - MDAX und SDAX (?)
 - füge Grafiken hinzu.
 - Kürzel ersetzen mit richtigen Namen?
 
