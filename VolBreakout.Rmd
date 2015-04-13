@@ -32,8 +32,17 @@ library(xts)
 library(quantmod)
 library(XML)
 library(googleVis)
+library(ggplot2)
+library(reshape2)
+library(bdscale)
+library(RColorBrewer)
 
 op <- options(gvis.plot.tag='chart')
+
+xts2df <- function(x) {
+  tmp <- data.frame(Date=index(x), coredata(x))
+  return(tmp)
+}
 
 
 #http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
@@ -97,6 +106,19 @@ plot(Table)
 ```
 
 Die Kürzel sind die Kürzel, die auf http://finance.yahoo.com verwendet werden.
+
+
+Der Plot zeigt, wann ein Signal für eine jeweilige Aktie generiert wurde. Parameter sind wiederum k=`r lookback` Tage und das `r trigger`fache des Handelvolumens.
+
+```{r mosaicplot}
+dax_signal <- dax_vbt["20140701::"]
+dax_signal <- ifelse(dax_signal<trigger,FALSE,TRUE)
+dax_signal <- xts2df(dax_signal)
+dax_signal <- melt(dax_signal, id.vars="Date", variable.name="Stock", value.name="Signal")
+ggplot(data=dax_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_bd(business.dates=yahoo('^GDAXI')) +  scale_fill_brewer(palette="Paired") + theme_minimal() + ggtitle("Mosaikplot der VB-Signale")# uses business days of DAX traded
+```
+
+dax_vbt
 
 # Nächste Schritte  
 
