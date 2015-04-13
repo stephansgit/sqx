@@ -118,7 +118,7 @@ dax_signal <- melt(dax_signal, id.vars="Date", variable.name="Stock", value.name
 ggplot(data=dax_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_bd(business.dates=yahoo('^GDAXI')) +  scale_fill_brewer(palette="Paired") + theme_minimal() + ggtitle("Mosaikplot der VB-Signale")# uses business days of DAX traded
 ```
 
-dax_vbt
+
 
 # Nächste Schritte  
 
