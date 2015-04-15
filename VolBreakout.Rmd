@@ -68,8 +68,10 @@ tdax_tbl <- readHTMLTable(tdax_url)
 tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
 
 de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
+remove <- c("HLE.DE", "TLG.DE")
+de_stocks <- de_stocks[!de_stocks%in%remove]
 
-
+  
 StartDate <- as.Date("2013-01-01")
 stocks <- new.env()
 getSymbols(de_stocks, from=StartDate, env=stocks)
