@@ -57,18 +57,31 @@ dax_url <- "http://finance.yahoo.com/q/cp?s=^GDAXI+Components"
 dax_tbl <- readHTMLTable(dax_url)
 #str(tables$yfncsumtab$V1)
 dax_list <- as.character(dax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
+mdax_url <- "http://finance.yahoo.com/q/cp?s=^MDAXI+Components"
+mdax_tbl <- readHTMLTable(mdax_url)
+mdax_list <- as.character(mdax_tbl$yfncsumtab$V1[6:55, drop=TRUE])
+sdax_url <- "http://finance.yahoo.com/q/cp?s=^SDAXI+Components"
+sdax_tbl <- readHTMLTable(sdax_url)
+sdax_list <- as.character(sdax_tbl$yfncsumtab$V1[6:55, drop=TRUE])
+tdax_url <- "http://finance.yahoo.com/q/cp?s=^TECDAX+Components"
+tdax_tbl <- readHTMLTable(tdax_url)
+tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
+
+de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
+
+
 StartDate <- as.Date("2013-01-01")
 stocks <- new.env()
-getSymbols(dax_list, from=StartDate, env=stocks)
+getSymbols(de_stocks, from=StartDate, env=stocks)
 
-dax_vol <- eapply(stocks, Vo)
-dax_vol <- as.xts(do.call(merge, dax_vol))
+de_vol <- eapply(stocks, Vo)
+de_vol <- as.xts(do.call(merge, de_vol))
 # adjust column names are re-order columns
-colnames(dax_vol) <- gsub(".Volume","",colnames(dax_vol))
-dax_vol[dax_vol==0] <- NA # replace 0 with NA
+colnames(de_vol) <- gsub(".Volume","",colnames(de_vol))
+de_vol[de_vol==0] <- NA # replace 0 with NA
 
 
-dax_vbt <- dax_vol / (rollapply(dax_vol, width=lookback, FUN=mean, na.rm=T, align="right"))
+de_vbt <- de_vol / (rollapply(de_vol, width=lookback, FUN=mean, na.rm=T, align="right"))
 
 
 ```
@@ -83,7 +96,7 @@ Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r loo
 ## Ergebnisse  
 
 ```{r last}
-last <- t(tail(dax_vbt,1))
+last <- t(tail(de_vbt,1))
 last_stock <- rownames(last)[which(last>trigger)]
 info <- if(is.null(last_stock)) {
   print("Keine Aktien hat ein Signal generiert")
@@ -98,9 +111,9 @@ Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r tri
 Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
 ```{r plot_tbl, results='asis'}
-table <- data.frame(Share=names(tail(dax_vbt,1)),          
-                      t(tail(round(dax_vbt,2),5)))
-names(table)[-1] <- as.character(index(tail(dax_vbt,5)))
+table <- data.frame(Share=names(tail(de_vbt,1)),          
+                      t(tail(round(de_vbt,2),5)))
+names(table)[-1] <- as.character(index(tail(de_vbt,5)))
 Table <- gvisTable(table)
 plot(Table)
 ```
@@ -111,11 +124,11 @@ Die Kürzel sind die Kürzel, die auf http://finance.yahoo.com verwendet werden.
 Der Plot zeigt, wann ein Signal für eine jeweilige Aktie generiert wurde. Parameter sind wiederum k=`r lookback` Tage und das `r trigger`fache des Handelvolumens.
 
 ```{r mosaicplot}
-dax_signal <- dax_vbt["20140701::"]
-dax_signal <- ifelse(dax_signal<trigger,FALSE,TRUE)
-dax_signal <- xts2df(dax_signal)
-dax_signal <- melt(dax_signal, id.vars="Date", variable.name="Stock", value.name="Signal")
-ggplot(data=dax_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_bd(business.dates=yahoo('^GDAXI')) +  scale_fill_brewer(palette="Paired") + theme_minimal() + ggtitle("Mosaikplot der VB-Signale")# uses business days of DAX traded
+de_signal <- de_vbt["20140701::"]
+de_signal <- ifelse(de_signal<trigger,FALSE,TRUE)
+de_signal <- xts2df(de_signal)
+de_signal <- melt(de_signal, id.vars="Date", variable.name="Stock", value.name="Signal")
+ggplot(data=de_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_bd(business.dates=yahoo('^GDAXI')) +  scale_fill_brewer(palette="Paired") + theme_minimal() + ggtitle("Mosaikplot der VB-Signale")# uses business days of DAX traded
 ```
 
 
