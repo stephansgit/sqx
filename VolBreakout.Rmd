@@ -9,7 +9,12 @@ Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwickl
 
 ```Letzte Ausführung: `r Sys.time()` ```   
 
-
+> NEWS 18. April 2015:  
+> Titel sind erweitert um Titel des MDAX, SDAX ud TecDax; somit werden ca. 160 deutsche Aktien überprüft.  
+> Die Aktien, bei denen Auffälligkeiten gefunden werden, werden geplottet.  
+  
+    
+    
 ## Idee  
 
 Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
@@ -50,7 +55,7 @@ xts2df <- function(x) {
 ###############
 # SET PARAMS
 lookback <- 40
-trigger <- 3
+trigger <- 2
 ##############
 
 dax_url <- "http://finance.yahoo.com/q/cp?s=^GDAXI+Components"
@@ -84,13 +89,15 @@ de_vol[de_vol==0] <- NA # replace 0 with NA
 
 
 de_vbt <- de_vol / (rollapply(de_vol, width=lookback, FUN=mean, na.rm=T, align="right"))
-
-
+save(list=ls(all=TRUE), file="Volbreakout.RData")
+#load(file="Volbreakout.RData")
 ```
 
 
-Zunächst ist das Monitoring für die 30 DAX Werte umgesetzt.  
+Zunächst ist das Monitoring für die Werte des DAX, MDAX, SDAX und TecDax umgesetzt.  
 Daten kommen von http://finance.yahoo.com.
+```Eingelesene Werte: `r dim(de_vbt)[2]` ```
+```Letzter Close: `r end(de_vbt)` ```   
 
 Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r lookback` Handelstage.
 
@@ -101,7 +108,7 @@ Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r loo
 last <- t(tail(de_vbt,1))
 last_stock <- rownames(last)[which(last>trigger)]
 info <- if(is.null(last_stock)) {
-  print("Keine Aktien hat ein Signal generiert")
+  print("Keine Aktie hat ein Signal generiert")
   }   else { last_stock}
 ```
 
@@ -110,6 +117,15 @@ Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r tri
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
+```{r charts}
+for (i in 1:length(info)) {
+  chartSeries(get(info[i], envir=stocks), subset='last 3 months', name=info[i]) 
+}
+```
+.  
+.  
+-----
+  
 Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
 ```{r plot_tbl, results='asis'}
@@ -130,18 +146,14 @@ de_signal <- de_vbt["20150101::"]
 de_signal <- ifelse(de_signal<trigger,FALSE,TRUE)
 de_signal <- xts2df(de_signal)
 de_signal <- melt(de_signal, id.vars="Date", variable.name="Stock", value.name="Signal")
-ggplot(data=de_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_bd(business.dates=yahoo('^GDAXI')) +  scale_fill_brewer(palette="Paired") + theme_minimal() + ggtitle("Mosaikplot der VB-Signale") + coord_flip()# uses business days of DAX traded
+ggplot(data=de_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_bd(business.dates=yahoo('^GDAXI')) +  scale_fill_brewer(palette="Paired") + theme_minimal() + ggtitle("Mosaikplot der VB-Signale") + coord_flip() + theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))# uses business days of DAX traded
 ```
 
 
 
 # Nächste Schritte  
 
-_Next Steps:_
-
-- Füge weitere Aktien hinzu - MDAX und SDAX (?)
-- füge Grafiken hinzu.
-- Kürzel ersetzen mit richtigen Namen?
+_Feedback gerne!_
 
 -----
 
