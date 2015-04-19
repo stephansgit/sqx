@@ -55,7 +55,7 @@ xts2df <- function(x) {
 ###############
 # SET PARAMS
 lookback <- 40
-trigger <- 2
+trigger <- 3
 ##############
 
 dax_url <- "http://finance.yahoo.com/q/cp?s=^GDAXI+Components"
