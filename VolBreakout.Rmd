@@ -10,8 +10,9 @@ Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwickl
 ```Letzte Ausführung: `r Sys.time()` ```   
 
 > NEWS 18. April 2015:  
-> Titel sind erweitert um Titel des MDAX, SDAX ud TecDax; somit werden ca. 160 deutsche Aktien überprüft.  
-> Die Aktien, bei denen Auffälligkeiten gefunden werden, werden geplottet.  
+
+- Titel sind erweitert um Titel des MDAX, SDAX ud TecDax; somit werden ca. 160 deutsche Aktien überprüft.  
+- Die Aktien, bei denen Auffälligkeiten gefunden werden, werden geplottet.  
   
     
     
@@ -55,7 +56,7 @@ xts2df <- function(x) {
 ###############
 # SET PARAMS
 lookback <- 40
-trigger <- 2
+trigger <- 3
 ##############
 
 dax_url <- "http://finance.yahoo.com/q/cp?s=^GDAXI+Components"
@@ -95,8 +96,9 @@ save(list=ls(all=TRUE), file="Volbreakout.RData")
 
 
 Zunächst ist das Monitoring für die Werte des DAX, MDAX, SDAX und TecDax umgesetzt.  
-Daten kommen von http://finance.yahoo.com.
-```Eingelesene Werte: `r dim(de_vbt)[2]` ```
+Daten kommen von http://finance.yahoo.com.  
+
+```Eingelesene Werte: `r dim(de_vbt)[2]` ```  
 ```Letzter Close: `r end(de_vbt)` ```   
 
 Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r lookback` Handelstage.
@@ -113,13 +115,16 @@ info <- if(is.null(last_stock)) {
 ```
 
 Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht):  
-`r info`  .
+
+````r info` ``` .
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
+Für die gefundenen Werte werden die Charts dargestellt (natürlich nur, wenn für Werte ein Signal gefunden wurde).  
+
 ```{r charts}
 for (i in 1:length(info)) {
-  chartSeries(get(info[i], envir=stocks), subset='last 3 months', name=info[i]) 
+  chartSeries(get(info[i], envir=stocks), subset='last 4 months', name=info[i]) 
 }
 ```
 .  
@@ -156,5 +161,6 @@ ggplot(data=de_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_
 _Feedback gerne!_
 
 -----
+```.`r Sys.time()` ```   
 
 END OF FILE
