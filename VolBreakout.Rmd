@@ -5,12 +5,17 @@ output:
         theme: readable
 ---
 
-Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwicklung___.
+Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwicklung___.  
+Bekannte Bugs:  
+
+- Bei Werten, deren Tickersymbol mit einer Zahl beginnt (bspw. 8GS.DE (China Spec Glass), wird ein "X" vorangestellt). Das verhindert bspw. das Plotten.
+
 
 ```Letzte Ausführung: `r Sys.time()` ```   
 
 > NEWS 20. April 2015:  
-- Es werden eine Vielzahl deutscher Aktien eingelesen. Diese finden sich unter http://stooq.com/db/l/?g=29 Dennoch gibt es für alle diese Aktien entsprechende Volumendaten.
+
+- Es werden nunmehr eine Vielzahl deutscher Aktien eingelesen. Diese finden sich unter http://stooq.com/db/l/?g=29 Dennoch gibt es __nicht__ für alle diese Aktien entsprechende Volumendaten.
   
     
     
@@ -100,13 +105,20 @@ save(list=ls(all=TRUE), file="Volbreakout.RData")
 #load(file="Volbreakout.RData")
 ```
 
+### Werte
 
 ~~Zunächst ist das Monitoring für die Werte des DAX, MDAX, SDAX und TecDax umgesetzt.~~  
 Eine Vielzahl deutscher Werte wird eingelesen, siehe Liste unter http://stooq.com/db/l/?g=29. Dennoch gibt es nicht für alle entsprechende Volumendaten.
 Daten kommen von http://finance.yahoo.com.  
 
+Ergebnisse des letzten Laufs:
 ```Eingelesene Werte: `r dim(de_vbt)[2]` ```  
 ```Letzter Close: `r end(de_vbt)` ```   
+
+Werte, die __nicht__ eingelesen wurden (bspw. weil Yahoo keine Daten zur Verfügung gestellt hat, oder aber es einen Zugriffsfehler gab. Dient hier nur dem Cross-Check):  
+``` `r setdiff(de_stocks, ls(envir=stocks))` ```
+
+### Parameter
 
 Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r lookback` Handelstage.
 
