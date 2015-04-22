@@ -12,10 +12,15 @@ __Bekannte Bugs__:
 
 - Bei Werten, deren Tickersymbol mit einer Zahl beginnt (bspw. 8GS.DE (China Spec Glass)), stellt das Tool fälschlicherweise ein "X" voran. Das verhindert leider das Plotten.
 
+-----
 
 ```Letzte Ausführung: `r Sys.time()` ```   
 
-> NEWS 20. April 2015:  
+> NEWS 22. April 2015:
+
+- Datenquelle ist nun Frankfurter Börse, nicht mehr Xetra. Datenversorgung insb. kleinerer Werte scheint mit Frankfurter Werten besser zu sein.
+
+__NEWS 20. April 2015__:  
 
 - Es werden nunmehr eine Vielzahl deutscher Aktien eingelesen. Diese finden sich unter http://stooq.com/db/l/?g=29.   Dennoch gibt es __nicht__ für alle diese Aktien entsprechende Volumendaten.
   
@@ -78,7 +83,7 @@ trigger <- 3
 # tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
 
-ticker <- read.csv(file="~/Desktop/tickerlist.csv")
+ticker <- read.csv(file="tickerlist.csv")
 #ticker <- ticker[1:100,]
 #remove <- c("HLE.DE", "TLG.DE")
 #de_stocks <- de_stocks[!de_stocks%in%remove]
@@ -112,7 +117,7 @@ save(list=ls(all=TRUE), file="Volbreakout.RData")
 
 ~~Zunächst ist das Monitoring für die Werte des DAX, MDAX, SDAX und TecDax umgesetzt.~~  
 Eine Vielzahl deutscher Werte wird eingelesen, siehe Liste unter http://stooq.com/db/l/?g=29. Dennoch gibt es __nicht__ für alle entsprechende Volumendaten.  
-Eingelesen werden gehandelte Volumen auf Xetra (dies 'benachteiligt' vor allem kleinere Werte. Unter Umständen müsste man auf Frankfurt umschatlten).  
+Eingelesen werden gehandelte Volumen ~~auf Xetra~~ von der Börse Frankfurt; die Datenstabilität scheint hier höher zu sein als bspw. bei Xetra-Volumen.  .  
 Daten kommen von http://finance.yahoo.com.  
 
 Ergebnisse des letzten Laufs:  
@@ -120,7 +125,8 @@ Ergebnisse des letzten Laufs:
 ```Letzter Close: `r end(de_vbt)` ```   
 
 Werte, die __nicht__ eingelesen wurden (bspw. weil Yahoo keine Daten zur Verfügung gestellt hat, oder aber es einen Zugriffsfehler gab. Dient hier nur dem Cross-Check):  
-``` `r setdiff(de_stocks, ls(envir=stocks))` ```
+``` `r length(setdiff(de_stocks, ls(envir=stocks)))` ```  
+``` `r setdiff(de_stocks, ls(envir=stocks))` ```  
 
 ### Parameter
 
