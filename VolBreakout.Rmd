@@ -5,7 +5,7 @@ output:
         theme: readable
 ---
 
-> Dieses Projekt befindet sich ___Beta Stadium___ und ist somit ___in der Entwicklung___.  
+> Dieses Projekt befindet sich im ___Beta Stadium___ und ist somit ___in der Entwicklung___.  
 
 
 __Bekannte Bugs__:  
@@ -83,6 +83,7 @@ ticker <- read.csv(file="~/Desktop/tickerlist.csv")
 #remove <- c("HLE.DE", "TLG.DE")
 #de_stocks <- de_stocks[!de_stocks%in%remove]
 de_stocks <- as.character(ticker[-1,1])
+de_stocks <- gsub(".DE", ".F", de_stocks) # replace the Xetra-suffix with Frankfurt suffix
 
 StartDate <- as.Date("2015-01-01")
 stocks <- new.env()
@@ -91,7 +92,7 @@ for (i in 1:length(de_stocks)) {
     try(
       getSymbols(de_stocks[i], from=StartDate, env=stocks, verbose = FALSE, warnings = FALSE)
       )
-    Sys.sleep(3)
+    Sys.sleep(1)
 }
  
 de_vol <- eapply(stocks, Vo)
