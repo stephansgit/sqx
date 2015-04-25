@@ -48,6 +48,7 @@ library(ggplot2)
 library(reshape2)
 library(bdscale)
 library(RColorBrewer)
+library(googlesheets)
 
 op <- options(gvis.plot.tag='chart')
 
@@ -79,11 +80,14 @@ trigger <- 3
 # tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
 
-ticker <- read.csv(file="ticker_werner.csv")
+sheet <- register_ss("20150425_Ticker")
+ticker <- get_via_csv(ss=sheet, ws="ticker_werner")
+
+#ticker <- read.csv(file="ticker_werner.csv")
 #ticker <- ticker[1:100,]
 #remove <- c("HLE.DE", "TLG.DE")
 #de_stocks <- de_stocks[!de_stocks%in%remove]
-de_stocks <- as.character(ticker[,1])
+de_stocks <- as.vector(unlist(ticker[,1]))
 
 StartDate <- as.Date("2015-01-01")
 stocks <- new.env()
@@ -137,8 +141,7 @@ Ergebnisse des letzten Laufs:
 ```Eingelesene Werte: `r dim(de_vbt)[2]` ```  
 ```Letzter Close: `r end(de_vbt)` ```   
 
-Werte, die __nicht__ eingelesen wurden (bspw. weil Yahoo keine Daten zur Verfügung gestellt hat, oder aber es einen Zugriffsfehler gab. Dient hier nur dem Cross-Check):  
-``` `r length(setdiff(stocks_requested, stocks_loaded))` ```  
+``` `r length(setdiff(stocks_requested, stocks_loaded))` ``` Werte konnten __nicht__ eingelesen werden (bspw. weil Yahoo keine Daten zur Verfügung gestellt hat, oder aber es einen Zugriffsfehler gab). Hier macht es u.U. Sinn, die Werte im Spreadsheet anzupassen:   
 ``` `r setdiff(stocks_requested, stocks_loaded)` ```  
 
 ### Parameter
