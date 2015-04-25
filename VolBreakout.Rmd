@@ -16,15 +16,11 @@ __Bekannte Bugs__:
 
 ```Letzte Ausführung: `r Sys.time()` ```   
 
-> NEWS 22. April 2015:
+> NEWS 25. April 2015:
 
-- Datenquelle ist nun Frankfurter Börse, nicht mehr Xetra. Datenversorgung insb. kleinerer Werte scheint mit Frankfurter Werten besser zu sein.
+- Datenbasis ist nun das zur Verfügung gestellte Spreadsheet. Dabei werden die Kürzel von den angegebenen Börsen gezogen. Fúr die Werte, für die keine Daten von Yahoo geliefert wurden, wird eine zweite Datenabfrage an der Frankfurter Börse durchgeführt.  
 
-__NEWS 20. April 2015__:  
-
-- Es werden nunmehr eine Vielzahl deutscher Aktien eingelesen. Diese finden sich unter http://stooq.com/db/l/?g=29.   Dennoch gibt es __nicht__ für alle diese Aktien entsprechende Volumendaten.
-  
-    
+----  
     
 ## Idee  
 
@@ -83,23 +79,37 @@ trigger <- 3
 # tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
 
-ticker <- read.csv(file="tickerlist.csv")
+ticker <- read.csv(file="ticker_werner.csv")
 #ticker <- ticker[1:100,]
 #remove <- c("HLE.DE", "TLG.DE")
 #de_stocks <- de_stocks[!de_stocks%in%remove]
-de_stocks <- as.character(ticker[-1,1])
-de_stocks <- gsub(".DE", ".F", de_stocks) # replace the Xetra-suffix with Frankfurt suffix
+de_stocks <- as.character(ticker[,1])
 
 StartDate <- as.Date("2015-01-01")
 stocks <- new.env()
 
+# Loop 1: Find values as specified
 for (i in 1:length(de_stocks)) {
     try(
       getSymbols(de_stocks[i], from=StartDate, env=stocks, verbose = FALSE, warnings = FALSE)
       )
     Sys.sleep(1)
 }
- 
+
+# Loop 2: Replace exchanges of values not find with Frankfurt
+de_stocks2 <- setdiff(de_stocks, ls(envir=stocks))
+de_stocks2 <- gsub("\\..*$", ".F", de_stocks2) # replace the Xetra-suffix with Frankfurt suffix
+for (i in 1:length(de_stocks2)) {
+    try(
+      getSymbols(de_stocks2[i], from=StartDate, env=stocks, verbose = FALSE, warnings = FALSE)
+      )
+    Sys.sleep(1)
+}
+
+# create lists of tickers requested and loaded; for comparison later
+stocks_requested <- sub("(.*?)\\..*", "\\1", de_stocks)
+stocks_loaded <- sub("(.*?)\\..*", "\\1", ls(envir=stocks))
+
 de_vol <- eapply(stocks, Vo)
 de_vol <- as.xts(do.call(merge, de_vol))
 # adjust column names are re-order columns
@@ -115,18 +125,21 @@ save(list=ls(all=TRUE), file="Volbreakout.RData")
 
 ### Werte
 
-~~Zunächst ist das Monitoring für die Werte des DAX, MDAX, SDAX und TecDax umgesetzt.~~  
-Eine Vielzahl deutscher Werte wird eingelesen, siehe Liste unter http://stooq.com/db/l/?g=29. Dennoch gibt es __nicht__ für alle entsprechende Volumendaten.  
-Eingelesen werden gehandelte Volumen ~~auf Xetra~~ von der Börse Frankfurt; die Datenstabilität scheint hier höher zu sein als bspw. bei Xetra-Volumen.  .  
-Daten kommen von http://finance.yahoo.com.  
+Die einzulesende Werte werden über folgendes Spreadsheet definiert:  
+https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing  
+Dabei ist auch das Börsenkürzel angegeben, wie es von Yahoo verwendet wird (bspw. .DE für Xetra, .F für Frankfurt).  
+Manchmal gibt es Probleme im Download von Yahoo. Daher wird für die Werte, die - so wie spezifiziert - nicht eingelesen werden können, ein weiterer Versuch über die Frankfurter Börse gestartet.  
+
+Alle Daten werden von http://finance.yahoo.com eingelesen.  
+
 
 Ergebnisse des letzten Laufs:  
 ```Eingelesene Werte: `r dim(de_vbt)[2]` ```  
 ```Letzter Close: `r end(de_vbt)` ```   
 
 Werte, die __nicht__ eingelesen wurden (bspw. weil Yahoo keine Daten zur Verfügung gestellt hat, oder aber es einen Zugriffsfehler gab. Dient hier nur dem Cross-Check):  
-``` `r length(setdiff(de_stocks, ls(envir=stocks)))` ```  
-``` `r setdiff(de_stocks, ls(envir=stocks))` ```  
+``` `r length(setdiff(stocks_requested, stocks_loaded))` ```  
+``` `r setdiff(stocks_requested, stocks_loaded)` ```  
 
 ### Parameter
 
