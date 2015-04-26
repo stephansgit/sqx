@@ -80,10 +80,10 @@ trigger <- 3
 # tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
 
-sheet <- register_ss("20150425_Ticker")
-ticker <- get_via_csv(ss=sheet, ws="ticker_werner")
+#sheet <- register_ss("20150425_Ticker")
+#ticker <- get_via_csv(ss=sheet, ws="ticker_werner")
 
-#ticker <- read.csv(file="ticker_werner.csv")
+ticker <- read.csv(file="ticker_werner.csv")
 #ticker <- ticker[1:100,]
 #remove <- c("HLE.DE", "TLG.DE")
 #de_stocks <- de_stocks[!de_stocks%in%remove]
@@ -132,6 +132,7 @@ save(list=ls(all=TRUE), file="Volbreakout.RData")
 Die einzulesende Werte werden über folgendes Spreadsheet definiert:  
 https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing  
 Dabei ist auch das Börsenkürzel angegeben, wie es von Yahoo verwendet wird (bspw. .DE für Xetra, .F für Frankfurt).  
+Beachten: Das Spreadsheet wird nicht "interaktiv" abgerufen, d.h. wenn dort etwas geändert wird, wird das nicht automatisch vom Tool verarbeitet.  
 Manchmal gibt es Probleme im Download von Yahoo. Daher wird für die Werte, die - so wie spezifiziert - nicht eingelesen werden können, ein weiterer Versuch über die Frankfurter Börse gestartet.  
 
 Alle Daten werden von http://finance.yahoo.com eingelesen.  
@@ -204,6 +205,8 @@ ggplot(data=de_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_
 # Nächste Schritte  
 
 - Aktien, deren Ticker mit einer Zahl startet, werden hier mit einem "X" angeführt.
+- Ändere den Code so, dass das Spreadseet interaktiv eingelesen wird.
+- Führe eine Fallunterscheidung ein, so dass nur Signale generiert werden, wenn wir es mit einem Up-move zu tun haben.
 
 
 -----
