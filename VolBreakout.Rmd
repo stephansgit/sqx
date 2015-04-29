@@ -66,9 +66,8 @@ xts2df <- function(x) {
 
 volUpDn <- function(x) {
   x$VolUpDn <- Vo(x) * sign(ifelse(OpCl(x)!=0, Cl(x)-Op(x), 0.01))
-  nm <- deparse(substitute(x))
-  nm <- as.character(gsub("^.*\\$", "", nm, fixed=FALSE))
-  print(nm)
+  nm <- gsub(".Open", "", colnames(x)[1])
+  colnames(x)[colnames(x)=="VolUpDn"] <- paste(nm, "VolUpDn", sep="_")
   x
 }
 
@@ -132,16 +131,13 @@ stocks_loaded <- sub("(.*?)\\..*", "\\1", ls(envir=stocks))
 de_vol <- eapply(stocks, volUpDn)
 VolUpDn_extract <- function(x) {
   tmp <- x[,grep("VolUpDn", colnames(x), ignore.case=TRUE)]
-  nm <- deparse(substitute(x))
-  nm <- as.character(gsub("^.*\\$", "", nm, fixed=FALSE))
-  names(tmp) <- nm 
   tmp
   #stop("subscript out of bounds: no column name containing \"VolUpDn\"")
   }
 de_vol <- lapply(de_vol, VolUpDn_extract)
 de_vol <- as.xts(do.call(merge, de_vol))
 # adjust column names are re-order columns
-colnames(de_vol) <- gsub("de_vol$","",colnames(de_vol))
+colnames(de_vol) <- gsub("_VolUpDn","",colnames(de_vol))
 
 de_vol[de_vol==0] <- NA # replace 0 with NA
 
