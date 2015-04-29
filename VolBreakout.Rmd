@@ -142,7 +142,7 @@ colnames(de_vol) <- gsub("_VolUpDn","",colnames(de_vol))
 de_vol[de_vol==0] <- NA # replace 0 with NA
 
 
-de_vbt <- de_vol / (rollapply(de_vol, width=lookback, FUN=mean, na.rm=T, align="right"))
+de_vbt <- de_vol / (rollapply(abs(de_vol), width=lookback, FUN=mean, na.rm=T, align="right"))
 save(list=ls(all=TRUE), file="Volbreakout.RData")
 #load(file="Volbreakout.RData")
 ```
@@ -179,13 +179,16 @@ info <- if(is.null(last_stock)) {
   }   else { last_stock}
 ```
 
-Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht):  
+Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
 
 ````r info` ``` .
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
 Für die gefundenen Werte werden die Charts dargestellt (natürlich nur, wenn für Werte ein Signal gefunden wurde).  
+Beachte: Es kann durchaus Werte mit einem $VB$-Wert von < -3 geben; diese haben hohes Volumen bei gleichzeitiger Abwärtsbewegung. Sie werden in den Charts nicht gezeigt, wohl aber in der Tabelle darunter.
+
+
 
 ```{r charts}
 for (i in 1:length(info)) {
