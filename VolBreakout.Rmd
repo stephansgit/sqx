@@ -19,7 +19,7 @@ __Bekannte Bugs__:
 > NEWS 29. April 2015:
 
 - Vom zur Verfügung gestellte Spreadsheet werden die Tickersymbole _bei jedem Lauf_ eingelesen. Das heißt, das Spreadsheet kann aktiv gepflegt werden und die Werte werden nachts automatisch eingelesen.
-- Das Volumen wir nun nach Up- und Downvolumen unterschieden. Das heißt, hohe Volumina können nun unterschieden werden danach, ob die Aktie gestiegen oder gefallen ist.
+- Das Volumen wird nun nach Up- und Downvolumen unterschieden. Das heißt, hohe Volumina können nun unterschieden werden danach, ob die Aktie gestiegen oder gefallen ist.
 
 ----  
     
@@ -34,9 +34,9 @@ $$UpDn_{t}=\begin{Bmatrix}
 -1 \forall (Open_{t}>Close_{t})
 \end{Bmatrix}$$
 
-$$VB_{t}=\frac{Vol_{t}}{\frac{1}{k}\sum_{n=0}^{k-1}Vol_{t-n}}$$
+$$VB_{t}=UpDn_{t} \cdot \frac{Vol_{t}}{\frac{1}{k}\sum_{n=0}^{k-1}Vol_{t-n}}$$
 
-Ein Signal wird bspw. dann generiert, wenn dieser Wert größer als _drei_ ist (was nichts anderes bedeutet, als dass das heutige Volumen dreimal größer als das durschnittliche Volumen ist).
+Ein Signal wird bspw. dann generiert, wenn dieser Wert größer als _drei_ ist (was nichts anderes bedeutet, als dass das heutige Volumen dreimal größer als das durschnittliche Volumen ist bei gleichzeitig gestiegenen Kursen).
 
 ## Implementierung
 
@@ -64,6 +64,7 @@ xts2df <- function(x) {
   return(tmp)
 }
 
+#function to calculate Volumen dependant on up or downmove of prices
 volUpDn <- function(x) {
   x$VolUpDn <- Vo(x) * sign(ifelse(OpCl(x)!=0, Cl(x)-Op(x), 0.01))
   nm <- gsub(".Open", "", colnames(x)[1])
@@ -129,7 +130,7 @@ stocks_requested <- sub("(.*?)\\..*", "\\1", de_stocks)
 stocks_loaded <- sub("(.*?)\\..*", "\\1", ls(envir=stocks))
 
 de_vol <- eapply(stocks, volUpDn)
-VolUpDn_extract <- function(x) {
+VolUpDn_extract <- function(x) { #function to extract the newly created VolUpDn-colum
   tmp <- x[,grep("VolUpDn", colnames(x), ignore.case=TRUE)]
   tmp
   #stop("subscript out of bounds: no column name containing \"VolUpDn\"")
@@ -149,8 +150,7 @@ save(list=ls(all=TRUE), file="Volbreakout.RData")
 
 ### Werte
 
-Die einzulesende Werte werden über folgendes Spreadsheet definiert:  
-https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing  
+Die einzulesende Werte werden über [dieses Spreadsheet](https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing) definiert.  
 Dabei ist auch das Börsenkürzel angegeben, wie es von Yahoo verwendet wird (bspw. .DE für Xetra, .F für Frankfurt).  
 Manchmal gibt es Probleme im Download von Yahoo. Daher wird für die Werte, die - so wie spezifiziert - nicht eingelesen werden können, ein weiterer Versuch über die Frankfurter Börse gestartet.  
 
@@ -186,7 +186,7 @@ Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r tri
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
 Für die gefundenen Werte werden die Charts dargestellt (natürlich nur, wenn für Werte ein Signal gefunden wurde).  
-Beachte: Es kann durchaus Werte mit einem $VB$-Wert von < -3 geben; diese haben hohes Volumen bei gleichzeitiger Abwärtsbewegung. Sie werden in den Charts nicht gezeigt, wohl aber in der Tabelle darunter.
+_Beachte: Es kann durchaus Werte mit einem $VB$-Wert von < -3 geben; diese haben hohes Volumen bei gleichzeitiger Abwärtsbewegung. Sie werden in den Charts nicht gezeigt, wohl aber in der Tabelle darunter._
 
 
 
@@ -227,7 +227,8 @@ ggplot(data=de_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_
 # Nächste Schritte  
 
 - Aktien, deren Ticker mit einer Zahl startet, werden hier mit einem "X" angeführt.
-
+- ~~Ändere den Code so, dass das Spreadseet interaktiv eingelesen wird.~~
+- ~~Führe eine Fallunterscheidung ein, so dass nur Signale generiert werden, wenn wir es mit einem Up-move zu tun haben.~~
 
 -----
 ```.`r Sys.time()` ```   
