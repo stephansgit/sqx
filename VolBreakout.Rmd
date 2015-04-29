@@ -16,9 +16,10 @@ __Bekannte Bugs__:
 
 ```Letzte Ausführung: `r Sys.time()` ```   
 
-> NEWS 25. April 2015:
+> NEWS 29. April 2015:
 
-- Datenbasis ist nun das zur Verfügung gestellte Spreadsheet. Dabei werden die Kürzel von den angegebenen Börsen gezogen. Fúr die Werte, für die keine Daten von Yahoo geliefert wurden, wird eine zweite Datenabfrage an der Frankfurter Börse durchgeführt.  
+- Vom zur Verfügung gestellte Spreadsheet werden die Tickersymbole _bei jedem Lauf_ eingelesen. Das heißt, das Spreadsheet kann aktiv gepflegt werden und die Werte werden nachts automatisch eingelesen.
+- Das Volumen wir nun nach Up- und Downvolumen unterschieden. Das heißt, hohe Volumina können nun unterschieden werden danach, ob die Aktie gestiegen oder gefallen ist.
 
 ----  
     
@@ -26,7 +27,12 @@ __Bekannte Bugs__:
 
 Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
 
-Der Indikator wird berechnet als Handelsvolumen am heutigen Tage $t$ dividiert durch das durschnittliche Handelsvolumen der letzten $k$ Tage. 
+Der Indikator wird berechnet als Handelsvolumen am heutigen Tage $t$ dividiert durch das durschnittliche Handelsvolumen der letzten $k$ Tage. Dabei wird das Volumen als _negativ_ dargestellt, wenn die Aktie am betreffenden Tag gefallen ist (Open größer als Close), als _positiv_, wenn die Aktie gestiegen ist (Open kleiner als Close). 
+
+$$UpDn_{t}=\begin{Bmatrix}
++1 \forall (Open_{t}\leq Close_{t})\\ 
+-1 \forall (Open_{t}>Close_{t})
+\end{Bmatrix}$$
 
 $$VB_{t}=\frac{Vol_{t}}{\frac{1}{k}\sum_{n=0}^{k-1}Vol_{t-n}}$$
 
@@ -48,7 +54,8 @@ library(ggplot2)
 library(reshape2)
 library(bdscale)
 library(RColorBrewer)
-library(googlesheets)
+library(RGoogleDocs)
+
 
 op <- options(gvis.plot.tag='chart')
 
@@ -56,6 +63,15 @@ xts2df <- function(x) {
   tmp <- data.frame(Date=index(x), coredata(x))
   return(tmp)
 }
+
+volUpDn <- function(x) {
+  x$VolUpDn <- Vo(x) * sign(ifelse(OpCl(x)!=0, Cl(x)-Op(x), 0.01))
+  nm <- deparse(substitute(x))
+  nm <- as.character(gsub("^.*\\$", "", nm, fixed=FALSE))
+  print(nm)
+  x
+}
+
 
 
 #http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
@@ -79,14 +95,13 @@ trigger <- 3
 # tdax_tbl <- readHTMLTable(tdax_url)
 # tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
+pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
 
-sheet <- register_ss("20150425_Ticker")
-ticker <- get_via_csv(ss=sheet, ws="ticker_werner")
+sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
+a = getDocs(sheets.con)
+ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
 
-#ticker <- read.csv(file="ticker_werner.csv")
-#ticker <- ticker[1:100,]
-#remove <- c("HLE.DE", "TLG.DE")
-#de_stocks <- de_stocks[!de_stocks%in%remove]
+ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
 de_stocks <- as.vector(unlist(ticker[,1]))
 
 StartDate <- as.Date("2015-01-01")
@@ -114,10 +129,19 @@ for (i in 1:length(de_stocks2)) {
 stocks_requested <- sub("(.*?)\\..*", "\\1", de_stocks)
 stocks_loaded <- sub("(.*?)\\..*", "\\1", ls(envir=stocks))
 
-de_vol <- eapply(stocks, Vo)
+de_vol <- eapply(stocks, volUpDn)
+VolUpDn_extract <- function(x) {
+  tmp <- x[,grep("VolUpDn", colnames(x), ignore.case=TRUE)]
+  nm <- deparse(substitute(x))
+  nm <- as.character(gsub("^.*\\$", "", nm, fixed=FALSE))
+  names(tmp) <- nm 
+  tmp
+  #stop("subscript out of bounds: no column name containing \"VolUpDn\"")
+  }
+de_vol <- lapply(de_vol, VolUpDn_extract)
 de_vol <- as.xts(do.call(merge, de_vol))
 # adjust column names are re-order columns
-colnames(de_vol) <- gsub(".Volume","",colnames(de_vol))
+colnames(de_vol) <- gsub("de_vol$","",colnames(de_vol))
 
 de_vol[de_vol==0] <- NA # replace 0 with NA
 
