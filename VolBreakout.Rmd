@@ -97,6 +97,7 @@ trigger <- 3
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
 pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
 
+
 sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
 a = getDocs(sheets.con)
 ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
@@ -152,6 +153,7 @@ save(list=ls(all=TRUE), file="Volbreakout.RData")
 
 Die einzulesende Werte werden über [dieses Spreadsheet](https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing) definiert.  
 Dabei ist auch das Börsenkürzel angegeben, wie es von Yahoo verwendet wird (bspw. .DE für Xetra, .F für Frankfurt).  
+Beachten: Das Spreadsheet wird nicht "interaktiv" abgerufen, d.h. wenn dort etwas geändert wird, wird das nicht automatisch vom Tool verarbeitet.  
 Manchmal gibt es Probleme im Download von Yahoo. Daher wird für die Werte, die - so wie spezifiziert - nicht eingelesen werden können, ein weiterer Versuch über die Frankfurter Börse gestartet.  
 
 Alle Daten werden von http://finance.yahoo.com eingelesen.  
