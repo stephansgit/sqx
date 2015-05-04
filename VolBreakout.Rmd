@@ -176,6 +176,7 @@ Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r loo
 ```{r last}
 last <- t(tail(de_vbt,1))
 last_stock <- rownames(last)[which(last>trigger)]
+dn_stock <- rownames(last)[which(last<(0-trigger))]
 info <- if(is.null(last_stock)) {
   print("Keine Aktie hat ein Signal generiert")
   }   else { last_stock}
@@ -190,18 +191,31 @@ Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r tri
 Für die gefundenen Werte werden die Charts dargestellt (natürlich nur, wenn für Werte ein Signal gefunden wurde).  
 _Beachte: Es kann durchaus Werte mit einem $VB$-Wert von < -3 geben; diese haben hohes Volumen bei gleichzeitiger Abwärtsbewegung. Sie werden in den Charts nicht gezeigt, wohl aber in der Tabelle darunter._
 
+Charts für Werte mit VB > 3:
 
-
-```{r charts}
+```{r charts1}
 for (i in 1:length(info)) {
   try(
     chartSeries(get(info[i], envir=stocks), subset='last 4 months', name=info[i]) 
     )
 }
 ```
-.  
-.  
+.    
 -----
+  
+Charts für Werte mit VB < -3:
+
+```{r charts2}
+for (i in 1:length(dn_stock)) {
+  try(
+    chartSeries(get(dn_stock[i], envir=stocks), subset='last 4 months', name=dn_stock[i]) 
+    )
+}
+```
+  
+  
+.  
+-----  
   
 Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
