@@ -95,15 +95,15 @@ trigger <- 3
 # tdax_tbl <- readHTMLTable(tdax_url)
 # tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
-pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
 
+#DOWNLOADING GOOGLE SPREADSHEET FAILS AT THE MOMENT
+#pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
+#sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
+#a = getDocs(sheets.con)
+#ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
+#ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
 
-sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
-a = getDocs(sheets.con)
-ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
-
-ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
-#ticker <- read.csv("ticker_werner.csv",header=TRUE)
+ticker <- read.csv("ticker.csv",header=TRUE)
 de_stocks <- as.vector(unlist(ticker[,1]))
 
 StartDate <- as.Date("2015-01-01")
