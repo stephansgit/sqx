@@ -103,6 +103,7 @@ a = getDocs(sheets.con)
 ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
 
 ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
+#ticker <- read.csv("ticker_werner.csv",header=TRUE)
 de_stocks <- as.vector(unlist(ticker[,1]))
 
 StartDate <- as.Date("2015-01-01")
