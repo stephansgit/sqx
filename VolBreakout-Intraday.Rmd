@@ -11,6 +11,7 @@ output:
 
 ```{r load, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+library(knitr)
 
 load(file="Volbreakout.RData")
 source("intraday.R")
@@ -44,12 +45,13 @@ info <- if(is.null(last_stock)) {
 
 Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
 
-```{r display}
+```{r display, results='asis'}
 modQuote <- standardQuote()
 modQuote[[1]] <- "l1c1p2ohgvn"
 iday_breakouts <- getQuote2clean(getQuote(info, what=modQuote))
+kable(iday_breakouts)
 ```  
-``` `r iday_breakouts` ```
+
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
