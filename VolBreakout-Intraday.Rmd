@@ -6,6 +6,8 @@ output:
 ---
 
 > Dies Seite ist eine Test-Seite. Sie stellt den Prototypen des VBT-Intraday-Tools dar.
+```Letzte Ausführung: `r Sys.time()` ```   
+
 
 ```{r load, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
@@ -21,7 +23,6 @@ de_vbt <- x / (rollapply(abs(x), width=lookback, FUN=mean, na.rm=T, align="right
 Ergebnisse des letzten Laufs:  
 ```Eingelesene Werte vom vorherigen End-of-Day: `r dim(de_vbt)[2]` ```
 
-```Letzte Ausführung: `r Sys.time()` ```   
 ```Intraday aktualisiert:  `r dim(tmp)[1]` ```
 ```Intraday NICHT aktualisierte Werte: `r no_act_quotes` ```
 
@@ -43,7 +44,11 @@ info <- if(is.null(last_stock)) {
 
 Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
 
-````r info` ``` .
+```{r display}
+modQuote <- standardQuote()
+modQuote[[1]] <- "l1c1p2ohgvn"
+getQuote2clean(getQuote(info, what=modQuote))
+```  
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
