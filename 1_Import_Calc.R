@@ -29,27 +29,33 @@ snp <- Ad(GSPC)
 
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
 
-  #--Download Russian data----------------------------
-  URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2016-12-31&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
-  download.file(URL, destfile="rtsi.csv")
-  rtsi <- read.csv(file="rtsi.csv", header=TRUE, skip=2, sep=";")
-  rtsi <- rtsi[,c("TRADEDATE", "CLOSE")] # drop irrelevant columns
-  library(lubridate)
-  rtsi$TRADEDATE <- ymd(rtsi$TRADEDATE) #convert to POSIXct
-  rtsi$TRADEDATE <- as.Date(rtsi$TRADEDATE) # convert to as.Date
-  ind <- data.frame(Date=index(indices.zoo$Russia),indices.zoo$Russia) # create new, temporary dataframe for Russia only
-  ind.m <- merge(x=ind, y=rtsi, by.x="Date", by.y="TRADEDATE", all.x=TRUE) # merge the Yahoo and the RTS data
-  ind.m$Russia[is.na(ind.m$Russia)] <- ind.m$CLOSE[is.na(ind.m$Russia)] # replace the NA data from yahoo with data from RTS
-  indices.zoo$Russia <- ind.m$Russia # add the new Russia data to the bigger data frame 
-  #--------
+#--Download Russian data----------------------------
+URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2016-12-31&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
+download.file(URL, destfile="rtsi.csv")
+rtsi <- read.csv(file="rtsi.csv", header=TRUE, skip=2, sep=";")
+rtsi <- rtsi[,c("TRADEDATE", "CLOSE")] # drop irrelevant columns
+library(lubridate)
+rtsi$TRADEDATE <- ymd(rtsi$TRADEDATE) #convert to POSIXct
+rtsi$TRADEDATE <- as.Date(rtsi$TRADEDATE) # convert to as.Date
+ind <- data.frame(Date=index(indices.zoo$Russia),indices.zoo$Russia) # create new, temporary dataframe for Russia only
+ind.m <- merge(x=ind, y=rtsi, by.x="Date", by.y="TRADEDATE", all.x=TRUE) # merge the Yahoo and the RTS data
+ind.m$Russia[is.na(ind.m$Russia)] <- ind.m$CLOSE[is.na(ind.m$Russia)] # replace the NA data from yahoo with data from RTS
+indices.zoo$Russia <- ind.m$Russia # add the new Russia data to the bigger data frame 
+#--------
 
 
-  #---Download Italian data
-  mib <- Quandl("YAHOO/INDEX_FTSEMIB_MI", type="xts", start=start(indices.zoo))
-  mib.zoo <-  Ad(mib)
-  names(mib.zoo) <- "Italy"
-  indices.zoo <- merge(indices.zoo, mib.zoo)
-  #------------
+#---Download Italian data
+#mib <- Quandl("YAHOO/INDEX_FTSEMIB_MI", type="xts", start=start(indices.zoo))
+  # or: https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv
+  mib <- read.csv(file="https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv")
+  mib$Date <- ymd(mib$Date)
+  mib <- zoo(mib, order.by = mib$Date)[,-1]
+  mib <- as.quantmod.OHLC(mib, col.names=c("Open", "High", "Low", "Close", "Volume", "Adjusted.Close"))
+
+mib.zoo <-  Ad(mib)
+names(mib.zoo) <- "Italy"
+indices.zoo <- merge(indices.zoo, mib.zoo)
+#------------
 
 indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
