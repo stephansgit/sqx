@@ -58,7 +58,7 @@ names(mib.zoo) <- "Italy"
 indices.zoo <- merge(indices.zoo, mib.zoo)
 #------------
 
-indices.zoo <- window(indices.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs.
+indices.zoo <- window(indices.zoo, start=as.Date("2007-01-01"), end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
 rm(list=setdiff(ls(), c("indices.zoo", "snp"))) # remove all raw data, just keep indices.zoo and the S&P Data
 
