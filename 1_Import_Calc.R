@@ -47,7 +47,8 @@ indices.zoo$Russia <- ind.m$Russia # add the new Russia data to the bigger data 
 #---Download Italian data
 #mib <- Quandl("YAHOO/INDEX_FTSEMIB_MI", type="xts", start=start(indices.zoo))
   # or: https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv
-  mib <- read.csv(file="https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv")
+  download.file("https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv", "MIB.csv", method="curl")
+  mib <- read.csv("MIB.csv")
   mib$Date <- ymd(mib$Date)
   mib <- zoo(mib, order.by = mib$Date)[,-1]
   mib <- as.quantmod.OHLC(mib, col.names=c("Open", "High", "Low", "Close", "Volume", "Adjusted.Close"))
