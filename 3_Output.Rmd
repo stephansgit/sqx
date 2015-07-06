@@ -31,8 +31,8 @@ load(file = "Indices_Data.RData") # loads the indices data
 ```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
 ```Letzte Ausführung: `r Sys.time()` ```   
 
-> **NEWS 01.04.2015**:  
-> Jens' Wunsch nach einer Darstellung des HBT-Wertes und des S&P 500 ist umgesetzt - siehe unten.  
+> **NEWS 06.07.2015**:  
+> Es gab einen Fehler mit Daten des italienischen Index, so dass das Tacho in den letzten Tagen mit Stand 22.06. 'stillstand'. Das ist nun behoben.   
 >  
 
 -----
