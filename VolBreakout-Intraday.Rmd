@@ -12,6 +12,7 @@ output:
 ```{r load, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 library(knitr)
+library(quantmod)
 
 load(file="Volbreakout.RData")
 source("intraday.R")
@@ -49,6 +50,7 @@ Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (
 modQuote <- standardQuote()
 modQuote[[1]] <- "l1c1p2ohgvn"
 iday_breakouts <- getQuote2clean(getQuote(info, what=modQuote))
+print(iday_breakouts)
 kable(iday_breakouts)
 ```  
 
