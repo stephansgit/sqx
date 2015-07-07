@@ -6,6 +6,8 @@ output:
 ---
 
 > Dies Seite ist eine Test-Seite. Sie stellt den Prototypen des VBT-Intraday-Tools dar.
+```Letzte Ausführung: `r Sys.time()` ```   
+
 
 ```{r load, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
@@ -22,7 +24,6 @@ de_vbt <- x / (rollapply(abs(x), width=lookback, FUN=mean, na.rm=T, align="right
 Ergebnisse des letzten Laufs:  
 ```Eingelesene Werte vom vorherigen End-of-Day: `r dim(de_vbt)[2]` ```
 
-```Letzte Ausführung: `r Sys.time()` ```   
 ```Intraday aktualisiert:  `r dim(tmp)[1]` ```
 ```Intraday NICHT aktualisierte Werte: `r no_act_quotes` ```
 
@@ -49,7 +50,7 @@ modQuote <- standardQuote()
 modQuote[[1]] <- "l1c1p2ohgvn"
 iday_breakouts <- getQuote2clean(getQuote(info, what=modQuote))
 kable(iday_breakouts)
-```
+```  
 
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
