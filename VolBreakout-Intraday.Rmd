@@ -28,6 +28,10 @@ Ergebnisse des letzten Laufs:
 ```Intraday aktualisiert:  `r dim(tmp)[1]` ```
 ```Intraday NICHT aktualisierte Werte: `r no_act_quotes` ```
 
+Nicht aktualisierte Werte können folgende Gründe haben:  
+
+- sie wurden heute nicht gehandelt,
+- sie wurden gehandelt, aber yahoo! gibt nicht den korrekten Zeitstempel mit (heute).
 
 
 ## Ergebnisse  
@@ -49,9 +53,12 @@ Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (
 ```{r display, results='asis'}
 modQuote <- standardQuote()
 modQuote[[1]] <- "l1c1p2ohgvn"
-iday_breakouts <- getQuote2clean(getQuote(info, what=modQuote))
-print(iday_breakouts)
-kable(iday_breakouts)
+if (!is.null(info)) {
+  iday_breakouts <- getQuote2clean(getQuote(info, what=modQuote))
+  kable(iday_breakouts)
+  } else {
+    print("No stocks meet criterium")
+  }
 ```  
 
 
