@@ -53,12 +53,14 @@ Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (
 ```{r display, results='asis'}
 modQuote <- standardQuote()
 modQuote[[1]] <- "l1c1p2ohgvn"
+try({
 if (!is.null(info)) {
   iday_breakouts <- getQuote2clean(getQuote(info, what=modQuote))
   kable(iday_breakouts)
   } else {
     print("No stocks meet criterium")
   }
+})
 ```  
 
 
