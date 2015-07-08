@@ -16,10 +16,9 @@ __Bekannte Bugs__:
 
 ```Letzte Ausführung: `r Sys.time()` ```   
 
-> NEWS 29. April 2015:
+> NEWS
 
-- Vom zur Verfügung gestellte Spreadsheet werden die Tickersymbole _bei jedem Lauf_ eingelesen. Das heißt, das Spreadsheet kann aktiv gepflegt werden und die Werte werden nachts automatisch eingelesen.
-- Das Volumen wird nun nach Up- und Downvolumen unterschieden. Das heißt, hohe Volumina können nun unterschieden werden danach, ob die Aktie gestiegen oder gefallen ist.
+
 
 ----  
     
@@ -97,12 +96,16 @@ trigger <- 3
 # de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
 
 #DOWNLOADING GOOGLE SPREADSHEET
-#pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
-#sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
-#a = getDocs(sheets.con)
-#ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
-#ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
-ticker <- read.csv("ticker.csv",header=TRUE) #WIRD NUR GENUTZT WENN REMOTE NICHT FUNZT
+ticker <- read.csv("ticker.csv",header=TRUE) #lies das spreadsheet ein
+
+# hier startet der interaktive Teil
+pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
+try(
+  sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
+  a = getDocs(sheets.con)
+  ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
+  ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
+)
 de_stocks <- as.vector(unlist(ticker[,1]))
 
 StartDate <- as.Date("2015-01-01")
