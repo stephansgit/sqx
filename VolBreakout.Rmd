@@ -100,12 +100,12 @@ ticker <- read.csv("ticker.csv",header=TRUE) #lies das spreadsheet ein
 
 # hier startet der interaktive Teil
 pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
-try(
+try({
   sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
   a = getDocs(sheets.con)
   ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
   ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
-)
+})
 de_stocks <- as.vector(unlist(ticker[,1]))
 
 StartDate <- as.Date("2015-01-01")
