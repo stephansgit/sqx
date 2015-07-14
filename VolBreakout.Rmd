@@ -223,9 +223,11 @@ for (i in 1:length(dn_stock)) {
 Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
 ```{r plot_tbl, results='asis'}
-table <- data.frame(Share=names(tail(de_vbt,1)),          
+fullnames <- getQuote(names(de_vbt), what=yahooQF("Name"))
+fullnames <- data.frame(Ticker=rownames(fullnames), Name=fullnames$Name)
+table <- data.frame(fullnames,          
                       t(tail(round(de_vbt,2),5)))
-names(table)[-1] <- as.character(index(tail(de_vbt,5)))
+names(table)[-c(1:2)] <- as.character(index(tail(de_vbt,5)))
 Table <- gvisTable(table)
 plot(Table)
 ```
