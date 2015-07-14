@@ -53,6 +53,9 @@ x <- merge(de_vol.df, tmp.c, by=intersect(names(de_vol.df), names(tmp.c)), all=T
 ## de_stocks[grep("^[0-9]", de_stocks)] ##
 x <- read.zoo(x)
 
+filename<-paste("intradayexport", as.numeric(Sys.time()),sep="_")
+save(x, tmp, tmp.c, file=filename)
+
 # "x" kann nun also weiter in das normale Skript überführt werden. Das einzige, was noch zu tun ist, sind die Tocker, die mit einer Zahl starten, zu säubern.
 # UND: Wie kann ich die Charts darstellen?
 #subset(tmp, Ticker==info[1])
