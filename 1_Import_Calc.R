@@ -46,15 +46,32 @@ indices.zoo$Russia <- ind.m$Russia # add the new Russia data to the bigger data 
 
 #---Download Italian data
 #mib <- Quandl("YAHOO/INDEX_FTSEMIB_MI", type="xts", start=start(indices.zoo))
-  # or: https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv
-  download.file("https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv", "MIB.csv", method="curl")
+# or: https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv
+# QUANDL seems instable, therefore we firts query Quandl. If that throws an error, we query yahoo.
+
+italiandata <- new.env()
+
+MIBfromQuandl <- function() {
+  download.file("http://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv", "MIB.csv", method="curl")
   mib <- read.csv("MIB.csv")
   mib$Date <- ymd(mib$Date)
   mib <- zoo(mib, order.by = mib$Date)[,-1]
-  mib <- as.quantmod.OHLC(mib, col.names=c("Open", "High", "Low", "Close", "Volume", "Adjusted.Close"))
+  mib <- as.quantmod.OHLC(mib, col.names=c("Open", "High", "Low", "Close", "Volume", "Adjusted.Close")) 
+  mib.zoo <-  Ad(mib)
+}
 
-mib.zoo <-  Ad(mib)
-names(mib.zoo) <- "Italy"
+MIBfromYahoo <- function() {
+  getSymbols("FTSEMIB.MI", env = italiandata)
+  mib.zoo <<-Ad(italiandata$FTSEMIB.MI)
+  names(mib.zoo) <<- "Italy"
+  print("Loading from Yahoo succesfull")
+}
+
+
+tryCatch(MIBfromQuandl(),
+  error=function(e) MIBfromYahoo()) 
+
+ 
 indices.zoo <- merge(indices.zoo, mib.zoo)
 #------------
 
