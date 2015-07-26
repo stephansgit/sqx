@@ -16,7 +16,7 @@ __Bekannte Bugs__:
 
 ```Letzte Ausführung: `r Sys.time()` ```   
 
-> NEWS 14. July
+> NEWS 14. July  
 > Neben den Tickersymbolen werden nun auch die Aktiennamen herausgeschrieben.
 
 
@@ -59,98 +59,25 @@ library(knitr)
 
 op <- options(gvis.plot.tag='chart')
 
-xts2df <- function(x) {
-  tmp <- data.frame(Date=index(x), coredata(x))
-  return(tmp)
-}
+# Lies Funktionen ein
+source(file="01_functions.R")
 
-#function to calculate Volumen dependant on up or downmove of prices
-volUpDn <- function(x) {
-  x$VolUpDn <- Vo(x) * sign(ifelse(OpCl(x)!=0, Cl(x)-Op(x), 0.01))
-  nm <- gsub(".Open", "", colnames(x)[1])
-  colnames(x)[colnames(x)=="VolUpDn"] <- paste(nm, "VolUpDn", sep="_")
-  x
-}
+# Lies Parameter ein
+source(file="02_parameters.R")
 
+# Lies Ticker-Symbole ein
+source(file="03_ticker.R")
 
+# Lies EOD-Daten von Yahoo
+source(file="04_load_EOD.R")
 
-#http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
+# Lies die erarbeiteten Daten ein 
+load(file="EOD-Data.RData")
 
-###############
-# SET PARAMS
-lookback <- 40
-trigger <- 3
-##############
-
-# dax_url <- "http://finance.yahoo.com/q/cp?s=^GDAXI+Components"
-# dax_tbl <- readHTMLTable(dax_url)
-# dax_list <- as.character(dax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
-# mdax_url <- "http://finance.yahoo.com/q/cp?s=^MDAXI+Components"
-# mdax_tbl <- readHTMLTable(mdax_url)
-# mdax_list <- as.character(mdax_tbl$yfncsumtab$V1[6:55, drop=TRUE])
-# sdax_url <- "http://finance.yahoo.com/q/cp?s=^SDAXI+Components"
-# sdax_tbl <- readHTMLTable(sdax_url)
-# sdax_list <- as.character(sdax_tbl$yfncsumtab$V1[6:55, drop=TRUE])
-# tdax_url <- "http://finance.yahoo.com/q/cp?s=^TECDAX+Components"
-# tdax_tbl <- readHTMLTable(tdax_url)
-# tdax_list <- as.character(tdax_tbl$yfncsumtab$V1[6:35, drop=TRUE])
-# de_stocks <- c(dax_list, mdax_list, sdax_list, tdax_list)
-
-#DOWNLOADING GOOGLE SPREADSHEET
-ticker <- read.csv("ticker.csv",header=TRUE) #lies das spreadsheet ein
-
-# hier startet der interaktive Teil
-pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
-try({
-  sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
-  a = getDocs(sheets.con)
-  ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
-  ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
-})
-de_stocks <- as.vector(unlist(ticker[,1]))
-
-StartDate <- as.Date("2015-01-01")
-stocks <- new.env()
-
-# Loop 1: Find values as specified
-for (i in 1:length(de_stocks)) {
-    try(
-      getSymbols(de_stocks[i], from=StartDate, env=stocks, verbose = FALSE, warnings = FALSE)
-      )
-    Sys.sleep(1)
-}
-
-# Loop 2: Replace exchanges of values not find with Frankfurt
-de_stocks2 <- setdiff(de_stocks, ls(envir=stocks))
-de_stocks2 <- gsub("\\..*$", ".F", de_stocks2) # replace the Xetra-suffix with Frankfurt suffix
-for (i in 1:length(de_stocks2)) {
-    try(
-      getSymbols(de_stocks2[i], from=StartDate, env=stocks, verbose = FALSE, warnings = FALSE)
-      )
-    Sys.sleep(1)
-}
-
-# create lists of tickers requested and loaded; for comparison later
-stocks_requested <- sub("(.*?)\\..*", "\\1", de_stocks)
-stocks_loaded <- sub("(.*?)\\..*", "\\1", ls(envir=stocks))
-
-de_vol <- eapply(stocks, volUpDn)
-VolUpDn_extract <- function(x) { #function to extract the newly created VolUpDn-colum
-  tmp <- x[,grep("VolUpDn", colnames(x), ignore.case=TRUE)]
-  tmp
-  #stop("subscript out of bounds: no column name containing \"VolUpDn\"")
-  }
-de_vol <- lapply(de_vol, VolUpDn_extract)
-de_vol <- as.xts(do.call(merge, de_vol))
-# adjust column names are re-order columns
-colnames(de_vol) <- gsub("_VolUpDn","",colnames(de_vol))
-
-de_vol[de_vol==0] <- NA # replace 0 with NA
+# Berechne den VB-Wert
+de_vbt <- vb_calc(de_vol)
 
 
-de_vbt <- de_vol / (rollapply(abs(de_vol), width=lookback, FUN=mean, na.rm=T, align="right"))
-save(list=ls(all=TRUE), file="Volbreakout.RData")
-#load(file="Volbreakout.RData")
 ```
 
 ### Werte
@@ -178,22 +105,17 @@ Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r loo
 ## Ergebnisse  
 
 ```{r last}
-last <- t(tail(de_vbt,1))
-last_stock <- rownames(last)[which(last>trigger)]
-dn_stock <- rownames(last)[which(last<(0-trigger))]
-info <- if(is.null(last_stock)) {
-  print("Keine Aktie hat ein Signal generiert")
-  }   else { last_stock}
+signals <- calc_signal(vb_vector=de_vbt, trigger=trigger)
 
 # Download the full names
 fullnames <- getQuote(names(de_vbt), what=yahooQF("Name"))
 fullnames <- data.frame(Ticker=rownames(fullnames), Name=fullnames$Name)
 ```
 
-Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
+Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von __über__ `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
 
 ```{r table_vbts, results='asis'}
-kable(merge(data.frame(Ticker=info), fullnames))
+kable(merge(data.frame(Ticker=signals$signal_up), fullnames))
 ```
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
@@ -207,9 +129,9 @@ Für die gefundenen Werte werden die Charts dargestellt (natürlich nur, wenn f�
 __Charts für Werte mit VB > 3:__
 
 ```{r charts1}
-for (i in 1:length(info)) {
+for (i in 1:length(signals$signal_up)) {
   try(
-    chartSeries(get(info[i], envir=stocks), subset='last 4 months', name=info[i]) 
+    chartSeries(get(signals$signal_up[i], envir=stocks), subset='last 4 months', name=signals$signal_up[i]) 
     )
 }
 ```
@@ -219,9 +141,9 @@ for (i in 1:length(info)) {
 __Charts für Werte mit VB < -3:__
 
 ```{r charts2}
-for (i in 1:length(dn_stock)) {
+for (i in 1:length(signals$signal_dn)) {
   try(
-    chartSeries(get(dn_stock[i], envir=stocks), subset='last 4 months', name=dn_stock[i]) 
+    chartSeries(get(signals$signal_dn[i], envir=stocks), subset='last 4 months', name=signals$signal_dn[i]) 
     )
 }
 ```
@@ -244,24 +166,7 @@ plot(Table)
 
 Die Kürzel sind die Kürzel, die auf http://finance.yahoo.com verwendet werden.
 
-
-```{r mosaicplot, eval=FALSE}
-de_signal <- de_vbt["20150101::"]
-de_signal <- ifelse(de_signal<trigger,FALSE,TRUE)
-de_signal <- xts2df(de_signal)
-de_signal <- melt(de_signal, id.vars="Date", variable.name="Stock", value.name="Signal")
-ggplot(data=de_signal) + geom_tile(aes(x=Date, y=Stock, fill=Signal)) + scale_x_bd(business.dates=yahoo('^GDAXI')) +  scale_fill_brewer(palette="Paired") + theme_minimal() + ggtitle("Mosaikplot der VB-Signale") + coord_flip() + theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))# uses business days of DAX traded
-```
-
-
-
-# Nächste Schritte  
-
-- Aktien, deren Ticker mit einer Zahl startet, werden hier mit einem "X" angeführt.
-- ~~Ändere den Code so, dass das Spreadseet interaktiv eingelesen wird.~~
-- ~~Führe eine Fallunterscheidung ein, so dass nur Signale generiert werden, wenn wir es mit einem Up-move zu tun haben.~~
-
 -----
-```.`r Sys.time()` ```   
+``` `r Sys.time()` ```   
 
 END OF FILE
