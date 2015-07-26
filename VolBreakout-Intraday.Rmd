@@ -1,11 +1,10 @@
 ---
-title: "Volumen Breakout Tool - Intraday Prototype"
+title: "Volumen Breakout Tool - Intraday Monitoring"
 output: 
     html_document:
         theme: readable
 ---
 
-> Dies Seite ist eine Test-Seite. Sie stellt den Prototypen des VBT-Intraday-Tools dar.
 ```Letzte Ausführung: `r Sys.time()` ```   
 
 
@@ -14,38 +13,23 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 library(knitr)
 library(quantmod)
 
-load(file="Volbreakout.RData")
-source("intraday.R")
-de_vbt <- x / (rollapply(abs(x), width=lookback, FUN=mean, na.rm=T, align="right"))
+load(file="Intraday-Data.RData")
+load(file="02_parameters.R")
+de_vbt_intraday <- de_vol_intraday / (rollapply(abs(de_vol_intraday), width=lookback, FUN=mean, na.rm=T, align="right"))
 
 ```
 
 ### Werte
 
 Ergebnisse des letzten Laufs:  
-```Eingelesene Werte vom vorherigen End-of-Day: `r dim(de_vbt)[2]` ```
-
-```Intraday aktualisiert:  `r dim(tmp)[1]` ```
-```Intraday NICHT aktualisierte Werte: `r no_act_quotes` ```
-
-Nicht aktualisierte Werte können folgende Gründe haben:  
-
-- sie wurden heute nicht gehandelt,
-- sie wurden gehandelt, aber yahoo! gibt nicht den korrekten Zeitstempel mit (heute).
-
+```Intraday aktualisiert:  `r dim(quotes_tday)[1]` ```
+```Intraday NICHT aktualisierte Werte: `r no_act_quotes` ```  
+Bei _nicht aktualisierten_ Werten hat Yahoo keine Handelsaktivität ausgewiesen.
 
 ## Ergebnisse  
 
-```{r last}
-
-trigger <- 3
-
-last <- t(tail(de_vbt,1))
-last_stock <- rownames(last)[which(last>trigger)]
-dn_stock <- rownames(last)[which(last<(0-trigger))]
-info <- if(is.null(last_stock)) {
-  print("Keine Aktie hat ein Signal generiert")
-  }   else { last_stock}
+```{r show_result}
+signals <- calc_signal(vb_vector=de_vbt_intraday, trigger=trigger)
 ```
 
 Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
@@ -54,8 +38,8 @@ Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (
 modQuote <- standardQuote()
 modQuote[[1]] <- "l1c1p2ohgvn"
 try({
-if (!is.null(info)) {
-  iday_breakouts <- getQuote2clean(getQuote(info, what=modQuote))
+if (!is.null(signals$signal_up)) {
+  iday_breakouts <- getQuote2clean(getQuote(signals$signal_up, what=modQuote))
   kable(iday_breakouts)
   } else {
     print("No stocks meet criterium")
