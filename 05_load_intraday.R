@@ -6,6 +6,7 @@
 library(reshape2)
 library(quantmod)
 library(xts)
+library(lubridate)
 
 Sys.setenv(TZ="Europe/Berlin") # needs to be done in order to make sure, getSymbols works properly.
 
@@ -33,6 +34,7 @@ quotes_tday.c <- quotes_tday.c[which(is.Date(quotes_tday.c$Date)),,drop=FALSE] #
 de_vol.df <- xts2df(de_vol)
 #Merge
 de_vol_intraday <- merge(de_vol.df, quotes_tday.c, by=intersect(names(de_vol.df), names(quotes_tday.c)), all=TRUE)
+# wenn das am WE läuft, dann findet er die Zeitstempel für den Freitag 2-mal und wirft deswegen ein Warning.
 ## de_stocks[grep("^[0-9]", de_stocks)] ##
 de_vol_intraday <- read.zoo(de_vol_intraday)
 

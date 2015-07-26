@@ -75,7 +75,7 @@ source(file="03_ticker.R")
 load(file="EOD-Data.RData")
 
 # Berechne den VB-Wert
-de_vbt <- vb_calc(de_vol)
+de_vbt <- vb_calc(de_vol, lookback)
 
 
 ```

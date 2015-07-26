@@ -13,9 +13,10 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 library(knitr)
 library(quantmod)
 
-load(file="Intraday-Data.RData")
-load(file="02_parameters.R")
-de_vbt_intraday <- de_vol_intraday / (rollapply(abs(de_vol_intraday), width=lookback, FUN=mean, na.rm=T, align="right"))
+source(file="05_load_intraday.R")
+#load(file="Intraday-Data.RData")
+source(file="02_parameters.R")
+de_vbt_intraday <- vb_calc(de_vol_intraday, lookback)
 
 ```
 
@@ -47,13 +48,12 @@ if (!is.null(signals$signal_up)) {
 })
 ```  
 
-
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
 
-Die Chartansicht ist momentan nicht verfügbar.
+Die Chartansicht ist im Intraday-Modus leider nicht verfügbar.
 
 -----
-```.`r Sys.time()` ```   
+``` `r Sys.time()` ```   
 
 END OF FILE

@@ -45,7 +45,7 @@ getQuote2clean <- function(x) {
 }
 
 # berechnet VB-Wert
-vb_calc <- function(voldata) {
+vb_calc <- function(voldata, lookback) {
   tmp <- voldata / (rollapply(abs(voldata), width=lookback, FUN=mean, na.rm=T, align="right"))
   return(tmp)
 }
