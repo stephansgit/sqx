@@ -17,3 +17,5 @@ try({
 
 # Kreiert einen Vektor aus den Tickersymbolen.
 de_stocks <- as.vector(unlist(ticker[,1]))
+
+save(list=ls(all=TRUE), file="SetupData.RData")
