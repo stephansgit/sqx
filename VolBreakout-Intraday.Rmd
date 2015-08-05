@@ -13,9 +13,10 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 library(knitr)
 library(quantmod)
 
+source(file="01_functions.R")
+source(file="02_parameters.R")
 source(file="05_load_intraday.R")
 #load(file="Intraday-Data.RData")
-source(file="02_parameters.R")
 de_vbt_intraday <- vb_calc(de_vol_intraday, lookback)
 
 ```

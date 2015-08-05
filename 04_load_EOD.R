@@ -42,4 +42,4 @@ colnames(de_vol) <- gsub("_VolUpDn","",colnames(de_vol))
 de_vol[de_vol==0] <- NA # replace 0 with NA
 
 # Speichert EOD-Daten
-save(stocks_requested, stocks_loaded, de_vol, stocks, file="EOD-Data.RData")
+save(stocks_requested, stocks_loaded, de_vol, stocks, file="data/EOD-Data.RData")

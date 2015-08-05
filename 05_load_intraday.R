@@ -10,7 +10,7 @@ library(lubridate)
 
 Sys.setenv(TZ="Europe/Berlin") # needs to be done in order to make sure, getSymbols works properly.
 
-load(file="EOD-Data.RData")
+load(file="data/EOD-Data.RData")
 loaded_symbols <- ls(envir=stocks)
 
 #Get quotes from yahoo
@@ -38,12 +38,12 @@ de_vol_intraday <- merge(de_vol.df, quotes_tday.c, by=intersect(names(de_vol.df)
 ## de_stocks[grep("^[0-9]", de_stocks)] ##
 de_vol_intraday <- read.zoo(de_vol_intraday)
 
-save(de_vol_intraday, file="Intraday-Data.RData")
+save(de_vol_intraday, file="data/Intraday-Data.RData")
 # de_vol_intraday kann von der Hauptroutine nun genutzt werden
 
 #-------------------------------------------
 # Exportiere die Daten zum Debuggen
-filename <- paste("intradayexport", as.numeric(Sys.time()),sep="_")
+filename <- paste("data/intradayexport", as.numeric(Sys.time()),sep="_")
 save(de_vol_intraday, quotes_tday, quotes_tday.c, file=filename)
 #-------------------------------------------
 

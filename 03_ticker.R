@@ -4,18 +4,18 @@
 #########################
 
 #DOWNLOADING GOOGLE SPREADSHEET
-ticker <- read.csv("ticker.csv",header=TRUE) #lies das spreadsheet ein
+ticker <- read.csv("data/ticker.csv",header=TRUE) #lies das spreadsheet ein
 
 # versucht die Tabelle über GoogleSpreadsheet ein
-pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
-try({
-  sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
-  a = getDocs(sheets.con)
-  ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
-  ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
-})
+#pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
+#try({
+#  sheets.con = getGoogleDocsConnection(getGoogleAuth("stephan.raspberry@gmail.com", pass, service = "wise"))
+#  a = getDocs(sheets.con)
+#  ts = getWorksheets(a$`20150425_Ticker`, sheets.con)
+#  ticker <- sheetAsMatrix(ts$ticker_werner, header = TRUE, as.data.frame = TRUE, trim = TRUE)
+#})
 
 # Kreiert einen Vektor aus den Tickersymbolen.
 de_stocks <- as.vector(unlist(ticker[,1]))
 
-save(list=ls(all=TRUE), file="SetupData.RData")
+save(list=ls(all=TRUE), file="data/SetupData.RData")
