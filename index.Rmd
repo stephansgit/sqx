@@ -1,0 +1,11 @@
+---
+title: "sqx tools"
+
+---
+
+
+Diese Seite beinhaltet Börsentools für Profis.
+
+> News 12. August:  
+> Der erste Prototyp der Tools ist für Testzwecke online!  
+> In den nächsten Tagen und Wochen werden die Dokumente noch überarbeitet und vereinfacht.  

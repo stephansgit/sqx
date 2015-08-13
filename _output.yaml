@@ -1,0 +1,6 @@
+html_document:
+  theme: readable
+  self_contained: false
+  lib_dir: libs
+  includes:
+    in_header: include/header.html
