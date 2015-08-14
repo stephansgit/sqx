@@ -41,5 +41,10 @@ colnames(de_vol) <- gsub("_VolUpDn","",colnames(de_vol))
 
 de_vol[de_vol==0] <- NA # replace 0 with NA
 
+# Load full names from Yahoo
+fullnames <- getQuote(names(de_vol), what=yahooQF("Name"))
+fullnames <- data.frame(Ticker=rownames(fullnames), Name=fullnames$Name)
+
+
 # Speichert EOD-Daten
-save(stocks_requested, stocks_loaded, de_vol, stocks, file="data/EOD-Data.RData")
+save(stocks_requested, stocks_loaded, de_vol, stocks,fullnames, file="data/EOD-Data.RData")
