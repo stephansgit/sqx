@@ -1,8 +1,5 @@
 ---
 title: "Volumen Breakout Tool"
-output: 
-    html_document:
-        theme: readable
 ---
 
 > Dieses Projekt befindet sich im ___Beta Stadium___ und ist somit ___in der Entwicklung___.  
@@ -68,7 +65,7 @@ source(file="02_parameters.R")
 source(file="03_ticker.R")
 
 # Lies EOD-Daten von Yahoo
-source(file="04_load_EOD.R")
+#source(file="04_load_EOD.R")
 
 # Lies die erarbeiteten Daten ein 
 load(file="data/EOD-Data.RData")

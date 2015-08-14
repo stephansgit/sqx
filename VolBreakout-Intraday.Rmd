@@ -1,8 +1,5 @@
 ---
 title: "Volumen Breakout Tool - Intraday Monitoring"
-output: 
-    html_document:
-        theme: readable
 ---
 
 ```Letzte Ausführung: `r Sys.time()` ```   
