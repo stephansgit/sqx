@@ -1,0 +1,25 @@
+---
+title: "Methodik des 'Volumen Breakout Tool'"
+---
+
+### Idee  
+
+Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
+
+Der Indikator wird berechnet als Handelsvolumen am heutigen Tage $t$ dividiert durch das durschnittliche Handelsvolumen der letzten $k$ Tage. Dabei wird das Volumen als _negativ_ dargestellt, wenn die Aktie am betreffenden Tag gefallen ist (Open größer als Close), als _positiv_, wenn die Aktie gestiegen ist (Open kleiner als Close). 
+
+$$UpDn_{t}=\begin{Bmatrix}
++1 \forall (Open_{t}\leq Close_{t})\\ 
+-1 \forall (Open_{t}>Close_{t})
+\end{Bmatrix}$$
+
+$$VB_{t}=UpDn_{t} \cdot \frac{Vol_{t}}{\frac{1}{k}\sum_{n=0}^{k-1}Vol_{t-n}}$$
+
+Ein Signal wird bspw. dann generiert, wenn dieser Wert größer als _drei_ ist (was nichts anderes bedeutet, als dass das heutige Volumen dreimal größer als das durschnittliche Volumen ist bei gleichzeitig gestiegenen Kursen).
+
+
+### Werte
+
+Die einzulesende Werte werden über [dieses Spreadsheet](https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing) definiert.  
+__Beachten:__ Das Spreadsheet wird nicht "interaktiv" abgerufen, d.h. wenn dort etwas geändert wird, wird das nicht automatisch vom Tool verarbeitet.  
+
