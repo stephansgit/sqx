@@ -2,7 +2,7 @@
 title: "Volumen Breakout Tool - Intraday Monitoring"
 ---
 
-```Letzte Ausführung: `r Sys.time()` ```   
+Das Tool identifiziert Aktien mit Volumenausbruch _intraday_.
 
 
 ```{r load, include=FALSE}
@@ -18,14 +18,13 @@ de_vbt_intraday <- vb_calc(de_vol_intraday, lookback)
 
 ```
 
-### Werte
+### Daten  
 
-Ergebnisse des letzten Laufs:  
+```Letzte Ausführung: `r Sys.time()` ```   
 ```Intraday aktualisiert:  `r dim(quotes_tday)[1]` ```
-```Intraday NICHT aktualisierte Werte: `r no_act_quotes` ```  
-Bei _nicht aktualisierten_ Werten hat Yahoo keine Handelsaktivität ausgewiesen.
+```Intraday nicht aktualisierte Werte: `r no_act_quotes` ```  
 
-## Ergebnisse  
+### Ergebnisse  
 
 ```{r show_result}
 signals <- calc_signal(vb_vector=de_vbt_intraday, trigger=trigger)
