@@ -1,5 +1,5 @@
 ---
-title: "Volumen Breakout Tool"
+title: "Volumen Breakout Tool - End of Day"
 ---
 
 
@@ -43,17 +43,19 @@ de_vbt <- vb_calc(de_vol, lookback)
 
 ```
 
+Das Tool identifziert Aktien mit einem Volumenausbruch. Details siehe [hier](http://sqx.servebeer.com/vbt/methode.html).  
+
+
 ### Daten
 
 ```Letzte Ausführung: `r Sys.time()` ```   
-
-Ergebnisse des letzten Laufs:  
 ```Eingelesene Werte: `r dim(de_vbt)[2]` ```  
-```Letzter Close: `r end(de_vbt)` ```   
+```Letzter berücksichtigter Close: `r end(de_vbt)` ```   
 
-``` `r length(setdiff(stocks_requested, stocks_loaded))` ``` Werte konnten __nicht__ eingelesen werden:     
+``` `r length(setdiff(stocks_requested, stocks_loaded))` ``` Werte konnten nicht eingelesen werden:     
 ``` `r setdiff(stocks_requested, stocks_loaded)` ```  
 
+Berücksichtigung der letzten `r lookback` Handelstage.
 
 
 ### Ergebnisse  
@@ -72,11 +74,11 @@ kable(merge(data.frame(Ticker=signals$signal_up), fullnames))
 
 _Beachte: Tickersymbolen, die mit einer Zahl beginnen, werden momentan noch mit einem X versehen - daher wird auch ihr Klarname nicht richtig gefunden._
 
-## Charts  
+### Charts  
 
-Für die gefundenen Werte werden die Charts dargestellt (natürlich nur, wenn für Werte ein Signal gefunden wurde).  
+Für die gefundenen Werte werden die Charts dargestellt.  
 
-__Charts für Werte mit VB > 3:__
+__Charts für Werte mit VB > +3:__
 
 ```{r charts1}
 for (i in 1:length(signals$signal_up)) {
@@ -102,9 +104,10 @@ for (i in 1:length(signals$signal_dn)) {
 .  
 -----  
 
-## Tabelle  
+### Tabelle  
 
-Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an; Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
+Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an. 
+Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
 ```{r plot_tbl, results='asis'}
 table <- data.frame(fullnames,          
@@ -114,43 +117,9 @@ Table <- gvisTable(table)
 plot(Table)
 ```
 
-Die Kürzel sind die Kürzel, die auf http://finance.yahoo.com verwendet werden.
+NB:  
+Bei Werten, deren Tickersymbol mit einer Zahl beginnt (bspw. 8GS.DE (China Spec Glass)), stellt das Tool fälschlicherweise ein "X" vor das Tickersymbol.
 
-
-
-__Bekannte Bugs__:  
-
-- Bei Werten, deren Tickersymbol mit einer Zahl beginnt (bspw. 8GS.DE (China Spec Glass)), stellt das Tool fälschlicherweise ein "X" voran. Das verhindert leider das Plotten.
-
-
-## Idee  
-
-Die Idee ist folgende: Kreiere einen Report, der täglich (für das vorausgegangene Closing) ein Set an Aktien daraufhin monitored, ob es eine signifikante Veränderung im Handelsvolumen gegeben hat.
-
-Der Indikator wird berechnet als Handelsvolumen am heutigen Tage $t$ dividiert durch das durschnittliche Handelsvolumen der letzten $k$ Tage. Dabei wird das Volumen als _negativ_ dargestellt, wenn die Aktie am betreffenden Tag gefallen ist (Open größer als Close), als _positiv_, wenn die Aktie gestiegen ist (Open kleiner als Close). 
-
-$$UpDn_{t}=\begin{Bmatrix}
-+1 \forall (Open_{t}\leq Close_{t})\\ 
--1 \forall (Open_{t}>Close_{t})
-\end{Bmatrix}$$
-
-$$VB_{t}=UpDn_{t} \cdot \frac{Vol_{t}}{\frac{1}{k}\sum_{n=0}^{k-1}Vol_{t-n}}$$
-
-Ein Signal wird bspw. dann generiert, wenn dieser Wert größer als _drei_ ist (was nichts anderes bedeutet, als dass das heutige Volumen dreimal größer als das durschnittliche Volumen ist bei gleichzeitig gestiegenen Kursen).
-
-
-### Werte
-
-Die einzulesende Werte werden über [dieses Spreadsheet](https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing) definiert.  
-Dabei ist auch das Börsenkürzel angegeben, wie es von Yahoo verwendet wird (bspw. .DE für Xetra, .F für Frankfurt).  
-__Beachten:__ Das Spreadsheet wird nicht "interaktiv" abgerufen, d.h. wenn dort etwas geändert wird, wird das nicht automatisch vom Tool verarbeitet.  
-Manchmal gibt es Probleme im Download von Yahoo. Daher wird für die Werte, die - so wie spezifiziert - nicht eingelesen werden können, ein weiterer Versuch über die Frankfurter Börse gestartet.  
-
-Alle Daten werden von http://finance.yahoo.com eingelesen.  
-
-### Parameter
-
-Für die Parametrierung wird k=`r lookback` gesetzt, d.h. auf die letzten `r lookback` Handelstage.
 
 
 -----
