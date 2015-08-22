@@ -4,6 +4,10 @@ title: "sqx tools - Börsentools für Profis"
 ---
 
 
+> News 22. August:
+> Das Börsentacho ist hinzugefügt. Und die Seite hat ein neues Design mit verbesserter Navigation!  
+  
+    
 > News 15. August:  
 > Die erste Version des aktualisierten Tools ist für Testzwecke online!  
 > Es bildet die bekannte Funktionalität ab.

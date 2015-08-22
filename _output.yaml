@@ -1,5 +1,5 @@
 html_document:
-  theme: readable
+  theme: cosmo
   self_contained: false
   lib_dir: libs
   includes:
