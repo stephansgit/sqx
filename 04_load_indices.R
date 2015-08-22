@@ -16,7 +16,7 @@ library(quantmod)
 library(reshape2)
 library(lubridate)
 
-
+# Source die Parameter und die Funktionen später NOCH EINMAL, nach dem "rm"
 source("01_functions.R")
 source("02_parameters.R")
 source("03_ticker.R")
@@ -95,6 +95,9 @@ save(indices.zoo, file="data/indices_raw.RData")
 ### treat NAs
 indices.zoo <- na.approx(zoo(indices.zoo), na.rm=TRUE) # interpolation happens for NAs
 indices.zoo <- na.locf(indices.zoo) # any remaining NAs are being replaced by simple "roll forward"
+
+source("01_functions.R")
+source("02_parameters.R")
 
 ### calculate HBT
 hbt <- hbt_calc(indices.zoo, lookback, smoothper)

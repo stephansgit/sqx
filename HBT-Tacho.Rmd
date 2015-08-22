@@ -11,6 +11,7 @@ library(knitr)
 library(scales)
 library(xts)
 
+starttime <- Sys.time()
 source("04_load_indices.R")
 
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
@@ -22,7 +23,7 @@ load(file = "data/Indices_Data.RData") # loads the indices data
 ```
 
 ```Letzte Daten: `r tail(index(indices.zoo),1)` ```    
-```Letzte Ausführung: `r Sys.time()` ```   
+```Letzte Ausführung: `r starttime` ```   
 
 
 -----
@@ -31,7 +32,8 @@ Das Börsentacho stellt verschiedene Aktienindizes hinsichtlich ihres Momentums 
 
 ### Das Welt-Tachometer
 
-Das Welt-Taschometer stellt den Durchschnitt über alle Weltindizes dar. Ebenfalls dargestellt ist die Historie als Zeitreihe (hierbei ist der HBT mit 100 multipliziert zur besseren Lesbarkeit).  
+Das Welt-Taschometer stellt den Durchschnitt über alle Weltindizes dar.  
+Ebenfalls dargestellt ist die Historie als Zeitreihe (hierbei ist der HBT mit 100 multipliziert zur besseren Lesbarkeit).  
   
 ```{r gauge, results='asis'}
 ### Create the gauge
@@ -44,7 +46,7 @@ Gauge1 <- gvisGauge(gauge.df, options=list(min=0.9, max=1.1, greenFrom=1.02,
 
 plot(Gauge1)
 
-Time <- gvisAnnotationChart(data=data.frame(Date=index(rsl.all.zoo),Value=100*coredata(rsl.all.zoo)),
+Time <- gvisAnnotationChart(data=data.frame(Date=index(hbt_world),Value=100*coredata(hbt_world)),
                               datevar="Date", numvar="Value", 
                             options=list(width=700, height=400, vAxis="{format:'#.###'}"))
 
@@ -130,7 +132,7 @@ ggplot(data=subset(xts2df(snphbt), Date>=as.Date("2014-01-01")), aes(x=Date, y=S
 #### Die letzten Daten
 
 Die letzten fünf **bereinigten** Einträge der Indexdaten.  
-Dient zum kurzen Crosscheck, ob die richtigen Werte genutzt wurden. Fehlende Werte ducrh den Datenlieferanten wurden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
+Dient zum kurzen Crosscheck, ob die richtigen Werte genutzt wurden. Fehlende Werte durch den Datenlieferanten wurden dabei zwischen letztem und nächstem verfügbaren Wert linear interpoliert. Fehlen Werte am Ende, wird der letzte verfügbare Wert fortgeschrieben.  
  
 ```{r showdata, results='asis'}
 kable(tail(indices.zoo), caption="Die letzten 5 Einträge")
