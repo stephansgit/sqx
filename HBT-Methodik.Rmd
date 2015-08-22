@@ -1,0 +1,19 @@
+---
+title: "Börsentacho - Methodik"
+---
+
+Das _Börsentacho_ stellt den Zustand ausgewählter Weltaktienindizes hinsichtlich ihres _Momentums_ dar.  
+Vereinfacht gesagt bezeichnet ein Wert über eins Aktienmärkte im Aufwärtstrend, ein Wert unter eins Aktienmärkte im Abwärtstrend.  
+
+
+### Der Ansatz
+
+Die Implementierung geht zurück auf den Ansatz von Holger:  
+  
+Für 18 weltweite Aktienindizes wird zunächst der 27-Tage-RSL berechnet und anschließend mit einem 10-Tages gleitendem Durchschnitt (GD) geglättet.  
+Dies ergibt den HBT-Wert (**H**olgers **B**örsen**T**acho) für einen bestimmten Index:
+
+$$RSL_{INDEX}=\frac{Close_{t}}{\frac{1}{27}\sum_{i=0}^{26}Close(t-i)}$$
+$$HBT_{INDEX}=\frac{1}{10}\sum_{i=0}^{9}RSL(t-i)$$
+
+Der Mittelwert über diese einzelnen (Länder)-HBTs ist der "HBT-Weltindikator".
