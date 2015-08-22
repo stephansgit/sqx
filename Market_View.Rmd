@@ -1,11 +1,11 @@
 ---
-title: "Börsentacho"
-output: 
-    html_document:
-        theme: readable
+title: "Börsentacho Indikatoren"
 ---
 
 ```{r setup, include=FALSE}
+
+starttime <- Sys.time()
+
 suppressPackageStartupMessages(library(googleVis))
 library(googleVis)
 library(zoo)
@@ -18,12 +18,15 @@ library(gridExtra)
 library(lubridate)
 library(bdscale)
 
+source("01_functions.R")
+source("02_parameters.R")
+
 options(scipen = 0, digits = 5) # set options to avoid scientific notation
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 op <- options(gvis.plot.tag='chart')
 ```
 
-In dieser Arbeitsmappe wird das Trendverhalten bestimmter Assetklassen dargestellt. Hierfür wird der Wert  von "Holgers Börsentacho" (HBT) errechnet. Es handelt sich um einen modifizierten RSL nach Levy.
+In dieser Arbeitsmappe wird das Trendverhalten bestimmter Assetklassen dargestellt. 
 
 
 ```{r load}
@@ -82,15 +85,14 @@ assets.zoo <- window(assets.zoo, end=Sys.Date()-1) # delete current day, because
 
 
 # Calculate the HBT
-mean.zoo <- rollapply(assets.zoo, width=27, FUN=mean, na.rm=T, align="right")
-rsl.zoo <- assets.zoo / mean.zoo
-hbt.zoo <- rollapply(rsl.zoo, width=10, FUN=mean, na.rm=T, align="right") # we add a 10-day SMA
+
+hbt.zoo <- hbt_calc(assets.zoo, lookback, smoothper)
 
 ```
 
 
 ```Letzte Daten: `r tail(index(hbt.zoo),1)` ```    
-```Letzte Ausführung: `r Sys.time()` ```   
+```Letzte Ausführung: `r starttime` ```   
 
 Die untersuchten Assetklassen sind
 
@@ -144,14 +146,5 @@ plot(Table)
 ggplot(data=hbt.m) + geom_tile(aes(x=Date, y=Asset, fill=HBT/100)) + scale_x_bd(business.dates=yahoo('SPY')) + scale_fill_gradient2("HBT",midpoint = 1, low=muted('red'), high=muted('green')) + theme_minimal() + ggtitle("Mosaikplot der HBT-Stände")# uses business days of S&P traded
 ```
 
-
-
-### Indexwerte und HBT-Werte: Analyse
-
-_To Do:_
-_Plotte die Indexwerte und den HBT-Wert, so dass man graphisch die Korrelationen beobachten kann._
-_- Indexwerte farblich in Abhängigkeit des HBT-Wertes_
-
-  
 -----
 END OF FILE
