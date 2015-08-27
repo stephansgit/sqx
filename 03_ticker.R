@@ -3,8 +3,13 @@
 # 26.07.2015
 #########################
 
-#DOWNLOADING GOOGLE SPREADSHEET
+#lies die Default-Daten ein
 ticker <- read.csv("data/ticker.csv",header=TRUE) #lies das spreadsheet ein
+
+# versuche vom Upload Folder zu lesen
+try(
+	ticker <- read.csv("/var/www/html/sqx.servebeer.com/vbt/upload/dateien/ticker_test.csv", header=TRUE)
+)
 
 # versucht die Tabelle über GoogleSpreadsheet ein
 #pass <- read.table(file="pass", header=FALSE, stringsAsFactors = FALSE)[[1]]
