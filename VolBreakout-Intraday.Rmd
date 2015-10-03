@@ -36,13 +36,11 @@ Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger` gezeigt (
 modQuote <- standardQuote()
 modQuote[[1]] <- "l1c1p2ohgvn"
 try({
-if (!is.null(signals$signal_up)) {
   iday_breakouts <- getQuote2clean(getQuote(signals$signal_up, what=modQuote))
-  kable(iday_breakouts)
-  } else {
-    print("No stocks meet criterium")
-  }
-})
+  kable(iday_breakouts, caption='Werte mit Upmove heute ("weiße Kerze")')
+  iday_breakouts <- getQuote2clean(getQuote(signals$signal_dn, what=modQuote))
+  kable(iday_breakouts, caption='Werte mit Upmove heute ("schwarze Kerze")')
+  })
 ```  
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  

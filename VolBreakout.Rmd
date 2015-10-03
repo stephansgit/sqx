@@ -64,10 +64,11 @@ Berücksichtigung der letzten `r lookback` Handelstage.
 signals <- calc_signal(vb_vector=de_vbt, trigger=trigger)
 ```
 
-Die folgenden Aktien haben am vergangen Closing einen $VB$-Wert von __über__ `r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
+Die folgenden Aktien haben am vergangen Closing einen _VB_-Wert von __über__ `r trigger` bzw. __kleiner als__ -`r trigger`gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht).
 
 ```{r table_vbts, results='asis'}
-kable(merge(data.frame(Ticker=signals$signal_up), fullnames))
+kable(merge(data.frame(Ticker=signals$signal_up), fullnames), caption='Werte mit Upmove heute ("weiße Kerze")')
+kable(merge(data.frame(Ticker=signals$signal_dn), fullnames, caption='Werte mit Downmove heute ("schwarze Kerze")'))
 ```
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
