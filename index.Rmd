@@ -1,14 +1,10 @@
 ---
-title: "sqx tools - Börsentools für Profis"
+title: "sqx tools"
 
 ---
 
 
-> News 22. August:
-> Das Börsentacho ist hinzugefügt. Und die Seite hat ein neues Design mit verbesserter Navigation!  
-  
     
-> News 15. August:  
-> Die erste Version des aktualisierten Tools ist für Testzwecke online!  
-> Es bildet die bekannte Funktionalität ab.
-> In den nächsten Wochen wird das Layout überarbeitet und eventuell zusätzliche Funktionen hinzugefügt.  
+> News 07. September:  
+> sqx.servebeer.com ist online!  
+> Es stellt das Volumenbreakout-Tool und das Börsentacho in überarbeiteter Variante bereit.  

@@ -20,6 +20,5 @@ Ein Signal wird bspw. dann generiert, wenn dieser Wert größer als _drei_ ist (
 
 ### Werte
 
-Die einzulesende Werte werden über [dieses Spreadsheet](https://docs.google.com/spreadsheets/d/1YJt8okr3PVOhfTN3lWb39bk2hNyufyuB8NuSyQhjhFY/edit?usp=sharing) definiert.  
-__Beachten:__ Das Spreadsheet wird nicht "interaktiv" abgerufen, d.h. wenn dort etwas geändert wird, wird das nicht automatisch vom Tool verarbeitet.  
+Die einzulesende Werte werden [hierüber](http://sqx.servebeer.com/vbt/upload/upload.html) definiert.    
 
