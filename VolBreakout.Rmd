@@ -69,7 +69,7 @@ Die folgenden Aktien haben am vergangen Closing einen _VB_-Wert von __über__ `r
 ```{r table_vbts, results='asis'}
 kable(merge(data.frame(Ticker=signals$signal_up), fullnames), caption='Werte mit Upmove heute ("weiße Kerze")')
 print("")
-kable(merge(data.frame(Ticker=signals$signal_dn), fullnames, caption='Werte mit Downmove heute ("schwarze Kerze")'))
+kable(merge(data.frame(Ticker=signals$signal_dn), fullnames), caption='Werte mit Downmove heute ("schwarze Kerze")')
 ```
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
