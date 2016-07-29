@@ -23,10 +23,11 @@ source("03_ticker.R")
 
 
 ### Import data from yahoo
+length(symbols_yahoo)
 try(getSymbols(symbols_yahoo, warnings=FALSE))
 
-indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(RTS.RS), Ad(SSEC), Ad(SSMI), Ad(STI))
-colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom",  "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "Russia", "China", "Switzerland", "Singapore")      
+indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(SSEC), Ad(SSMI), Ad(STI))
+colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom",  "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "China", "Switzerland", "Singapore")      
 tail(indices.zoo)
 
 
@@ -36,17 +37,22 @@ snp <- Ad(GSPC)
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
 
 #--Download Russian data----------------------------
+library(Quandl)
+RTSI <- Quandl("YAHOO/INDEX_RTS_RS", type="xts", end_date='2016-06-30') # wieso auch immer hat Quandl die Daten danach unveraendert
+library(RCurl)
 URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2016-12-31&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
-download.file(URL, destfile="rtsi.csv")
-rtsi <- read.csv(file="rtsi.csv", header=TRUE, skip=2, sep=";")
+x <- getURL(URL)
+#download.file(URL, destfile="rtsi.csv")
+rtsi <- read.csv(textConnection(x), header=TRUE, skip=2, sep=";")
 rtsi <- rtsi[,c("TRADEDATE", "CLOSE")] # drop irrelevant columns
-
 rtsi$TRADEDATE <- ymd(rtsi$TRADEDATE) #convert to POSIXct
 rtsi$TRADEDATE <- as.Date(rtsi$TRADEDATE) # convert to as.Date
-ind <- data.frame(Date=index(indices.zoo$Russia),indices.zoo$Russia) # create new, temporary dataframe for Russia only
-ind.m <- merge(x=ind, y=rtsi, by.x="Date", by.y="TRADEDATE", all.x=TRUE) # merge the Yahoo and the RTS data
-ind.m$Russia[is.na(ind.m$Russia)] <- ind.m$CLOSE[is.na(ind.m$Russia)] # replace the NA data from yahoo with data from RTS
-indices.zoo$Russia <- ind.m$Russia # add the new Russia data to the bigger data frame 
+ind <- data.frame(Date=index(RTSI),RTSI = Ad(RTSI)) # create new, temporary dataframe for Russia only
+ind.m <- merge(x=ind, y=rtsi, by.x="Date", by.y="TRADEDATE", all=TRUE) # merge the Yahoo and the RTS data
+ind.m <- as.xts(ind.m[,-1], order.by = ind.m$Date)
+
+ind.m$Adjusted.Close[is.na(ind.m$Adjusted.Close)] <- ind.m$CLOSE[is.na(ind.m$Adjusted.Close)] # replace the NA data from quandl with data from RTS
+indices.zoo$Russia <- ind.m$Adjusted.Close[paste0(start(indices.zoo),'::')] # add the new Russia data to the bigger data frame 
 #--------
 
 
@@ -74,9 +80,9 @@ MIBfromYahoo <- function() {
 }
 
 
-tryCatch(MIBfromQuandl(),
-  error=function(e) MIBfromYahoo()) 
-
+# tryCatch(MIBfromQuandl(),
+#   error=function(e) MIBfromYahoo()) 
+try(MIBfromYahoo())
  
 indices.zoo <- merge(indices.zoo, mib.zoo)
 #------------
