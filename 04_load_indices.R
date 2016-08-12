@@ -24,9 +24,19 @@ source("03_ticker.R")
 
 ### Import data from yahoo
 length(symbols_yahoo)
-try(getSymbols(symbols_yahoo, warnings=FALSE))
 
-indices.zoo <- merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(SSEC), Ad(SSMI), Ad(STI))
+#### Download Symbols in a list ####
+# see: http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
+stocks.sample <- lapply(symbols_yahoo, function(i) {
+ try(getSymbols(i, from=StartDate, auto.assign=FALSE))
+ }
+ )
+###==> das geht fast (download in Liste mit error handling). Jetzt noch sicherstellen, dass die anderen Indices gehen
+# names(stocks.sample) <- symbols # give reasonable names to the list
+
+try(getSymbols(symbols_yahoo[4:12], warnings=FALSE))
+
+indices.zoo <- try(merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(SSEC), Ad(SSMI), Ad(STI)))
 colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom",  "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "China", "Switzerland", "Singapore")      
 tail(indices.zoo)
 
@@ -86,6 +96,12 @@ try(MIBfromYahoo())
  
 indices.zoo <- merge(indices.zoo, mib.zoo)
 #------------
+
+# FTSE Data from Quandl of CONTINUOUS FUTURE
+liffe_z2 <- Quandl("CHRIS/LIFFE_Z2")
+liffe_z2.xts <- as.xts(liffe_z2$Settle, order.by = liffe_z2$Date)
+indices.zoo <- merge(indices.zoo, liffe_z2.xts)
+
 
 indices.zoo <- window(indices.zoo, start=StartDate, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
