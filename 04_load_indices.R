@@ -34,8 +34,6 @@ indices.all <- lapply(symbols_yahoo, function(i) {
 indices.class <- unlist(lapply(indices.all, is.zoo)) # checkt ob zoo (oder ERROR), und...
 indices.zoo <- lapply(indices.all[indices.class], Ad) #...extrahiert für all zoos den closing
 indices.names <- rapply(strsplit(unlist(lapply(indices.zoo, names)), '.', fixed=TRUE), function(x) head(x,1))
-print('Geladen wurde von Yahoo'); indices.names
-#indices.zoo <- try(merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(SSEC), Ad(SSMI), Ad(STI)))
 indices.zoo <- do.call(cbind, indices.zoo)
 names(indices.zoo) <- indices.names
 
@@ -67,35 +65,11 @@ indices.zoo$Russia <- ind.m$Adjusted.Close[paste0(start(indices.zoo),'::')] # ad
 
 
 #---Download Italian data
-#mib <- Quandl("YAHOO/INDEX_FTSEMIB_MI", type="xts", start=start(indices.zoo))
-# or: https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv
-# QUANDL seems instable, therefore we firts query Quandl. If that throws an error, we query yahoo.
-
-## ITALY DOES NOT SEEM TO WORK FROM YAHOO, FIX THAT
-italiandata <- new.env()
-
-MIBfromQuandl <- function() {
-  download.file("http://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv", "MIB.csv", method="curl")
-  mib <- read.csv("MIB.csv")
-  mib$Date <- ymd(mib$Date)
-  mib <- zoo(mib, order.by = mib$Date)[,-1]
-  mib <- as.quantmod.OHLC(mib, col.names=c("Open", "High", "Low", "Close", "Volume", "Adjusted.Close")) 
-  mib.zoo <-  Ad(mib)
-}
-
-MIBfromYahoo <- function() {
-  getSymbols("FTSEMIB.MI", env = italiandata)
-  mib.zoo <<-Ad(italiandata$FTSEMIB.MI)
-  names(mib.zoo) <<- "Italy"
-  print("Loading from Yahoo succesfull")
-}
-
-
-# tryCatch(MIBfromQuandl(),
-#   error=function(e) MIBfromYahoo()) 
-try(MIBfromYahoo())
- 
-indices.zoo <- merge(indices.zoo, mib.zoo)
+# yahoo does not deliver; we query Quandl and use the LYXOR ETF instead
+library(Quandl)
+epa_mib <- Quandl("GOOG/EPA_MIB")
+epa_mib.xts <- as.xts(epa_mib$Close, order.by = epa_mib$Date)
+indices.zoo <- merge(indices.zoo, epa_mib.xts)
 #------------
 
 # FTSE Data from Quandl of CONTINUOUS FUTURE
@@ -109,6 +83,10 @@ colnames(indices.zoo) <- c("USA", "Germany", "France", "Switzerland", "Spain", "
 #-------END OF LOADING--------------
 
 indices.zoo <- window(indices.zoo, start=StartDate, end=Sys.Date()-1) # delete current day, because it will contain NAs.
+
+# Just for logging:
+print('Created data after cleaning:')
+print(tail(indices.zoo))
 
 rm(list=setdiff(ls(), c("indices.zoo", "snp"))) # remove all raw data, just keep indices.zoo and the S&P Data
 
