@@ -27,18 +27,18 @@ length(symbols_yahoo)
 
 #### Download Symbols in a list ####
 # see: http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
-stocks.sample <- lapply(symbols_yahoo, function(i) {
+indices.all <- lapply(symbols_yahoo, function(i) {
  try(getSymbols(i, from=StartDate, auto.assign=FALSE))
  }
  )
-###==> das geht fast (download in Liste mit error handling). Jetzt noch sicherstellen, dass die anderen Indices gehen
-# names(stocks.sample) <- symbols # give reasonable names to the list
+indices.class <- unlist(lapply(indices.all, is.zoo)) # checkt ob zoo (oder ERROR), und...
+indices.zoo <- lapply(indices.all[indices.class], Ad) #...extrahiert für all zoos den closing
+indices.names <- rapply(strsplit(unlist(lapply(indices.zoo, names)), '.', fixed=TRUE), function(x) head(x,1))
+print('Geladen wurde von Yahoo'); indices.names
+#indices.zoo <- try(merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(SSEC), Ad(SSMI), Ad(STI)))
+indices.zoo <- do.call(cbind, indices.zoo)
+names(indices.zoo) <- indices.names
 
-try(getSymbols(symbols_yahoo[4:12], warnings=FALSE))
-
-indices.zoo <- try(merge(Ad(DJIA), Ad(AORD), Ad(ATX), Ad(BVSP), Ad(FCHI), Ad(FTSE),  Ad(GDAXI), Ad(GSPTSE), Ad(HSI), Ad(IBEX), Ad(MERV), Ad(MXX), Ad(N225), Ad(SSEC), Ad(SSMI), Ad(STI)))
-colnames(indices.zoo) <- c("USA", "Australia", "Austria", "Brasil", "France", "United Kingdom",  "Germany", "Canada", "HongKong", "Spain", "Argentina", "Mexico", "Japan", "China", "Switzerland", "Singapore")      
-tail(indices.zoo)
 
 
 getSymbols("^GSPC") #load S&P 500 data.
@@ -71,6 +71,7 @@ indices.zoo$Russia <- ind.m$Adjusted.Close[paste0(start(indices.zoo),'::')] # ad
 # or: https://www.quandl.com/api/v1/datasets/YAHOO/INDEX_FTSEMIB_MI.csv
 # QUANDL seems instable, therefore we firts query Quandl. If that throws an error, we query yahoo.
 
+## ITALY DOES NOT SEEM TO WORK FROM YAHOO, FIX THAT
 italiandata <- new.env()
 
 MIBfromQuandl <- function() {
@@ -102,6 +103,10 @@ liffe_z2 <- Quandl("CHRIS/LIFFE_Z2")
 liffe_z2.xts <- as.xts(liffe_z2$Settle, order.by = liffe_z2$Date)
 indices.zoo <- merge(indices.zoo, liffe_z2.xts)
 
+colnames(indices.zoo) <- c("USA", "Germany", "France", "Switzerland", "Spain", "China", "Mexico", 
+  "Japan", "Australia", "Austria", "Canada", "HongKong", "Argentina", "Brasil", "Russia", "Italy", "UK")      
+
+#-------END OF LOADING--------------
 
 indices.zoo <- window(indices.zoo, start=StartDate, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
