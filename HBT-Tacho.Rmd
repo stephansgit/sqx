@@ -28,6 +28,11 @@ starttime <- Sys.time()
 
 -----
 
+> ACHTUNG  
+> Da Yahoo die Lieferung von Daten für verschiedene Indizes (UK (FTSE), Italien (FTSE MIB), Singapur STI, Russland) eingestellt hat, 
+> ist vorübergehend nur eine reduzierte Historie verfügbar.
+> Zudem wird Singapur nicht berücksichtigt; für Italien und UK werden ETFs als Ersatz verwendet.  
+
 Das Börsentacho stellt verschiedene Aktienindizes hinsichtlich ihres Momentums dar.
 
 ### Das Welt-Tachometer
@@ -88,7 +93,7 @@ rsl.df <- as.data.frame(hbt)
 rsl.df$Date <- index(hbt)
 rsl.m <- melt(rsl.df, id.vars="Date", variable.name="Country", value.name="HBT")
 #ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01"))) + geom_line(aes(x=Date, y=RSL, color=Country, group=Country))
-ggplot(data=subset(rsl.m,Date>as.Date("2012-07-01")), aes(x=Date, y=HBT)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_grey() + theme(panel.grid=element_blank()) + scale_x_date(labels=date_format("%m/%y"), breaks=date_breaks("year"))
+ggplot(data=subset(rsl.m,Date>as.Date("2015-07-01")), aes(x=Date, y=HBT)) + geom_line() + facet_wrap(~Country, nrow = 3) + geom_hline(yintercept=1, color="darkgrey") + theme_grey() + theme(panel.grid=element_blank()) + scale_x_date(labels=date_format("%m/%y"), breaks=date_breaks("year"))
 ```
 
 ### Der dynamische Chart
@@ -151,8 +156,8 @@ Australia    | All Ordinaries
 Austria      | ATX
 Brasil       | IBOVESPA
 France       | CAC-40
-UK           | FTSE
-Italy        | FTSE MIB
+UK           | Continuous LIFFE Future auf FTSE
+Italy        | Lyxor ETF auf FTSE MIB
 Germany      | DAX
 Canada       | TSE Composite
 HongKong     | Hang-Seng
@@ -163,7 +168,7 @@ Japan        | Nikkei
 Russia       | RTS  
 China        | SSE Composite
 Switzerland  | SMI
-Singapore    | Straight Times
+Singapore    | __NICHT MEHR BERÜCKSICHTIGT__
 
 -----
 
