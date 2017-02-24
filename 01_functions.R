@@ -3,6 +3,9 @@
 # 26.07.2015
 #############################
 
+library(xts)
+library(quantmod)
+
 # Konvertiert xts-Objekt in einen data.frame
 xts2df <- function(x) {
   tmp <- data.frame(Date=index(x), coredata(x))

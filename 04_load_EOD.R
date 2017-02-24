@@ -3,7 +3,9 @@
 # 26.07.2015
 ##########################
 
-
+source("01_functions.R")
+source("02_parameters.R")
+load("data/SetupData.RData")
 
 stocks <- new.env()
 

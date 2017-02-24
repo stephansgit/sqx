@@ -44,7 +44,7 @@ save(de_vol_intraday, file="data/Intraday-Data.RData")
 #-------------------------------------------
 # Exportiere die Daten zum Debuggen
 filename <- paste("data/intradayexport", as.numeric(Sys.time()),sep="_")
-save(de_vol_intraday, quotes_tday, quotes_tday.c, file=filename)
+#save(de_vol_intraday, quotes_tday, quotes_tday.c, file=filename)
 #-------------------------------------------
 
 # Darstellen von Charts:

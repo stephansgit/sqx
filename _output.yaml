@@ -1,6 +1,5 @@
 html_document:
   theme: cosmo
   self_contained: false
-  lib_dir: libs
   includes:
     in_header: include/header.html
