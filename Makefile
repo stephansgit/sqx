@@ -10,7 +10,7 @@ data/EOD-Data.RData: 04_load_EOD.R data/SetupData.RData
 	Rscript $<
 
 VolBreakout.html: VolBreakout.Rmd data/EOD-Data.RData
-	Rscript -e 'rmarkdown::render("$<")'
+	Rscript -e "path_to_eod_data='data/EOD-Data.RData'; rmarkdown::render('$<')"
 
 /var/www/html/sqx.servebeer.com/vbt/vbt.html: VolBreakout.html
 	mv $< $@
