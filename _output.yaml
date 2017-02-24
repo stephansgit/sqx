@@ -1,5 +1,5 @@
 html_document:
   theme: cosmo
-  self_contained: false
+  self_contained: true
   includes:
     in_header: include/header.html
