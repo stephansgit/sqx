@@ -3,6 +3,8 @@
 # 26.07.2015
 ##########################
 
+args <- commandArgs(trailingOnly = TRUE)
+
 source("01_functions.R")
 
-load_EoD_data(daten = "data/SetupData.RData", output="data/EOD-Data.RData")
+load_EoD_data(daten = args[1], output_eod = args[2])

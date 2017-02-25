@@ -1,16 +1,29 @@
-all: /var/www/html/sqx.servebeer.com/vbt/vbt.html
+all: /var/www/html/sqx.servebeer.com/vbt/vbt.html /var/www/html/sqx.servebeer.com/vbt/vbt_swbr.html
 
 clean: 
-	rm -f data/SetupData.RData data/EOD-Data.RData VolBreakout.html
+	rm -f data/SetupData.RData data/EOD-Data.RData VolBreakout.html data/SetupData_swbr.RData data/EOD-Data_swbr.RData
 
 data/SetupData.RData: 03_ticker.R
-	Rscript $<
+	Rscript $< /var/www/html/sqx.servebeer.com/vbt/upload/dateien/ticker.csv data/ticker.csv data/SetupData.RData
+
+# Daten fuer Schweiz Bruessel
+data/SetupData_swbr.RData: 03_ticker.R 
+	Rscript $< NULL data/ticker_swbr.csv data/SetupData_swbr.RData
 
 data/EOD-Data.RData: 04_load_EOD.R data/SetupData.RData
-	Rscript $<
+	Rscript $< data/SetupData.RData data/EOD-Data.RData
+
+data/EOD-Data_swbr.RData: 04_load_EOD.R data/SetupData_swbr.RData
+	Rscript $< data/SetupData_swbr.RData data/EOD-Data_swbr.RData
 
 VolBreakout.html: VolBreakout.Rmd data/EOD-Data.RData
-	Rscript -e "path_to_eod_data='data/EOD-Data.RData'; rmarkdown::render('$<')"
+	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Deutschland', path_to_eod_data='data/EOD-Data.RData'))"
+
+VolBreakout_swbr.html: VolBreakout.Rmd data/EOD-Data_swbr.RData
+	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Schweiz, Belgien', path_to_eod_data='data/EOD-Data_swbr.RData'), output_file = 'VolBreakout_swbr.html')"
 
 /var/www/html/sqx.servebeer.com/vbt/vbt.html: VolBreakout.html
+	mv $< $@
+
+/var/www/html/sqx.servebeer.com/vbt/vbt_swbr.html: VolBreakout_swbr.html
 	mv $< $@
