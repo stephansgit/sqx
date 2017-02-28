@@ -1,5 +1,6 @@
 html_document:
   theme: cosmo
-  self_contained: true
+  self_contained: false
+  lib_dir: libs
   includes:
-    in_header: include/header.html
+    in_header: /home/fibo/boerse/VolBreakout/include/header.html

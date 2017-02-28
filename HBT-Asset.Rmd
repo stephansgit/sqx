@@ -1,0 +1,150 @@
+---
+title: "Börsentacho Indikatoren"
+---
+
+```{r setup, include=FALSE}
+
+starttime <- Sys.time()
+
+suppressPackageStartupMessages(library(googleVis))
+library(googleVis)
+library(zoo)
+library(reshape2)
+library(ggplot2)
+library(knitr)
+library(scales)
+library(quantmod)
+library(gridExtra)
+library(lubridate)
+library(bdscale)
+
+source("01_functions.R")
+source("02_parameters.R")
+
+options(scipen = 0, digits = 5) # set options to avoid scientific notation
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+op <- options(gvis.plot.tag='chart')
+```
+
+In dieser Arbeitsmappe wird das Trendverhalten bestimmter Assetklassen dargestellt. 
+
+
+```{r load}
+#Set variables####
+start <- "01.01.2012"
+end <- format(Sys.Date(), "%d.%m.%Y")
+
+ariva.import <- function(symbol) 
+{   tmp <- read.csv2(symbol)
+    tmp$Datum <- as.Date(tmp$Datum)
+    tmp$Erster <- as.numeric(sub("\\,", ".", gsub("\\.","",tmp$Erster)))
+    tmp$Hoch <- as.numeric(sub("\\,", ".", gsub("\\.","",tmp$Hoch)))
+    tmp$Tief <- as.numeric(sub("\\,", ".", gsub("\\.","",tmp$Tief)))
+    tmp$Schlusskurs <- as.numeric(sub("\\,", ".", gsub("\\.","",tmp$Schlusskurs)))
+    tmp$Volumen <- as.numeric(sub("\\,", ".", gsub("\\.","",tmp$Volumen)))
+    tmp <- zoo(tmp[,2:6], tmp$Datum)
+}
+ 
+  eurusd <- paste0("http://www.ariva.de/quote/historic/historic.csv?secu=4633&boerse_id=48&clean_split=1&clean_payout=0&clean_bezug=0&min_time=",start,"&max_time=",end,"&trenner=%3B&go=Download")
+  eurusd <- read.csv2(eurusd)
+  eurusd$Datum <- as.Date(eurusd$Datum)
+  eurusd <- zoo(eurusd[,2:5], eurusd$Datum)
+
+silver <- paste0("http://www.ariva.de/quote/historic/historic.csv?secu=38823&boerse_id=33&clean_split=1&clean_payout=0&clean_bezug=0&min_time=",start,"&max_time=",end,"&trenner=%3B&go=Download")
+  silver <- read.csv2(silver)
+	silver$Datum <- as.Date(silver$Datum)
+	silver <- zoo(silver[,2:5], silver$Datum)
+
+gold <- paste0("http://www.ariva.de/quote/historic/historic.csv?secu=32119&boerse_id=33&clean_split=1&clean_payout=0&clean_bezug=0&min_time=",start,"&max_time=",end,"&trenner=%3B&go=Download")
+  gold <- ariva.import(gold)
+	
+	brent <- paste0("http://www.ariva.de/quote/historic/historic.csv?secu=101622813&boerse_id=33&clean_split=1&clean_payout=0&clean_bezug=0&min_time=",start,"&max_time=",end,"&trenner=%3B&go=Download")
+	brent <- read.csv2(brent)
+	brent$Datum <- as.Date(brent$Datum)
+	brent <- zoo(brent[,2:5], brent$Datum)
+
+  sp500 <- paste0("http://www.ariva.de/quote/historic/historic.csv?secu=4152&boerse_id=37&clean_split=1&clean_payout=0&clean_bezug=0&min_time=",start,"&max_time=",end,"&trenner=%3B&go=Download")
+  sp500 <- ariva.import(sp500)
+
+  dax <- paste0("http://www.ariva.de/quote/historic/historic.csv?secu=290&boerse_id=12&clean_split=1&clean_payout=0&clean_bezug=0&min_time=",start,"&max_time=",end,"&trenner=%3B&go=Download")
+	dax <- ariva.import(dax)
+
+# Kreiere einen Data-Frame
+assets.zoo <- cbind(dax$Schlusskurs, sp500$Schlusskurs, silver$Schlusskurs, 
+	              gold$Schlusskurs, brent$Schlusskurs, eurusd$Schlusskurs)
+colnames(assets.zoo) <- c("DAX", "S&P500", "Silber","Gold", 
+		"Brent", "EURUSD")
+
+# Cleaning
+wevector <- which(wday(assets.zoo)==1 | wday(assets.zoo)==7)
+assets.zoo <- assets.zoo[-wevector,] # filters weekends out of dataset; on some weekends there are some quotes...
+assets.zoo <- na.locf(assets.zoo,na.rm=F)
+
+assets.zoo <- window(assets.zoo, end=Sys.Date()-1) # delete current day, because it will contain NAs or useless interpolated values.
+
+
+
+# Calculate the HBT
+
+hbt.zoo <- hbt_calc(assets.zoo, lookback, smoothper)
+
+```
+
+
+```Letzte Daten: `r tail(index(hbt.zoo),1)` ```    
+```Letzte Ausführung: `r starttime` ```   
+
+Die untersuchten Assetklassen sind
+
+- DAX
+- S&P 500
+- Silber in USD
+- Gold in USD
+- Brent-Öl
+- Euro zu US-Dollar
+
+
+### Tachostand
+
+```{r gauge, results='asis'}
+### Create the gauge
+gauge.df <- as.data.frame(round(tail(hbt.zoo,1),4))
+Gauge1 <- gvisGauge(gauge.df, options=list(min=0.9, max=1.1, greenFrom=1.02,
+                                           greenTo=1.1, yellowFrom=0.98, yellowTo=1.02,
+                                           redFrom=0.9, redTo=.98, height=250))
+
+plot(Gauge1)
+```
+
+### Zeitreihe der HBT-Werte
+
+Wiederum ist der HBT-Wert mit 100 multipliziert, zur besseren Lesbarkeit im Chart.  
+
+```{r zeitreihe, results='asis'}
+hbt.m <- data.frame(Date=index(hbt.zoo),100*coredata(hbt.zoo))
+hbt.m <- melt(hbt.m, id.vars="Date", variable.name="Asset", value.name="HBT")
+Time <- gvisAnnotationChart(data=hbt.m,
+                              datevar="Date", numvar="HBT", idvar="Asset",
+                            options=list(width=900, height=400, vAxis="{format:'#.###'}"))
+
+plot(Time)
+```
+
+### Tabelle der HBT-Werte
+
+Dargestellt die letzten 20 Werte (sortieren durch Klicken auf die Spaltenköpfe):  
+
+```{r table, results='asis'}
+hbt.df <- data.frame(Date=index(hbt.zoo),round(coredata(hbt.zoo),3))
+Table <- gvisTable(data=tail(hbt.df,20))
+plot(Table)
+```
+
+### HBT-Werte als Mosaikplot
+
+```{r moasic}
+ggplot(data=hbt.m) + geom_tile(aes(x=Date, y=Asset, fill=HBT/100)) + scale_x_bd(business.dates=yahoo('SPY')) + scale_fill_gradient2("HBT",midpoint = 1, low=muted('red'), high=muted('green')) + theme_minimal() + ggtitle("Mosaikplot der HBT-Stände")# uses business days of S&P traded
+```
+
+-----
+END OF FILE

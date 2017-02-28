@@ -1,6 +1,6 @@
 #############################
-# Beinhaltet Funktionen im Rahmen des VB-Projekts
-# 26.07.2015
+# Beinhaltet Funktionen im Rahmen des HBT und VBT VB-Projekts
+# merge 28.02.2017
 #############################
 
 library(xts)
@@ -133,3 +133,14 @@ calc_signal <- function(vb_vector, trigger) {
 
 
 
+########################################
+# HBT
+#
+##################################
+
+# berechnet VB-Wert
+hbt_calc <- function(indices, lookback, smoothper) {
+  tmp <- indices / (rollapply(indices, width=lookback, FUN=mean, na.rm=T, align="right")) # calc the RSL
+  tmp <- rollapply(tmp, width=smoothper, FUN=mean, na.rm=TRUE, align="right") # add a smoother
+  return(tmp)
+}
