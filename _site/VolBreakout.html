@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Volumen Breakout Tool - End of Day</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">sqx tools</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-line-chart"></span>
+     
+    Volumen Breakout
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="index.html">Methodik</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="VolBreakout.html">End of Day Deutschland</a>
+    </li>
+    <li>
+      <a href="VolBreakout_swbr.html">End of Day Schweiz/Belgien</a>
+    </li>
+    <li>
+      <a href="VolBreakout-Intraday.html">Intraday Deutschland</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="index.html">Upload Ticker</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="glyphicon glyphicon-dashboard"></span>
+     
+    Börsentacho
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="index.html">Methodik</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="HBT-Tacho.html">Aktienindizes</a>
+    </li>
+    <li>
+      <a href="HBT-Asset.html">Assets</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-question"></span>
+     
+    Über
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Volumen Breakout Tool - End of Day</h1>
+
+</div>
+
+
+<p>Das Tool identifziert Aktien mit einem Volumenausbruch. Details siehe <a href="http://sqx.servebeer.com/vbt/methode.html">hier</a>.</p>
+<p><strong>Börsen: Deutschland</strong></p>
+<div id="daten" class="section level3">
+<h3>Daten</h3>
+<p><code>Letzte Ausführung: 2017-03-05 17:22:26</code><br />
+<code>Eingelesene Werte: 66</code><br />
+<code>Letzter berücksichtigter Close: 2017-03-03</code></p>
+<p><code>3</code> Werte konnten nicht eingelesen werden:<br />
+<code>AGY1, BAF, BEZ3</code></p>
+<p>Berücksichtigung der letzten 40 Handelstage.</p>
+</div>
+<div id="ergebnisse" class="section level3">
+<h3>Ergebnisse</h3>
+<p>Die folgenden Aktien haben am vergangen Closing einen <em>VB</em>-Wert von <strong>über</strong> 3 bzw. <strong>kleiner als</strong> -3 gezeigt (was einem Volumen über dem 3fachen Durchschnittsvolumen entspricht).</p>
+<table>
+<caption>Werte mit Upmove heute (“weiße Kerze”)</caption>
+<thead>
+<tr class="header">
+<th align="left">Ticker</th>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ACWN.DE</td>
+<td align="left">A.S.CREATION TAPETEN NA</td>
+</tr>
+</tbody>
+</table>
+<p>[1] “”</p>
+<table>
+<caption>Werte mit Downmove heute (“schwarze Kerze”)</caption>
+<thead>
+<tr class="header">
+<th align="left">Ticker</th>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">BWB.DE</td>
+<td align="left">BAADER BANK AG</td>
+</tr>
+</tbody>
+</table>
+<p>(<em>Leer</em> bedeutet, dass kein Wert den Volumendurchschnitt ‘durchbrochen’ hat.)</p>
+<p><em>Beachte: Tickersymbolen, die mit einer Zahl beginnen, werden momentan noch mit einem X versehen - daher wird auch ihr Klarname nicht richtig gefunden.</em></p>
+</div>
+<div id="charts" class="section level3">
+<h3>Charts</h3>
+<p>Für die gefundenen Werte werden die Charts dargestellt.</p>
+<p><strong>Charts für Werte mit VB &gt; +3:</strong></p>
+<p><img src="VolBreakout_files/figure-html/charts1-1.png" width="672" /> .<br />
+—–</p>
+<p><strong>Charts für Werte mit VB &lt; -3:</strong></p>
+<p><img src="VolBreakout_files/figure-html/charts2-1.png" width="672" /></p>
+</div>
+<div id="section" class="section level2">
+<h2>.</h2>
+<div id="tabelle" class="section level3">
+<h3>Tabelle</h3>
+<p>Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an. Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.</p>
+<!-- Table generated in R 3.3.2 by googleVis 0.6.2 package -->
+<!-- Sun Mar  5 17:22:28 2017 -->
+<!-- jsHeader -->
+<script type="text/javascript">
+ 
+// jsData 
+function gvisDataTableID20b624d62b () {
+var data = new google.visualization.DataTable();
+var datajson =
+[
+ [
+"AV7.DE",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"BYW6.DE",
+"BAYWA AG VINK.NA. O.N.",
+-0.42,
+0.52,
+0.47,
+0.39,
+1.77
+],
+[
+"AUS.DE",
+"AT+S AUSTR.T.+SYSTEMT.",
+-0.35,
+-0.06,
+-1.35,
+-0.6,
+-1.01
+],
+[
+"A6T.DE",
+"ARTEC TECHNOLOGIES O.N.",
+-0.65,
+0.22,
+3.12,
+1.67,
+-0.98
+],
+[
+"BST.DE",
+"BASTEI LUEBBE AG  O.N.",
+-4.89,
+0.39,
+-1.08,
+1.11,
+0.28
+],
+[
+"BDT.DE",
+"BERTRANDT AG O.N.",
+-0.58,
+1.45,
+1.62,
+-0.78,
+-0.91
+],
+[
+"BFC.DE",
+"KTM INDUSTRIES AG",
+null,
+null,
+null,
+null,
+1
+],
+[
+"ADN1.DE",
+"ADESSO AG  O.N.",
+-0.14,
+0.56,
+0.37,
+0.97,
+0.59
+],
+[
+"A62.DU",
+"N/A",
+null,
+null,
+null,
+null,
+0.54
+],
+[
+"SPR.DE",
+"A.SPRINGER SE VNA",
+-0.69,
+1.47,
+1.1,
+1.03,
+-1.09
+],
+[
+"ALG.DE",
+"ALBIS LEASING AG O.N.",
+null,
+-1,
+-2.39,
+0.3,
+0.04
+],
+[
+"ALV.DE",
+"ALLIANZ SE NA O.N.",
+-0.74,
+-1.02,
+1.19,
+-0.82,
+0.88
+],
+[
+"BYW.DE",
+"BAYWA AG NA.",
+null,
+-0.75,
+-0.75,
+1.65,
+-0.74
+],
+[
+"BSS.F",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"BEON.F",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"AAH.F",
+"AHLERS AG ST O.N.",
+0.67,
+0.11,
+0.69,
+0.7,
+null
+],
+[
+"AW2.F",
+"AUTOBANK AG INH.AKT.",
+-0.67,
+null,
+null,
+0.07,
+null
+],
+[
+"ALX.F",
+"ALEXANDERWERK AG O.N.",
+null,
+null,
+null,
+null,
+null
+],
+[
+"D7I.F",
+"BDI-BIOENERGY INTERNAT.AG",
+null,
+null,
+null,
+null,
+null
+],
+[
+"AAH3.F",
+"AHLERS AG VZO O.N.",
+-2.15,
+-2.14,
+1.86,
+0.76,
+1.43
+],
+[
+"BIJ.DE",
+"BIJOU BRIGITTE O.N.",
+0.47,
+1.8,
+-1.06,
+0.69,
+0.97
+],
+[
+"AGR3.MU",
+"N/A",
+-0.25,
+null,
+null,
+-0.77,
+1.2
+],
+[
+"ATF.DE",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"ADV.DE",
+"ADVA OPT.NETW.SE  O.N.",
+2.32,
+1.53,
+-1.56,
+1.19,
+0.98
+],
+[
+"HRPK.DE",
+"7C SOLARPARKEN AG  O.N.",
+-0.3,
+0.49,
+-0.34,
+0.3,
+0.54
+],
+[
+"BWB.DE",
+"BAADER BANK AG",
+3.18,
+-17.55,
+-0.32,
+-1.27,
+-3.82
+],
+[
+"BC8.DE",
+"BECHTLE AG O.N.",
+-0.79,
+0.93,
+-1.03,
+-0.86,
+1.2
+],
+[
+"A8A.DE",
+"JDC GROUP AG O.N.",
+0.41,
+null,
+0.27,
+0.1,
+0.71
+],
+[
+"AIXA.DE",
+"AIXTRON SE NA O.N.",
+0.94,
+-1.04,
+1.41,
+1.65,
+-1.22
+],
+[
+"A1OS.DE",
+"ALL FOR ONE STEEB AG",
+-0.24,
+-0.19,
+-0.49,
+0.1,
+-0.54
+],
+[
+"ART.DE",
+"ARTNET AG NA O.N.",
+0.16,
+null,
+null,
+0.03,
+null
+],
+[
+"AAD.DE",
+"AMADEUS FIRE AG",
+-0.91,
+1.87,
+1.21,
+-1.04,
+-0.25
+],
+[
+"VSJ.DE",
+"ADVANCED VISION T.  IS 2",
+0.99,
+-0.45,
+0.11,
+1.46,
+-1.11
+],
+[
+"AGR.MU",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"UUU.DE",
+"3U HOLDING AG",
+0.5,
+-0.17,
+-0.13,
+1.14,
+-0.44
+],
+[
+"X3W9K.DE",
+"N/A",
+0.14,
+0.04,
+-0.25,
+0.71,
+0.12
+],
+[
+"AB1.DE",
+"AIR BERLIN PLC  EO -,25",
+0.54,
+-0.66,
+-1.11,
+0.36,
+-0.94
+],
+[
+"DTD2.DE",
+"B+S BANKSYSTEME AG O.N.",
+-0.18,
+null,
+1.08,
+null,
+0.51
+],
+[
+"BSL.DE",
+"BASLER AG O.N.",
+0.98,
+0.89,
+-1.28,
+1.63,
+0.39
+],
+[
+"ACWN.DE",
+"A.S.CREATION TAPETEN NA",
+0.15,
+2.68,
+0.8,
+null,
+3.52
+],
+[
+"ANO.DE",
+"ALNO AG",
+0.04,
+0.11,
+0,
+0.55,
+0.2
+],
+[
+"USE.DE",
+"BEATE UHSE AG",
+-1.79,
+0.77,
+-1.55,
+-0.06,
+-0.01
+],
+[
+"BBZA.F",
+"BB BIOTECH NAM.  SF 0,20",
+null,
+null,
+null,
+null,
+null
+],
+[
+"HUL.F",
+"BHS TABLETOP AG O.N.",
+null,
+null,
+null,
+null,
+null
+],
+[
+"MBH3.F",
+"MASCH.BERT.HER. O.N. VZO",
+0.66,
+null,
+-0.22,
+-2.06,
+0.21
+],
+[
+"AU2.F",
+"AGRARIUS AG INH. O.N.KONV",
+null,
+null,
+null,
+null,
+null
+],
+[
+"AOF.DE",
+"ATOSS SOFTWARE AG",
+1.85,
+null,
+-0.25,
+1.19,
+-1.18
+],
+[
+"X5AB.DE",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"AR4.DE",
+"AURELIUS EQ.OPP.  O.N.",
+-0.55,
+0.89,
+1.32,
+1.09,
+-0.75
+],
+[
+"BAS.DE",
+"BASF SE NA O.N.",
+0.97,
+1.11,
+1.23,
+1.43,
+1.12
+],
+[
+"B5A.DE",
+"BAUER AG",
+0.64,
+-0.14,
+0.87,
+-0.19,
+0.23
+],
+[
+"ABA.DE",
+"ALBA SE O.N.",
+-0.17,
+null,
+null,
+-0.38,
+null
+],
+[
+"NDA.DE",
+"AURUBIS AG",
+-0.78,
+-0.86,
+1.16,
+1.22,
+2.58
+],
+[
+"BAYN.DE",
+"BAYER AG NA O.N.",
+-0.73,
+-0.94,
+1.25,
+0.78,
+0.88
+],
+[
+"BEI.DE",
+"BEIERSDORF AG O.N.",
+0.93,
+-1.28,
+-1.14,
+-0.84,
+-0.89
+],
+[
+"AIR.DE",
+"AIRBUS",
+-0.01,
+0.01,
+1.07,
+-0.13,
+0.02
+],
+[
+"ACX.DE",
+"BET-AT-HOME.COM AG O.N.",
+0.52,
+0.6,
+0.58,
+-0.26,
+-0.92
+],
+[
+"AOX.DE",
+"ALSTRIA OFFICE REIT-AG",
+-0.84,
+1.05,
+-1.31,
+1.21,
+-1.02
+],
+[
+"X2GB.DE",
+"N/A",
+-0.97,
+-0.55,
+-0.74,
+0.62,
+0.79
+],
+[
+"B8A.DE",
+"BAVARIA INDS GRP  O.N.",
+-0.43,
+0.22,
+-0.45,
+null,
+null
+],
+[
+"B5SK.DE",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"BFV.F",
+"BERL.EFFEKTENGES.AG O.N.",
+2.38,
+0.8,
+null,
+2.57,
+null
+],
+[
+"CMBT.F",
+"N/A",
+null,
+null,
+null,
+null,
+null
+],
+[
+"B9B.F",
+"BHB BRAUHLD.BAY.MIT.AG",
+null,
+null,
+null,
+null,
+null
+],
+[
+"NSU.F",
+"AUDI AG O.N.",
+null,
+null,
+null,
+null,
+null
+],
+[
+"A5A.F",
+"ASKNET AG NA O.N.",
+1.79,
+null,
+null,
+null,
+null
+] 
+];
+data.addColumn('string','Ticker');
+data.addColumn('string','Name');
+data.addColumn('number','2017-02-27');
+data.addColumn('number','2017-02-28');
+data.addColumn('number','2017-03-01');
+data.addColumn('number','2017-03-02');
+data.addColumn('number','2017-03-03');
+data.addRows(datajson);
+return(data);
+}
+ 
+// jsDrawChart
+function drawChartTableID20b624d62b() {
+var data = gvisDataTableID20b624d62b();
+var options = {};
+options["allowHtml"] = true;
+
+    var chart = new google.visualization.Table(
+    document.getElementById('TableID20b624d62b')
+    );
+    chart.draw(data,options);
+    
+
+}
+  
+ 
+// jsDisplayChart
+(function() {
+var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+var chartid = "table";
+  
+// Manually see if chartid is in pkgs (not all browsers support Array.indexOf)
+var i, newPackage = true;
+for (i = 0; newPackage && i < pkgs.length; i++) {
+if (pkgs[i] === chartid)
+newPackage = false;
+}
+if (newPackage)
+  pkgs.push(chartid);
+  
+// Add the drawChart function to the global list of callbacks
+callbacks.push(drawChartTableID20b624d62b);
+})();
+function displayChartTableID20b624d62b() {
+  var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+  var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+  window.clearTimeout(window.__gvisLoad);
+  // The timeout is set to 100 because otherwise the container div we are
+  // targeting might not be part of the document yet
+  window.__gvisLoad = setTimeout(function() {
+  var pkgCount = pkgs.length;
+  google.load("visualization", "1", { packages:pkgs, callback: function() {
+  if (pkgCount != pkgs.length) {
+  // Race condition where another setTimeout call snuck in after us; if
+  // that call added a package, we must not shift its callback
+  return;
+}
+while (callbacks.length > 0)
+callbacks.shift()();
+} });
+}, 100);
+}
+ 
+// jsFooter
+</script>
+<!-- jsChart -->
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartTableID20b624d62b"></script>
+<!-- divChart -->
+<div id="TableID20b624d62b" style="width: 500; height: automatic;">
+
+</div>
+<p>NB:<br />
+Bei Werten, deren Tickersymbol mit einer Zahl beginnt (bspw. 8GS.DE (China Spec Glass)), stellt das Tool fälschlicherweise ein “X” vor das Tickersymbol.</p>
+<hr />
+<p><code>2017-03-05 17:22:28</code></p>
+<p>END OF FILE</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

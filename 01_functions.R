@@ -1,11 +1,20 @@
 #############################
 # Beinhaltet Funktionen im Rahmen des HBT und VBT VB-Projekts
-# merge 28.02.2017
+# merged 28.02.2017
 #############################
 
 library(xts)
 library(quantmod)
 
+#### Allgemeines ####
+# Konvertiert xts-Objekt in einen data.frame
+xts2df <- function(x) {
+  tmp <- data.frame(Date=index(x), coredata(x))
+  return(tmp)
+}
+
+
+#### VBT ####
 read_ticker_data <- function(path_from_upload="/var/www/html/sqx.servebeer.com/vbt/upload/dateien/ticker.csv", path_for_standard="data/ticker.csv", output="data/SetupData.RData") {
   #lies die Default-Daten ein
   ticker <- read.csv(path_for_standard,header=TRUE) #lies das spreadsheet ein
@@ -32,7 +41,7 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   # Loop 1: Find values as specified
   for (i in 1:length(de_stocks)) {
     try(
-      getSymbols(de_stocks[i], from=StartDate, env=stocks, verbose = FALSE, warnings = FALSE)
+      getSymbols(de_stocks[i], from=StartDate_vbt, env=stocks, verbose = FALSE, warnings = FALSE)
     )
     Sys.sleep(1)
   }
@@ -42,7 +51,7 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   de_stocks2 <- gsub("\\..*$", ".F", de_stocks2) # replace the Xetra-suffix with Frankfurt suffix
   for (i in 1:length(de_stocks2)) {
     try(
-      getSymbols(de_stocks2[i], from=StartDate, env=stocks, verbose = FALSE, warnings = FALSE)
+      getSymbols(de_stocks2[i], from=StartDate_vbt, env=stocks, verbose = FALSE, warnings = FALSE)
     )
     Sys.sleep(1)
   }
@@ -55,7 +64,7 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   rm(de_stocks)
   rm(de_stocks2)
   
-  message("Tidying he data....")
+  message("Tidying the data....")
   de_vol <- eapply(stocks, volUpDn) #volUpDn ist eine Eigendefinierte Funktion
   de_vol <- lapply(de_vol, VolUpDn_extract) #volUpDn_extract ist eine Eigendefinierte Funktion
   de_vol <- as.xts(do.call(merge, de_vol))
@@ -75,11 +84,6 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   message("Output path is ", output_eod)
   save(stocks_requested, stocks_loaded, de_vol, stocks,fullnames, file=output_eod)
   
-}
-# Konvertiert xts-Objekt in einen data.frame
-xts2df <- function(x) {
-  tmp <- data.frame(Date=index(x), coredata(x))
-  return(tmp)
 }
 
 #function to calculate Volumen dependant on up or downmove of prices
@@ -119,7 +123,7 @@ getQuote2clean <- function(x) {
 
 # berechnet VB-Wert
 vb_calc <- function(voldata, lookback) {
-  tmp <- voldata / (rollapply(abs(voldata), width=lookback, FUN=mean, na.rm=T, align="right"))
+  tmp <- voldata / (rollapply(abs(voldata), width=lookback_vbt, FUN=mean, na.rm=T, align="right"))
   return(tmp)
 }
 
@@ -133,14 +137,11 @@ calc_signal <- function(vb_vector, trigger) {
 
 
 
-########################################
-# HBT
-#
-##################################
+#### HBT ####
 
-# berechnet VB-Wert
-hbt_calc <- function(indices, lookback, smoothper) {
-  tmp <- indices / (rollapply(indices, width=lookback, FUN=mean, na.rm=T, align="right")) # calc the RSL
-  tmp <- rollapply(tmp, width=smoothper, FUN=mean, na.rm=TRUE, align="right") # add a smoother
+# berechnet HBT Wert
+hbt_calc <- function(indices, lookback_hbt, smoothper_hbt) {
+  tmp <- indices / (rollapply(indices, width=lookback_hbt, FUN=mean, na.rm=T, align="right")) # calc the RSL
+  tmp <- rollapply(tmp, width=smoothper_hbt, FUN=mean, na.rm=TRUE, align="right") # add a smoother
   return(tmp)
 }

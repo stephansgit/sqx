@@ -34,9 +34,11 @@ quotes_tday.c <- quotes_tday.c[which(is.Date(quotes_tday.c$Date)),,drop=FALSE] #
 de_vol.df <- xts2df(de_vol)
 #Merge
 de_vol_intraday <- merge(de_vol.df, quotes_tday.c, by=intersect(names(de_vol.df), names(quotes_tday.c)), all=TRUE)
-# wenn das am WE läuft, dann findet er die Zeitstempel für den Freitag 2-mal und wirft deswegen ein Warning.
-## de_stocks[grep("^[0-9]", de_stocks)] ##
+# wenn das am WE läuft, dann findet er die Zeitstempel für den Freitag 2-mal und wirft deswegen ein Warning: Fix hier:
 de_vol_intraday <- read.zoo(de_vol_intraday)
+if(wday(Sys.Date())==1 | wday(Sys.Date())==7) {
+  de_vol_intraday <- de_vol_intraday[-dim(de_vol_intraday)[1],]  
+}
 
 save(de_vol_intraday, file="data/Intraday-Data.RData")
 # de_vol_intraday kann von der Hauptroutine nun genutzt werden

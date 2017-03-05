@@ -86,7 +86,7 @@ assets.zoo <- window(assets.zoo, end=Sys.Date()-1) # delete current day, because
 
 # Calculate the HBT
 
-hbt.zoo <- hbt_calc(assets.zoo, lookback, smoothper)
+hbt.zoo <- hbt_calc(assets.zoo, lookback_hbt, smoothper_hbt)
 
 ```
 
@@ -142,7 +142,7 @@ plot(Table)
 
 ### HBT-Werte als Mosaikplot
 
-```{r moasic}
+```{r moasic, eval=FALSE}
 ggplot(data=hbt.m) + geom_tile(aes(x=Date, y=Asset, fill=HBT/100)) + scale_x_bd(business.dates=yahoo('SPY')) + scale_fill_gradient2("HBT",midpoint = 1, low=muted('red'), high=muted('green')) + theme_minimal() + ggtitle("Mosaikplot der HBT-Stände")# uses business days of S&P traded
 ```
 

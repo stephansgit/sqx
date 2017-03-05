@@ -5,6 +5,5 @@ title: "sqx tools"
 
 
     
-> News 07. September:  
-> sqx.servebeer.com ist online!  
-> Es stellt das Volumenbreakout-Tool und das Börsentacho in überarbeiteter Variante bereit.  
+> News März 2017:
+> Die Seite wird inhaltlich überarbeitet...

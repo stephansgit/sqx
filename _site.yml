@@ -1,0 +1,35 @@
+name: "sqx"
+navbar:
+  title: "sqx tools"
+  left:
+    - text: "Volumen Breakout"
+      icon: fa-line-chart
+      menu:
+        - text: "Methodik"
+          href: index.html
+        - text: "---------"
+        - text: "End of Day Deutschland"
+          href: VolBreakout.html
+        - text: "End of Day Schweiz/Belgien"
+          href: VolBreakout_swbr.html
+        - text: "Intraday Deutschland"
+          href: VolBreakout-Intraday.html
+        - text: "---------"
+        - text: "Upload Ticker"
+          href: index.html
+    - text: "Börsentacho"
+      icon: glyphicon-dashboard
+      menu:
+        - text: "Methodik"
+          href: index.html
+        - text: "---------"
+        - text: "Aktienindizes"
+          href: HBT-Tacho.html
+        - text: "Assets"
+          href: HBT-Asset.html
+    - text: "Über"
+      icon: fa-question
+      href: about.html
+output:
+  html_document:
+    theme: cerulean

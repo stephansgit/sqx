@@ -19,7 +19,6 @@ library(lubridate)
 # Source die Parameter und die Funktionen später NOCH EINMAL, nach dem "rm"
 source("01_functions.R")
 source("02_parameters.R")
-source("03_ticker.R")
 
 
 ### Import data from yahoo
@@ -28,7 +27,7 @@ length(symbols_yahoo)
 #### Download Symbols in a list ####
 # see: http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
 indices.all <- lapply(symbols_yahoo, function(i) {
- try(getSymbols(i, from=StartDate, auto.assign=FALSE))
+ try(getSymbols(i, from=StartDate_hbt, auto.assign=FALSE))
  }
  )
 indices.class <- unlist(lapply(indices.all, is.zoo)) # checkt ob zoo (oder ERROR), und...
@@ -82,7 +81,7 @@ colnames(indices.zoo) <- c("USA", "Germany", "France", "Switzerland", "Spain", "
 
 #-------END OF LOADING--------------
 
-indices.zoo <- window(indices.zoo, start=StartDate, end=Sys.Date()-1) # delete current day, because it will contain NAs.
+indices.zoo <- window(indices.zoo, start=StartDate_hbt, end=Sys.Date()-1) # delete current day, because it will contain NAs.
 
 # Just for logging:
 print('Created data after cleaning:')
@@ -105,7 +104,7 @@ source("01_functions.R")
 source("02_parameters.R")
 
 ### calculate HBT
-hbt <- hbt_calc(indices.zoo, lookback, smoothper)
+hbt <- hbt_calc(indices.zoo, lookback_hbt, smoothper_hbt)
 hbt_world <- zoo(rowMeans(hbt), order.by=as.Date(index(hbt)))
 
 ### Save data

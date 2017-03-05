@@ -1,0 +1,56 @@
+---
+title: "Volumen Breakout Tool - Intraday Monitoring"
+---
+
+Das Tool identifiziert Aktien mit Volumenausbruch _intraday_.
+
+
+```{r load, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+library(knitr)
+library(quantmod)
+
+source(file="01_functions.R")
+source(file="02_parameters.R")
+#source(file="05_load_intraday.R")
+load(file="data/Intraday-Data.RData")
+de_vbt_intraday <- vb_calc(de_vol_intraday, lookback_vbt)
+
+```
+
+### Daten  
+
+```Letzte Ausführung: `r Sys.time()` ```   
+```Intraday aktualisiert:  `r dim(quotes_tday)[1]` ```
+```Intraday nicht aktualisierte Werte: `r no_act_quotes` ```  
+
+### Ergebnisse  
+
+```{r show_result}
+signals <- calc_signal(vb_vector=de_vbt_intraday, trigger=trigger_vbt)
+```
+
+Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger_vbt` gezeigt (was einem Volumen über dem `r trigger_vbt`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
+
+```{r display, results='asis'}
+modQuote <- standardQuote()
+modQuote[[1]] <- "l1c1p2ohgvn"
+try({
+  iday_breakouts <- getQuote2clean(getQuote(signals$signal_up, what=modQuote))
+  kable(iday_breakouts, caption='Werte mit Upmove heute ("weiße Kerze")')
+})
+try({
+  iday_breakouts <- getQuote2clean(getQuote(signals$signal_dn, what=modQuote))
+  kable(iday_breakouts, caption='Werte mit Downmove heute ("schwarze Kerze")')
+  })
+```  
+
+(_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
+
+
+Die Chartansicht ist im Intraday-Modus leider nicht verfügbar.
+
+-----
+``` `r Sys.time()` ```   
+
+END OF FILE

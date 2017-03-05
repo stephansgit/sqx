@@ -11,7 +11,8 @@ library(knitr)
 library(scales)
 library(xts)
 
-source("04_load_indices.R")
+#source("04_load_indices.R")
+source("01_functions.R")
 
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 

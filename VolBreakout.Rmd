@@ -41,7 +41,7 @@ source(file="02_parameters.R")
 load(file=params$path_to_eod_data)
 
 # Berechne den VB-Wert
-de_vbt <- vb_calc(de_vol, lookback)
+de_vbt <- vb_calc(de_vol, lookback_vbt)
 
 
 ```
@@ -59,16 +59,16 @@ __Börsen: `r params$exchanges`__
 ``` `r length(setdiff(stocks_requested, stocks_loaded))` ``` Werte konnten nicht eingelesen werden:     
 ``` `r setdiff(stocks_requested, stocks_loaded)` ```  
 
-Berücksichtigung der letzten `r lookback` Handelstage.
+Berücksichtigung der letzten `r lookback_vbt` Handelstage.
 
 
 ### Ergebnisse  
 
 ```{r last}
-signals <- calc_signal(vb_vector=de_vbt, trigger=trigger)
+signals <- calc_signal(vb_vector=de_vbt, trigger=trigger_vbt)
 ```
 
-Die folgenden Aktien haben am vergangen Closing einen _VB_-Wert von __über__ `r trigger` bzw. __kleiner als__ -`r trigger` gezeigt (was einem Volumen über dem `r trigger`fachen Durchschnittsvolumen entspricht).
+Die folgenden Aktien haben am vergangen Closing einen _VB_-Wert von __über__ `r trigger_vbt` bzw. __kleiner als__ -`r trigger_vbt` gezeigt (was einem Volumen über dem `r trigger_vbt`fachen Durchschnittsvolumen entspricht).
 
 ```{r table_vbts, results='asis'}
 kable(merge(data.frame(Ticker=signals$signal_up), fullnames), caption='Werte mit Upmove heute ("weiße Kerze")')
