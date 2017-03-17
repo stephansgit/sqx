@@ -1,0 +1,8 @@
+Also, die Webseite kann gebaut werden,
+Ausnahme: 
+- Intraday
+- Upload Link
+- Schweiz/Belgien
+
+Nächste Schritte:
+- Makefile machen. Mache ich ein großes? Momentan laufen die Rmd einfach durch, weil sie sich darauf verlassen, dass dir R files die Daten aufbereitet haben.
