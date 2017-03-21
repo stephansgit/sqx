@@ -6,7 +6,7 @@ navbar:
       icon: fa-line-chart
       menu:
         - text: "Methodik"
-          href: index.html
+          href: VolBreakout-Methodik.html
         - text: "---------"
         - text: "End of Day Deutschland"
           href: VolBreakout.html
@@ -21,7 +21,7 @@ navbar:
       icon: glyphicon-dashboard
       menu:
         - text: "Methodik"
-          href: index.html
+          href: HBT-Methodik.html
         - text: "---------"
         - text: "Aktienindizes"
           href: HBT-Tacho.html

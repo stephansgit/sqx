@@ -1,0 +1,25 @@
+all: /var/www/html/sqx.servebeer.com/HBT-Tacho.html /var/www/html/sqx.servebeer.com/HBT-Asset.html
+
+clean: 
+	rm -f data/Indices_Data.RData HBT-Tacho.html HBT-Asset.html
+
+# ---------------------------------------------------------------------
+
+# HBT-Tacho
+data/Indices_Data.RData: 04_load_indices.R
+	Rscript $<
+
+HBT-Tacho.html: HBT-Tacho.Rmd data/Indices_Data.RData
+	Rscript -e "rmarkdown::render('$<')"
+
+/var/www/html/sqx.servebeer.com/HBT-Tacho.html: HBT-Tacho.html
+	mv $< $@
+
+#---------------------
+
+# HBT-Assets
+HBT-Asset.html: HBT-Asset.Rmd
+	Rscript -e "rmarkdown::render('$<')"
+
+/var/www/html/sqx.servebeer.com/HBT-Asset.html: HBT-Asset.html
+	mv $< $@

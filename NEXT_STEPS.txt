@@ -3,3 +3,9 @@ Alle Files von HBT und VBT jetzt in einem Projekt vereint.
 Entscheidung: wir rendern nicht die komplette Seite, sondern jedes .Rmd einzeln über render_site(xxx.Rmd).
 Das erlaubt uns die Seiten individuell zu rendern, je nach Tages-Zeitpunkt.
 Ausserdem können wir so die MAKEFILEs nutzen.
+
+Es gibt jetzt drei Makefiles, und die Seite wird vernünftig gebaut.
+Úberprüfe Makefiles auf das clean, und geht nicht vielleicht ein Makefile?
+Löse noch das error handling.
+
+NICHT gelöst ist der Upload-Teil!

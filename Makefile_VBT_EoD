@@ -1,4 +1,4 @@
-all: /var/www/html/sqx.servebeer.com/vbt/vbt.html /var/www/html/sqx.servebeer.com/vbt/vbt_swbr.html
+all: /var/www/html/sqx.servebeer.com/VolBreakout.html /var/www/html/sqx.servebeer.com/VolBreakout_swbr.html
 
 clean: 
 	rm -f data/SetupData.RData data/EOD-Data.RData VolBreakout.html data/SetupData_swbr.RData data/EOD-Data_swbr.RData
@@ -25,11 +25,11 @@ VolBreakout.html: VolBreakout.Rmd data/EOD-Data.RData
 VolBreakout_swbr.html: VolBreakout.Rmd data/EOD-Data_swbr.RData
 	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Schweiz, Belgien', path_to_eod_data='data/EOD-Data_swbr.RData'), output_file = 'VolBreakout_swbr.html')"
 
-#/var/www/html/sqx.servebeer.com/vbt/vbt.html: VolBreakout.html
-#	mv $< $@
+/var/www/html/sqx.servebeer.com/VolBreakout.html: VolBreakout.html
+	mv $< $@
 
-#/var/www/html/sqx.servebeer.com/vbt/vbt_swbr.html: VolBreakout_swbr.html
-#	mv $< $@
+/var/www/html/sqx.servebeer.com/VolBreakout_swbr.html: VolBreakout_swbr.html
+	mv $< $@
 
 
 #-------------------------------------------------------------------------
