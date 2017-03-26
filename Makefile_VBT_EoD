@@ -1,3 +1,7 @@
+.PHONY: all clean
+.DELETE_ON_ERROR:
+
+
 all: /var/www/html/sqx.servebeer.com/VolBreakout.html /var/www/html/sqx.servebeer.com/VolBreakout_swbr.html
 
 clean: 

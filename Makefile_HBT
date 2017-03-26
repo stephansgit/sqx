@@ -1,3 +1,7 @@
+.PHONY: all clean
+.DELETE_ON_ERROR:
+
+
 all: /var/www/html/sqx.servebeer.com/HBT-Tacho.html /var/www/html/sqx.servebeer.com/HBT-Asset.html
 
 clean: 

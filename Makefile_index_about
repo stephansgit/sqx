@@ -1,3 +1,7 @@
+.PHONY: all clean
+.DELETE_ON_ERROR:
+
+
 all: /var/www/html/sqx.servebeer.com/index.html /var/www/html/sqx.servebeer.com/about.html /var/www/html/sqx.servebeer.com/HBT-Methodik.html /var/www/html/sqx.servebeer.com/VolBreakout-Methodik.html
 
 clean: 
