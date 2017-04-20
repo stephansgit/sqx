@@ -2,7 +2,7 @@
 .DELETE_ON_ERROR:
 
 
-all: /var/www/html/sqx.servebeer.com/index.html /var/www/html/sqx.servebeer.com/about.html /var/www/html/sqx.servebeer.com/HBT-Methodik.html /var/www/html/sqx.servebeer.com/VolBreakout-Methodik.html
+all: /var/www/html/sqx-test.servebeer.com/index.html /var/www/html/sqx-test.servebeer.com/about.html /var/www/html/sqx-test.servebeer.com/HBT-Methodik.html /var/www/html/sqx-test.servebeer.com/VolBreakout-Methodik.html
 
 clean: 
 	rm -f about.html index.html HBT-Methodik.html VolBreakout-Methodik.html
@@ -13,7 +13,7 @@ clean:
 index.html: index.Rmd
 	Rscript -e "rmarkdown::render('$<')"
 
-/var/www/html/sqx.servebeer.com/index.html: index.html
+/var/www/html/sqx-test.servebeer.com/index.html: index.html
 	mv $< $@
 
 #---------------------
@@ -22,19 +22,19 @@ index.html: index.Rmd
 about.html: about.Rmd
 	Rscript -e "rmarkdown::render('$<')"
 
-/var/www/html/sqx.servebeer.com/about.html: about.html
+/var/www/html/sqx-test.servebeer.com/about.html: about.html
 	mv $< $@
 
 # HBT-Methodik
 HBT-Methodik.html: HBT-Methodik.Rmd
 	Rscript -e "rmarkdown::render('$<')"
 
-/var/www/html/sqx.servebeer.com/HBT-Methodik.html: HBT-Methodik.html
+/var/www/html/sqx-test.servebeer.com/HBT-Methodik.html: HBT-Methodik.html
 	mv $< $@
 
 # VBT-Methodik
 VolBreakout-Methodik.html: VolBreakout-Methodik.Rmd
 	Rscript -e "rmarkdown::render('$<')"
 
-/var/www/html/sqx.servebeer.com/VolBreakout-Methodik.html: VolBreakout-Methodik.html
+/var/www/html/sqx-test.servebeer.com/VolBreakout-Methodik.html: VolBreakout-Methodik.html
 	mv $< $@

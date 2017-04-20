@@ -5,5 +5,12 @@ title: "sqx tools"
 
 
     
-> News März 2017:
-> Die Seite wird inhaltlich überarbeitet...
+> Dies ist die Testinstanz von sqx-tools.
+
+Noch nicht funktionsfähig sind  
+
+1. Intraday Aktualisierungen
+2. Upload der Ticker-Daten
+3. Zeitstempel der Aktualisierungen sind unter Umständen falsch  
+4. Icons werden nicht dargestellt
+
