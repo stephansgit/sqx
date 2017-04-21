@@ -9,3 +9,12 @@ Es gibt jetzt drei Makefiles, und die Seite wird vernünftig gebaut.
 Löse noch das error handling.
 
 NICHT gelöst ist der Upload-Teil!
+
+Intraday:
+- nutzt das "data/EOD-Data.RData", das darf ich nicht löschen. --> OKAY, da clean nur morgen ausgeführt wird.
+- ist gebaut; ausführen mit sudo make --debug all -f Makefile_VBT_intraday
+
+todo:
+- check clean for intraday
+- deploy intraday
+- 

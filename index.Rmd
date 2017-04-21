@@ -9,7 +9,7 @@ title: "sqx tools"
 
 Noch nicht funktionsfähig sind  
 
-1. Intraday Aktualisierungen
+1. ~~Intraday Aktualisierungen~~ SOLLTE GEHEN
 2. Upload der Ticker-Daten
 3. Zeitstempel der Aktualisierungen sind unter Umständen falsch  
 4. Icons werden nicht dargestellt

@@ -11,6 +11,7 @@ library(lubridate)
 Sys.setenv(TZ="Europe/Berlin") # needs to be done in order to make sure, getSymbols works properly.
 
 load(file="data/EOD-Data.RData")
+source("01_functions.R")
 loaded_symbols <- ls(envir=stocks)
 
 #Get quotes from yahoo
@@ -40,7 +41,7 @@ if(wday(Sys.Date())==1 | wday(Sys.Date())==7) {
   de_vol_intraday <- de_vol_intraday[-dim(de_vol_intraday)[1],]  
 }
 
-save(de_vol_intraday, file="data/Intraday-Data.RData")
+save(de_vol_intraday, quotes_tday, no_act_quotes, file="data/Intraday-Data.RData")
 # de_vol_intraday kann von der Hauptroutine nun genutzt werden
 
 #-------------------------------------------
