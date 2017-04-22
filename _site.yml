@@ -33,3 +33,7 @@ navbar:
 output:
   html_document:
     theme: cerulean
+    self_contained: false
+    lib_dir: libs
+    include:
+      after_body: footer.html

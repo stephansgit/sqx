@@ -113,10 +113,10 @@ getQuote2clean <- function(x) {
   x$Volume <- x$Volume * sign(ifelse((x$Open- x$Last)!=0, x$Last - x$Open, 0.01))
   x$Ticker <- row.names(x)
   #x$Tradetime <- x$Trade.Time
-  hour(x$Trade.Time) <- ifelse(
-    (hour(x$Trade.Time)>=0 & hour(x$Trade.Time)<9),
-    hour(x$Trade.Time) + 12,
-    hour(x$Trade.Time)
+  lubridate::hour(x$Trade.Time) <- ifelse(
+    (lubridate::hour(x$Trade.Time)>=0 & lubridate::hour(x$Trade.Time)<9),
+    lubridate::hour(x$Trade.Time) + 12,
+    lubridate::hour(x$Trade.Time)
   )
   return(x)
 }

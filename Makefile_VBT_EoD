@@ -2,10 +2,10 @@
 .DELETE_ON_ERROR:
 
 
-all: /var/www/html/sqx-test.servebeer.com/VolBreakout.html /var/www/html/sqx-test.servebeer.com/VolBreakout_swbr.html
+all: /var/www/html/sqx-test.servebeer.com/VolBreakout.html /var/www/html/sqx-test.servebeer.com/VolBreakout_swbr.html /var/www/html/sqx-test.servebeer.com/VolBreakout_files /var/www/html/sqx-test.servebeer.com/VolBreakout_swbr_files
 
 clean: 
-	rm -f data/SetupData.RData data/EOD-Data.RData VolBreakout.html data/SetupData_swbr.RData data/EOD-Data_swbr.RData
+	rm -f data/SetupData.RData data/EOD-Data.RData VolBreakout.html data/SetupData_swbr.RData data/EOD-Data_swbr.RData VolBreakout_files VolBreakout_swbr_files
 
 # ---------------------------------------------------------------------
 
@@ -32,8 +32,13 @@ VolBreakout_swbr.html: VolBreakout.Rmd data/EOD-Data_swbr.RData
 /var/www/html/sqx-test.servebeer.com/VolBreakout.html: VolBreakout.html
 	mv $< $@
 
+/var/www/html/sqx-test.servebeer.com/VolBreakout_files: VolBreakout_files
+	mv $< $@
+
 /var/www/html/sqx-test.servebeer.com/VolBreakout_swbr.html: VolBreakout_swbr.html
 	mv $< $@
 
+/var/www/html/sqx-test.servebeer.com/VolBreakout_swbr_files: VolBreakout_swbr_files
+	mv $< $@
 
 #-------------------------------------------------------------------------
