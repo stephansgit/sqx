@@ -2,15 +2,17 @@
 .DELETE_ON_ERROR:
 
 
-all: /var/www/html/sqx-test.servebeer.com/VolBreakout-Intraday.html
+all: /var/www/html/sqx-test.servebeer.com/VolBreakout-Intraday.html clean_intraday_data
 
 clean: 
 	rm -f VolBreakout-Intraday.html data/Intraday-Data.RData
 	
 # ---------------------------------------------------------------------
 
+clean_intraday_data:
+	rm -f data/Intraday-Data.RData
 
-data/Intraday-Data.RData: 05_load_intraday.R data/EOD-Data.RData
+data/Intraday-Data.RData: 05_load_intraday.R data/EOD-Data.RData clean_intraday_data
 	Rscript $< 
 
 

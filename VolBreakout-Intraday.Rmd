@@ -21,6 +21,7 @@ de_vbt_intraday <- vb_calc(de_vol_intraday, lookback_vbt)
 ### Daten  
 
 ```Letzte Ausführung: `r Sys.time()` ```   
+```Timestamp Intraday Daten: `r file.mtime("data/Intraday-Data.RData")` ```  
 ```Intraday aktualisiert:  `r dim(quotes_tday)[1]` ```
 ```Intraday nicht aktualisierte Werte: `r no_act_quotes` ```  
 

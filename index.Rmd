@@ -11,6 +11,6 @@ Noch nicht funktionsfähig sind
 
 1. ~~Intraday Aktualisierungen~~ SOLLTE GEHEN
 2. Upload der Ticker-Daten
-3. Zeitstempel der Aktualisierungen sind unter Umständen falsch  
+3. ~~Zeitstempel der Aktualisierungen sind unter Umständen falsch~~ BEI INTRADAY WEITEREN ZEITSTEMPEL HINZUGEFÜGT  
 4. ~~Icons werden nicht dargestellt~~
 
