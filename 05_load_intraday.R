@@ -32,6 +32,17 @@ quotes_tday.c <- quotes_tday.c[which(is.Date(quotes_tday.c$Date)),,drop=FALSE] #
 #tmp.zoo<-read.zoo(tmp.c)
 
 #Convert the xts to data.frame for the merge to follow
+    #and first we need to check for duplicate entries in the index
+    doubleindex <- which(duplicated(index(de_vol)))
+    if (length(doubleindex)) {
+      message(paste("Doppelte Eintraeg im Index:", length(doubleindex)))
+      #is.na(de_vol[doubleindex, ])
+      de_vol <- de_vol[ -doubleindex, ] # entferne die doppelten Einträge - ACHTUNG, das ist Holzammer, weil wir nicht prüfen, ob die NA sind oder so.
+      message("Doppele Eintraege entfernt")
+    } else {
+      message("Keine doppelten Eintraege")
+    } 
+
 de_vol.df <- xts2df(de_vol)
 #Merge
 de_vol_intraday <- merge(de_vol.df, quotes_tday.c, by=intersect(names(de_vol.df), names(quotes_tday.c)), all=TRUE)
