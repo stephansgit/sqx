@@ -8,7 +8,7 @@ StartDate_vbt <- as.Date("2015-01-01")
 StartDate_hbt <- as.Date("2007-01-01")
 
 #### Symbole für HBT Indizes
-symbols_yahoo <- c( "DJIA", "^GDAXI", "^FCHI", "^SSMI", "^IBEX", "^SSEC", "^MXX", "^N225", "^AORD", "^ATX", "^GSPTSE", "^HSI", "^BVSP", "^MERV")
+symbols_yahoo <- c( "DJI", "^GDAXI", "^FCHI", "^SSMI", "^IBEX", "^SSEC", "^MXX", "^N225", "^AORD", "^ATX", "^GSPTSE", "^HSI", "^BVSP", "^MERV")
 
 
 # Parameter für Berechnungen
