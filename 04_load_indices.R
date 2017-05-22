@@ -27,7 +27,8 @@ length(symbols_yahoo)
 #### Download Symbols in a list ####
 # see: http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
 indices.all <- lapply(symbols_yahoo, function(i) {
- try(getSymbols(i, from=StartDate_hbt, auto.assign=FALSE))
+ message(paste("Trying to load", symbols_yahoo[i]))
+  try(getSymbols(i, from=StartDate_hbt, auto.assign=FALSE))
  }
  )
 indices.class <- unlist(lapply(indices.all, is.zoo)) # checkt ob zoo (oder ERROR), und...
@@ -43,23 +44,23 @@ snp <- Ad(GSPC)
 
 Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deletion that follows
 
-#--Download Russian data----------------------------
-library(Quandl)
-RTSI <- Quandl("YAHOO/INDEX_RTS_RS", type="xts", end_date='2016-06-30') # wieso auch immer hat Quandl die Daten danach unveraendert
-library(RCurl)
-URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2016-12-31&lang=en&limit=100&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
-x <- getURL(URL)
-#download.file(URL, destfile="rtsi.csv")
-rtsi <- read.csv(textConnection(x), header=TRUE, skip=2, sep=";")
-rtsi <- rtsi[,c("TRADEDATE", "CLOSE")] # drop irrelevant columns
-rtsi$TRADEDATE <- ymd(rtsi$TRADEDATE) #convert to POSIXct
-rtsi$TRADEDATE <- as.Date(rtsi$TRADEDATE) # convert to as.Date
-ind <- data.frame(Date=index(RTSI),RTSI = Ad(RTSI)) # create new, temporary dataframe for Russia only
-ind.m <- merge(x=ind, y=rtsi, by.x="Date", by.y="TRADEDATE", all=TRUE) # merge the Yahoo and the RTS data
-ind.m <- as.xts(ind.m[,-1], order.by = ind.m$Date)
-
-ind.m$Adjusted.Close[is.na(ind.m$Adjusted.Close)] <- ind.m$CLOSE[is.na(ind.m$Adjusted.Close)] # replace the NA data from quandl with data from RTS
-indices.zoo$Russia <- ind.m$Adjusted.Close[paste0(start(indices.zoo),'::')] # add the new Russia data to the bigger data frame 
+# #--Download Russian data----------------------------
+# library(Quandl)
+# RTSI <- Quandl("YAHOO/INDEX_RTS_RS", type="xts", end_date='2016-06-30') # wieso auch immer hat Quandl die Daten danach unveraendert
+# library(RCurl)
+# URL <- "http://moex.com/iss/history/engines/stock/markets/index/securities/RTSI.csv?iss.only=history&iss.json=extended&callback=JSON_CALLBACK&from=2015-01-01&till=2017-12-31&lang=en&limit=1000&start=0&sort_order=TRADEDATE&sort_order_desc=desc"
+# x <- getURL(URL)
+# #download.file(URL, destfile="rtsi.csv")
+# rtsi <- read.csv(textConnection(x), header=TRUE, skip=2, sep=";")
+# rtsi <- rtsi[,c("TRADEDATE", "CLOSE")] # drop irrelevant columns
+# rtsi$TRADEDATE <- ymd(rtsi$TRADEDATE) #convert to POSIXct
+# rtsi$TRADEDATE <- as.Date(rtsi$TRADEDATE) # convert to as.Date
+# ind <- data.frame(Date=index(RTSI),RTSI = Ad(RTSI)) # create new, temporary dataframe for Russia only
+# ind.m <- merge(x=ind, y=rtsi, by.x="Date", by.y="TRADEDATE", all=TRUE) # merge the Yahoo and the RTS data
+# ind.m <- as.xts(ind.m[,-1], order.by = ind.m$Date)
+# 
+# ind.m$Adjusted.Close[is.na(ind.m$Adjusted.Close)] <- ind.m$CLOSE[is.na(ind.m$Adjusted.Close)] # replace the NA data from quandl with data from RTS
+# indices.zoo$Russia <- ind.m$Adjusted.Close[paste0(start(indices.zoo),'::')] # add the new Russia data to the bigger data frame 
 #--------
 
 
@@ -77,7 +78,7 @@ liffe_z2.xts <- as.xts(liffe_z2$Settle, order.by = liffe_z2$Date)
 indices.zoo <- merge(indices.zoo, liffe_z2.xts)
 
 colnames(indices.zoo) <- c("USA", "Germany", "France", "Switzerland", "Spain", "China", "Mexico", 
-  "Japan", "Australia", "Austria", "Canada", "HongKong", "Argentina", "Brasil", "Russia", "Italy", "UK")      
+  "Japan", "Australia", "Austria", "Canada", "HongKong", "Argentina", "Brasil", "Italy", "UK")      
 
 #-------END OF LOADING--------------
 
