@@ -1,8 +1,8 @@
-.PHONY: all clean /var/www/html/sqx-test.servebeer.com/HBT-Tacho_files
+.PHONY: all clean /var/www/html/sqx.servebeer.com/HBT-Tacho_files
 .DELETE_ON_ERROR:
 
 
-all: /var/www/html/sqx-test.servebeer.com/HBT-Tacho.html /var/www/html/sqx-test.servebeer.com/HBT-Asset.html /var/www/html/sqx-test.servebeer.com/HBT-Tacho_files
+all: /var/www/html/sqx.servebeer.com/HBT-Tacho.html /var/www/html/sqx.servebeer.com/HBT-Asset.html /var/www/html/sqx.servebeer.com/HBT-Tacho_files
 
 clean: 
 	rm -f data/Indices_Data.RData HBT-Tacho.html HBT-Asset.html HBT-Tacho_files/figure-html/*
@@ -16,12 +16,12 @@ data/Indices_Data.RData: 04_load_indices.R
 HBT-Tacho.html: HBT-Tacho.Rmd data/Indices_Data.RData
 	Rscript -e "rmarkdown::render('$<')"
 
-/var/www/html/sqx-test.servebeer.com/HBT-Tacho.html: HBT-Tacho.html
+/var/www/html/sqx.servebeer.com/HBT-Tacho.html: HBT-Tacho.html
 	mv $< $@
 
-/var/www/html/sqx-test.servebeer.com/HBT-Tacho_files: HBT-Tacho.html
-	rm -rf /var/www/html/sqx-test.servebeer.com/HBT-Tacho_files/
-	cp -rf HBT-Tacho_files/ /var/www/html/sqx-test.servebeer.com/HBT-Tacho_files/
+/var/www/html/sqx.servebeer.com/HBT-Tacho_files: HBT-Tacho.html
+	rm -rf /var/www/html/sqx.servebeer.com/HBT-Tacho_files/
+	cp -rf HBT-Tacho_files/ /var/www/html/sqx.servebeer.com/HBT-Tacho_files/
 
 #---------------------
 
@@ -29,5 +29,5 @@ HBT-Tacho.html: HBT-Tacho.Rmd data/Indices_Data.RData
 HBT-Asset.html: HBT-Asset.Rmd
 	Rscript -e "rmarkdown::render('$<')"
 
-/var/www/html/sqx-test.servebeer.com/HBT-Asset.html: HBT-Asset.html
+/var/www/html/sqx.servebeer.com/HBT-Asset.html: HBT-Asset.html
 	mv $< $@

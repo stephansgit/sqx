@@ -2,7 +2,7 @@
 .DELETE_ON_ERROR:
 
 
-all: /var/www/html/sqx-test.servebeer.com/VolBreakout-Intraday.html clean_intraday_data
+all: /var/www/html/sqx.servebeer.com/VolBreakout-Intraday.html clean_intraday_data
 
 clean: 
 	rm -f VolBreakout-Intraday.html data/Intraday-Data.RData
@@ -20,7 +20,7 @@ VolBreakout-Intraday.html: VolBreakout-Intraday.Rmd data/Intraday-Data.RData
 	Rscript -e "rmarkdown::render('$<')"
 
 
-/var/www/html/sqx-test.servebeer.com/VolBreakout-Intraday.html: VolBreakout-Intraday.html
+/var/www/html/sqx.servebeer.com/VolBreakout-Intraday.html: VolBreakout-Intraday.html
 	mv $< $@
 
 #-------------------------------------------------------------------------

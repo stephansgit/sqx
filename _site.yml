@@ -16,7 +16,7 @@ navbar:
           href: VolBreakout-Intraday.html
         - text: "---------"
         - text: "Upload Ticker"
-          href: index.html
+          href: vbt/upload/upload.html
     - text: "Börsentacho"
       icon: glyphicon-dashboard
       menu:
@@ -30,6 +30,9 @@ navbar:
     - text: "Über"
       icon: fa-question
       href: about.html
+    - text: "Admin"
+      icon: ambulance
+      href: admin.html
 output:
   html_document:
     theme: cerulean
