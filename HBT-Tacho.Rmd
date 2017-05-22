@@ -166,7 +166,7 @@ Spain        | IBEX
 Argentina    | Merval
 Mexico       | IPC
 Japan        | Nikkei
-Russia       | RTS  
+Russia       | __NICHT MEHR BERÜCKSICHTIGT__  
 China        | SSE Composite
 Switzerland  | SMI
 Singapore    | __NICHT MEHR BERÜCKSICHTIGT__
