@@ -71,14 +71,16 @@ signals <- calc_signal(vb_vector=de_vbt, trigger=trigger_vbt)
 Die folgenden Aktien haben am vergangen Closing einen _VB_-Wert von __über__ `r trigger_vbt` bzw. __kleiner als__ -`r trigger_vbt` gezeigt (was einem Volumen über dem `r trigger_vbt`fachen Durchschnittsvolumen entspricht).
 
 ```{r table_vbts, results='asis'}
-kable(merge(data.frame(Ticker=signals$signal_up), fullnames), caption='Werte mit Upmove heute ("weiße Kerze")')
+signals$signal_up <- merge(data.frame(Ticker=signals$signal_up), fullnames)
+signals$signal_dn <- merge(data.frame(Ticker=signals$signal_dn), fullnames)
+kable(signals$signal_up, caption='Werte mit Upmove heute ("weiße Kerze")')
 print("")
-kable(merge(data.frame(Ticker=signals$signal_dn), fullnames), caption='Werte mit Downmove heute ("schwarze Kerze")')
+kable(signals$signal_dn, caption='Werte mit Downmove heute ("schwarze Kerze")')
 ```
 
 (_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
 
-_Beachte: Tickersymbolen, die mit einer Zahl beginnen, werden momentan noch mit einem X versehen - daher wird auch ihr Klarname nicht richtig gefunden._
+_Beachte: Tickersymbole, die mit einer Zahl beginnen, werden momentan noch mit einem X versehen - daher wird auch ihr Klarname nicht richtig gefunden._
 
 ### Charts  
 
@@ -87,27 +89,27 @@ Für die gefundenen Werte werden die Charts dargestellt.
 __Charts für Werte mit VB > +3:__
 
 ```{r charts1}
-for (i in 1:length(signals$signal_up)) {
+for (i in 1:length(signals$signal_up$Ticker)) {
   try(
-    chartSeries(get(signals$signal_up[i], envir=stocks), subset='last 4 months', name=signals$signal_up[i]) 
+    chartSeries(get(as.character(signals$signal_up$Ticker[i]), envir=stocks), subset='last 4 months', name=as.character(signals$signal_up$Name[i])) 
     )
 }
 ```
-.    
+   
 -----
   
 __Charts für Werte mit VB < -3:__
 
 ```{r charts2}
-for (i in 1:length(signals$signal_dn)) {
+for (i in 1:length(signals$signal_dn$Ticker)) {
   try(
-    chartSeries(get(signals$signal_dn[i], envir=stocks), subset='last 4 months', name=signals$signal_dn[i]) 
+    chartSeries(get(as.character(signals$signal_dn$Ticker[i]), envir=stocks), subset='last 4 months', name=as.character(signals$signal_dn$Name[i])) 
     )
 }
 ```
   
   
-.  
+  
 -----  
 
 ### Tabelle  
