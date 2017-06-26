@@ -31,7 +31,7 @@ navbar:
       icon: fa-question
       href: about.html
     - text: "Admin"
-      icon: ambulance
+      icon: fa-ambulance
       href: admin.html
 output:
   html_document:

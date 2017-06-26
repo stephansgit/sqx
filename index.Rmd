@@ -5,12 +5,15 @@ title: "sqx tools"
 
 
     
-> Dies ist die Testinstanz von sqx-tools.
+> Die neue _sqx-tools_ ist online!
 
-Noch nicht funktionsfähig sind  
+Wesentliche Neuerungen sind:  
 
-1. ~~Intraday Aktualisierungen~~ SOLLTE GEHEN
-2. Upload der Ticker-Daten
-3. ~~Zeitstempel der Aktualisierungen sind unter Umständen falsch~~ BEI INTRADAY WEITEREN ZEITSTEMPEL HINZUGEFÜGT  
-4. ~~Icons werden nicht dargestellt~~
+- Überarbeitetes Layout
+- Schweizer und Belgische Werte NEU im Volumen-Breakout-Tool
+- verbesserte Code-Basis, die Erweiterungen einfacher erlaubt
+
+> Yahoo scheint wieder stabiler zu laufen, so dass die mesiten Werte aktualisiert werden.
+> Vereinzelt kommt es zu Fehlern; diese sind allerdings nicht reproduzierbar, siehe bspw. [hier](https://github.com/joshuaulrich/quantmod/issues/166).
+
 

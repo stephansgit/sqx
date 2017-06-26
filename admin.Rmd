@@ -5,7 +5,15 @@ title: "Admin"
 
 Links zu den log-Dateien der Makefiles:  
 
-HBT: 			http://sqx.servebeer.com/make_hbt.log
-VBT:			http://qx.servebeer.com/make_vbt.log
+HBT: 			http://sqx.servebeer.com/make_hbt.log  
+
+VBT:			http://sqx.servebeer.com/make_vbt.log  
+
 VBT-intraday: 		http://sqx.servebeer.com/make_vbt-intraday.log
 
+Release:
+
+```{r, echo=FALSE, results='asis'}
+system("git log --pretty=format:'%h %ad%x09%an%x09%s' --date=short > gitlog")
+cat("<embed src='~/boerse/sqx/gitlog' style='width:500px; height:500px;'>")
+```
