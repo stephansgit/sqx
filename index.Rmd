@@ -5,15 +5,16 @@ title: "sqx tools"
 
 
     
-> Die neue _sqx-tools_ ist online!
+> Release v1.1 ist online
+
+Bei der Darstellung der Charts im VolumenBreakout-Bereich wird nun der volle Name der Aktien angegeben.
+
+
+> 22. Mai 2017: Komplett überarbeitete ***sqx-tools*** (Release v1.0) ist online!
 
 Wesentliche Neuerungen sind:  
 
 - Überarbeitetes Layout
 - Schweizer und Belgische Werte NEU im Volumen-Breakout-Tool
 - verbesserte Code-Basis, die Erweiterungen einfacher erlaubt
-
-> Yahoo scheint wieder stabiler zu laufen, so dass die mesiten Werte aktualisiert werden.
-> Vereinzelt kommt es zu Fehlern; diese sind allerdings nicht reproduzierbar, siehe bspw. [hier](https://github.com/joshuaulrich/quantmod/issues/166).
-
 
