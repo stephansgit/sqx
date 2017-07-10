@@ -5,12 +5,12 @@ title: "sqx tools"
 
 
     
-> Release v1.1 ist online
+## Release v1.1 ist online
 
-Bei der Darstellung der Charts im VolumenBreakout-Bereich wird nun der volle Name der Aktien angegeben.
+Bei der Darstellung der Charts im VolumenBreakout-Bereich wird nun der volle Name und das Kürzel der Aktien angegeben.
 
 
-> 22. Mai 2017: Komplett überarbeitete ***sqx-tools*** (Release v1.0) ist online!
+## 22. Mai 2017: Komplett überarbeitete ***sqx-tools*** (Release v1.0) ist online!
 
 Wesentliche Neuerungen sind:  
 
