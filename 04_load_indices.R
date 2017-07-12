@@ -65,10 +65,10 @@ Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deleti
 
 
 #---Download Italian data
-# yahoo does not deliver; we query Quandl and use the LYXOR ETF instead
+# yahoo does not deliver; we query Quandl and use the LSE ETF instead, which is in GBP, but whatever....
 library(Quandl)
-epa_mib <- Quandl("GOOG/EPA_MIB")
-epa_mib.xts <- as.xts(epa_mib$Close, order.by = epa_mib$Date)
+epa_mib <- Quandl("LSE/IMIB")
+epa_mib.xts <- as.xts(epa_mib$`Last Close`, order.by = epa_mib$Date)
 indices.zoo <- merge(indices.zoo, epa_mib.xts)
 #------------
 
