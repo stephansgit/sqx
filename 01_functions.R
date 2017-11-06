@@ -75,6 +75,10 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   
   de_vol[de_vol==0] <- NA # replace 0 with NA
   
+ # debug point - save
+  save(stocks_requested, stocks_loaded, de_vol, stocks, file=output_eod)
+  message("erfolgreicher debug save")
+
   # Load full names from Yahoo
   message("Loading full names...")
   fullnames <- getQuote(names(de_vol), what=yahooQF("Name"))
