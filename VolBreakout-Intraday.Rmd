@@ -34,14 +34,14 @@ signals <- calc_signal(vb_vector=de_vbt_intraday, trigger=trigger_vbt)
 Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger_vbt` gezeigt (was einem Volumen über dem `r trigger_vbt`fachen Durchschnittsvolumen entspricht bei gleichzeitiger Aufwärtsbewegung des Preises):  
 
 ```{r display, results='asis'}
-modQuote <- standardQuote()
-modQuote[[1]] <- "l1c1p2ohgvn"
+#modQuote <- standardQuote()
+#modQuote[[1]] <- "l1c1p2ohgvn"
 try({
-  iday_breakouts <- getQuote2clean(getQuote(signals$signal_up, what=modQuote))
+  iday_breakouts <- getQuote_json(signals$signal_up)
   kable(iday_breakouts, caption='Werte mit Upmove heute ("weiße Kerze")')
 })
 try({
-  iday_breakouts <- getQuote2clean(getQuote(signals$signal_dn, what=modQuote))
+  iday_breakouts <- getQuote_json(signals$signal_dn)
   kable(iday_breakouts, caption='Werte mit Downmove heute ("schwarze Kerze")')
   })
 ```  

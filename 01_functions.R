@@ -112,13 +112,27 @@ getQuote_json <- function(ticks) {
     qRoot <- "https://query1.finance.yahoo.com/v7/finance/quote?fields=symbol,longName,regularMarketPrice,regularMarketChange,regularMarketChangePercent,regularMarketOpen,regularMarketTime,regularMarketVolume&formatted=false&symbols="
     z <- jsonlite::fromJSON(paste(qRoot, paste(ticks, collapse=","), sep=""))
     z <- z$quoteResponse$result[,c("symbol", "regularMarketTime", "regularMarketPrice", "regularMarketChange", "regularMarketChangePercent", "regularMarketOpen", "longName", "regularMarketVolume")]
-    row.names(z) <- z$symbol
-    z$symbol <- NULL
-    names(z) <- c("Trade.Time", "Last", "Change", "Change Perc", "Open", "Name", "Volume")
+    #row.names(z) <- z$symbol
+    #z$symbol <- NULL
+    names(z) <- c("Ticker", "Trade.Time", "Last", "Change", "Change Perc", "Open", "Name", "Volume")
     z$Trade.Time <- as.POSIXct(z$Trade.Time, origin = '1970-01-01 00:00:00')
     z$Volume <- z$Volume * sign(ifelse((z$Open - z$Last)!=0, z$Last - z$Open, 0.01))
     return(z)
 }
+
+#modified function to get DAX values
+getQuote_DAX_json <- function(ticks) {
+  qRoot <- "https://query1.finance.yahoo.com/v7/finance/quote?fields=symbol,longName,regularMarketPrice,regularMarketChange,regularMarketChangePercent,regularMarketOpen,regularMarketTime,regularMarketVolume&formatted=false&symbols="
+  z <- jsonlite::fromJSON(paste(qRoot, paste(ticks, collapse=","), sep=""))
+  z <- z$quoteResponse$result[,c("symbol", "regularMarketTime", "regularMarketPrice", "regularMarketChange", "regularMarketChangePercent", "regularMarketOpen", "regularMarketVolume")]
+  #row.names(z) <- z$symbol
+  #z$symbol <- NULL
+  names(z) <- c("Ticker" ,"Trade.Time", "Last", "Change", "Change Perc", "Open", "Volume")
+  z$Trade.Time <- as.POSIXct(z$Trade.Time, origin = '1970-01-01 00:00:00')
+  z$Volume <- z$Volume * sign(ifelse((z$Open - z$Last)!=0, z$Last - z$Open, 0.01))
+  return(z)
+}
+
 
 # säubert einen Quote von getQuote
 getQuote2clean <- function(x) {

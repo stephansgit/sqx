@@ -27,7 +27,7 @@ quotes_raw <- rbind(quotes_raw_1, quotes_raw_2, quotes_raw_3, quotes_raw_4, quot
 quotes_all <- quotes_raw
 quotes_all$Date = as.Date(quotes_all$Trade.Time)
 #unique(tmp$Date)
-lasttradingday <- as.Date(getQuote_json("^GDAXI")$Trade.Time) # use DAX quote to asses last German trading day
+lasttradingday <- as.Date(getQuote_DAX_json("^GDAXI")$Trade.Time) # use DAX quote to asses last German trading day
 quotes_tday <- subset(quotes_all, Date==as.Date(lasttradingday)) # delete all quotes not from TODAY
 no_act_quotes <- setdiff(quotes_all$Ticker, quotes_tday$Ticker)
 
