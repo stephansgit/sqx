@@ -4,13 +4,20 @@ title: "sqx tools"
 ---
 
 
-    
-## Release v1.1 ist online
+   
+## 04. Dezember 2017: Patch für Yahoo-Schnittstellenänderungen eingeführt
+
+Yahoo hat die Schnittstellen geändert. Dies führte dazu, dass keine Klarnamen der Aktien angezeigt wurden.
+Dies ist nun "geflickt": Sowohl im End-of-Day als auch im Intraday Scanner für den Volumen-Breakout werden die vollen Aktiennamen angezeigt.  
+Zusätzlich wurden ("unter der Haube") die Abfragen an Yahoo geändert.  
+
+
+### Release v1.1 ist online
 
 Bei der Darstellung der Charts im VolumenBreakout-Bereich wird nun der volle Name und das Kürzel der Aktien angegeben.
 
 
-## 22. Mai 2017: Komplett überarbeitete ***sqx-tools*** (Release v1.0) ist online!
+### 22. Mai 2017: Komplett überarbeitete ***sqx-tools*** (Release v1.0) ist online!
 
 Wesentliche Neuerungen sind:  
 
