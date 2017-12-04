@@ -80,10 +80,12 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   message("erfolgreicher debug save")
 
   # Load full names from Yahoo
+  ## I manually saved a mapping table to mapping_table.RData, which I load now... Might be decomissioned if new quantmod package available.
   message("Loading full names...")
-  fullnames <- rep(NA, length(names(de_vol)))
-  fullnames <- data.frame(Ticker=names(de_vol), Name=fullnames)
-  
+  #fullnames <- getQuote_json(names(de_vol))$Name
+  #fullnames <- data.frame(Ticker=names(de_vol), Name=fullnames)
+  load("name_mapping.RData")
+  fullnames <- name_mapping
   
   # Speichert EOD-Daten
   message("Saving...")
