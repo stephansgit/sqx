@@ -84,13 +84,9 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   message("Loading full names...")
   #fullnames <- getQuote_json(names(de_vol))$Name
   #fullnames <- data.frame(Ticker=names(de_vol), Name=fullnames)
-<<<<<<< HEAD
   load("name_mapping.RData")
   fullnames <- name_mapping
-=======
-  load("name_maping.RData")
-  fullnames <- mapping_names
->>>>>>> 1341b54765a551d166dfc96a60d344a125375cb7
+
   
   # Speichert EOD-Daten
   message("Saving...")
