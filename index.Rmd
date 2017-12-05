@@ -5,11 +5,12 @@ title: "sqx tools"
 
 
    
-## 04. Dezember 2017: Patch für Yahoo-Schnittstellenänderungen eingeführt
+## 06. Dezember 2017: Patch für Yahoo-Schnittstellenänderungen eingeführt: Namen auch im End-of-Day angezeigt  
 
 Yahoo hat die Schnittstellen geändert. Dies führte dazu, dass keine Klarnamen der Aktien angezeigt wurden.
 Dies ist nun "geflickt": Sowohl im End-of-Day als auch im Intraday Scanner für den Volumen-Breakout werden die vollen Aktiennamen angezeigt.  
 Zusätzlich wurden ("unter der Haube") die Abfragen an Yahoo geändert.  
+![Nikolaus](https://t4.ftcdn.net/jpg/01/27/98/07/160_F_127980749_JldanHlqvHMGI7MlCLE6Awa2QBb6FVuP.jpg)
 
 
 ### Release v1.1 ist online
