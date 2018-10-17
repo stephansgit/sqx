@@ -1,5 +1,5 @@
 .PHONY: all clean /var/www/html/sqx.servebeer.com/VolBreakout_files /var/www/html/sqx.servebeer.com/VolBreakout_swbr_files 
-.DELETE_ON_ERROR:
+
 
 
 all: /var/www/html/sqx.servebeer.com/VolBreakout.html /var/www/html/sqx.servebeer.com/VolBreakout_swbr.html /var/www/html/sqx.servebeer.com/VolBreakout_files /var/www/html/sqx.servebeer.com/VolBreakout_swbr_files

@@ -40,7 +40,7 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   
   # Loop 1: Find values as specified
   for (i in 1:length(de_stocks)) {
-    message(paste("Trying to load"), de_stocks[i])
+    message(paste("Trying to load "), de_stocks[i])
     try(
       getSymbols(de_stocks[i], from=StartDate_vbt, env=stocks, verbose = FALSE, warnings = FALSE)
     )
@@ -51,7 +51,7 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   de_stocks2 <- setdiff(de_stocks, ls(envir=stocks))
   de_stocks2 <- gsub("\\..*$", ".F", de_stocks2) # replace the Xetra-suffix with Frankfurt suffix
   for (i in 1:length(de_stocks2)) {
-    message(paste("Now on FRA: Trying to load"), de_stocks2[i])
+    message(paste("Now on FRA: Trying to load "), de_stocks2[i])
     try(
       getSymbols(de_stocks2[i], from=StartDate_vbt, env=stocks, verbose = FALSE, warnings = FALSE)
     )
@@ -75,9 +75,18 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   
   de_vol[de_vol==0] <- NA # replace 0 with NA
   
+  # Wir ersetzen die Symbole mit einem X aus make.names mit dem richtigen Symbol. Ziemlich kompliziert; das geht einfcher...
+  which_symbols_has_added_x <- setdiff(stocks_loaded, make.names(stocks_loaded)) # shows where make.names did kick in
+  which_tickers_are_those <- grep(paste(which_symbols_has_added_x,collapse="|"), names(de_vol), value = TRUE)
+  names(de_vol)[grep(paste(which_symbols_has_added_x,collapse="|"), names(de_vol), value = FALSE)] <- sapply(strsplit(which_tickers_are_those, "X"), '[[', 2)
+  
+  # debug point - save
+  save(stocks_requested, stocks_loaded, de_vol, stocks, file=output_eod)
+  message("erfolgreicher debug save")
+
   # Load full names from Yahoo
-  message("Loading full names...")
-  fullnames <- getQuote(names(de_vol), what=yahooQF("Name"))
+  message("Loading full names...")                                               
+  fullnames <- getQuote(names(de_vol), what=yahooQF(c("Symbol", "Name", "Volume", "Last Trade (Price Only)", "Bid", "Previous Close"))) #NOTE: Bid must be called, othersie fails
   fullnames <- data.frame(Ticker=rownames(fullnames), Name=fullnames$Name)
   
   

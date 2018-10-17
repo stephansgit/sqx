@@ -4,17 +4,8 @@ title: "sqx tools"
 ---
 
 
-    
-## Release v1.1 ist online
+## 20. Oktober 2018: Stabilisierung der Schnittstelle zu _yahoo!_  
 
-Bei der Darstellung der Charts im VolumenBreakout-Bereich wird nun der volle Name und das Kürzel der Aktien angegeben.
-
-
-## 22. Mai 2017: Komplett überarbeitete ***sqx-tools*** (Release v1.0) ist online!
-
-Wesentliche Neuerungen sind:  
-
-- Überarbeitetes Layout
-- Schweizer und Belgische Werte NEU im Volumen-Breakout-Tool
-- verbesserte Code-Basis, die Erweiterungen einfacher erlaubt
-
+Änderungen seitens _yahoo!_ im letzen Jahr haben immer wieder zu Anpassungen geführt. Diese wurden nun konsolidiert.  
+Für den User sollte das nicht weiter sichtbar sein.  
+__EINZIGE ÄNDERUNG:__ Tickersymbole, die mit einer Zahl begannen (bspw. Covestro `1COV.DE`) wurden nicht richtig dargestellt; u.a. wurde der Klarname nicht gefunden. Dies ist nun gefixt.

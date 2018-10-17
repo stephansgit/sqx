@@ -125,9 +125,6 @@ Table <- gvisTable(table)
 plot(Table)
 ```
 
-NB:  
-Bei Werten, deren Tickersymbol mit einer Zahl beginnt (bspw. 8GS.DE (China Spec Glass)), stellt das Tool fälschlicherweise ein "X" vor das Tickersymbol.
-
 
 
 -----
