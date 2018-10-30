@@ -30,9 +30,9 @@ starttime <- Sys.time()
 -----
 
 > ACHTUNG  
-> Da Yahoo die Lieferung von Daten für verschiedene Indizes (UK (FTSE), Italien (FTSE MIB), Singapur STI, Russland) eingestellt hat, 
-> ist vorübergehend nur eine reduzierte Historie verfügbar.
-> Zudem wird Singapur nicht berücksichtigt; für Italien und UK werden ETFs als Ersatz verwendet.  
+> Yahoo hat die Lieferung von Daten für verschiedene Indizes (UK (FTSE), Italien (FTSE MIB), Singapur STI, Russland) eingestellt.  
+> Daher ist die "Reichweite" des HBT stark eingeschränkt.  
+
 
 Das Börsentacho stellt verschiedene Aktienindizes hinsichtlich ihres Momentums dar.
 
@@ -157,8 +157,8 @@ Australia    | All Ordinaries
 Austria      | ATX
 Brasil       | IBOVESPA
 France       | CAC-40
-UK           | Continuous LIFFE Future auf FTSE
-Italy        | Lyxor ETF auf FTSE MIB
+UK           | __NICHT MEHR BERÜCKSICHTIGT__ 
+Italy        | __NICHT MEHR BERÜCKSICHTIGT__ 
 Germany      | DAX
 Canada       | TSE Composite
 HongKong     | Hang-Seng

@@ -27,7 +27,7 @@ length(symbols_yahoo)
 #### Download Symbols in a list ####
 # see: http://stackoverflow.com/questions/24377590/getsymbols-downloading-data-for-multiple-symbols-and-calculate-returns
 indices.all <- lapply(symbols_yahoo, function(i) {
- message(paste("Trying to load", symbols_yahoo[i]))
+ message(paste("Trying to load", i))
   try(getSymbols(i, from=StartDate_hbt, auto.assign=FALSE))
  }
  )
@@ -64,21 +64,21 @@ Sys.setenv(TZ="CET") # sets system time back to Europe; important for the deleti
 #--------
 
 
-#---Download Italian data
-# yahoo does not deliver; we query Quandl and use the LSE ETF instead, which is in GBP, but whatever....
-library(Quandl)
-epa_mib <- Quandl("LSE/IMIB")
-epa_mib.xts <- as.xts(epa_mib$`Last Close`, order.by = epa_mib$Date)
-indices.zoo <- merge(indices.zoo, epa_mib.xts)
-#------------
+# #---Download Italian data
+# # yahoo does not deliver; we query Quandl and use the LSE ETF instead, which is in GBP, but whatever....
+# library(Quandl)
+# epa_mib <- Quandl("LSE/IMIB")
+# epa_mib.xts <- as.xts(epa_mib$`Last Close`, order.by = epa_mib$Date)
+# indices.zoo <- merge(indices.zoo, epa_mib.xts)
+# #------------
 
-# FTSE Data from Quandl of CONTINUOUS FUTURE
-liffe_z2 <- Quandl("CHRIS/LIFFE_Z2")
-liffe_z2.xts <- as.xts(liffe_z2$Settle, order.by = liffe_z2$Date)
-indices.zoo <- merge(indices.zoo, liffe_z2.xts)
+# # FTSE Data from Quandl of CONTINUOUS FUTURE
+# liffe_z2 <- Quandl("CHRIS/LIFFE_Z2")
+# liffe_z2.xts <- as.xts(liffe_z2$Settle, order.by = liffe_z2$Date)
+# indices.zoo <- merge(indices.zoo, liffe_z2.xts)
 
 colnames(indices.zoo) <- c("USA", "Germany", "France", "Switzerland", "Spain", "China", "Mexico", 
-  "Japan", "Australia", "Austria", "Canada", "HongKong", "Argentina", "Brasil", "Italy", "UK")      
+  "Japan", "Australia", "Austria", "Canada", "HongKong", "Argentina", "Brasil")      
 
 #-------END OF LOADING--------------
 
