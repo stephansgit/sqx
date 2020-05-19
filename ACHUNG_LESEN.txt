@@ -1,0 +1,11 @@
+Es gibt ein Problem mit quantmods getQuote:
+Er liest die Fullnames nicht richtig in 01-functions.R auf dem MASTER-branch.
+Deswegen hängt das Produktivsystem auf dem alten issue_fullnames.
+
+Wie das Pb lösen? Es gibt Hinweise, dass das mit dem Massendaten zu tun hat
+(https://stackoverflow.com/questions/54032076/getquote-error-in-rownamesdf-x-value-value-invalid-row-names-lengt)
+
+Ebenfalls hat getQuote in den Version 0.4.16 auch starke Änderungen erfahren. Am besten man nützte die letzte Version und versucht einen WAIT einzubauen?
+Vllt hilft das?
+
+Oder wir initialisieren den fullnames Vektor; und wenn ein try um das Aufrufen der fullnames scheitert, dann bleibt der halt leer....

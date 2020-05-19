@@ -117,7 +117,7 @@ for (i in 1:length(signals$signal_dn$Ticker)) {
 Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an. 
 Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
-```{r plot_tbl, results='asis'}
+```{r plot_tbl, results='asis', include=FALSE}
 recent_quotes <- data.frame(t(tail(round(de_vbt,2),5)))
 recent_quotes$Ticker <- rownames(recent_quotes)
 table <- merge(recent_quotes, fullnames)
