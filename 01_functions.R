@@ -110,7 +110,7 @@ load_full_names <- function(x) {
       message(cond)
       message("\nattempting to load locally...")
       
-      ## I manually saved a mapping table to mapping_table.RData, which I load now... Might be decomissioned if new quantmod package available.
+      ## I manually saved a mapping table to mapping_table.RData, which I load now...
       load("name_mapping.RData")
       message("Full names loaded locally.")
       return(name_mapping)
