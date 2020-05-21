@@ -86,15 +86,37 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
 
   # Load full names from Yahoo
   message("Loading full names...")                                               
-  fullnames <- getQuote(names(de_vol), what=yahooQF(c("Symbol", "Name", "Volume", "Last Trade (Price Only)", "Bid", "Previous Close"))) #NOTE: Bid must be called, othersie fails
-  fullnames <- data.frame(Ticker=rownames(fullnames), Name=fullnames$Name)
-  
+  fullnames <- load_full_names(names(de_vol)) # this is a function defined below, that trries to call from Yahoo, but if it fails, it loads locally
   
   # Speichert EOD-Daten
   message("Saving...")
   message("Output path is ", output_eod)
   save(stocks_requested, stocks_loaded, de_vol, stocks,fullnames, file=output_eod)
   
+}
+
+# function to load full names
+load_full_names <- function(x) {
+  
+  fullnames <- tryCatch(
+    {
+      fn <- getQuote(x, what=yahooQF(c("Symbol", "Name", "Volume", "Last Trade (Price Only)", "Bid", "Previous Close"))) #NOTE: Bid must be called, othersie fails
+      fn <- data.frame(Ticker=rownames(fn), Name=fn$Name)
+      return(fn)
+    },
+    error = function(cond) {
+      message("Cannot read full names from Yahoo")
+      message("Here's the original error message:")
+      message(cond)
+      message("\nattempting to load locally...")
+      
+      ## I manually saved a mapping table to mapping_table.RData, which I load now...
+      load("name_mapping.RData")
+      message("Full names loaded locally.")
+      return(name_mapping)
+    },
+    finally = message("Full name loaded, one way or another...")
+    )
 }
 
 #function to calculate Volumen dependant on up or downmove of prices
