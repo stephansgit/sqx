@@ -118,10 +118,16 @@ Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an.
 Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
 
 ```{r plot_tbl, results='asis'}
-table <- data.frame(fullnames,          
-                      t(tail(round(de_vbt,2),5)))
-names(table)[-c(1:2)] <- as.character(index(tail(de_vbt,5)))
-Table <- gvisTable(table)
+#cut, clean and transpose the vbt_de object
+de_vbt_t <- zoo::fortify.zoo(tail(round(de_vbt,2),5))
+nm <- de_vbt_t$Index
+de_vbt_t <- as.data.frame(t(de_vbt_t[,-1]))
+colnames(de_vbt_t) <- nm
+de_vbt_t$Ticker <- rownames(de_vbt_t)
+
+tbl <- merge(fullnames, de_vbt_t)
+
+Table <- googleVis::gvisTable(tbl)
 plot(Table)
 ```
 
