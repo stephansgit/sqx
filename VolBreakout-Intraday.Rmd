@@ -35,13 +35,15 @@ Die folgenden Aktien haben heute einen $VB$-Wert von über `r trigger_vbt` gezei
 
 ```{r display, results='asis'}
 modQuote <- standardQuote()
-modQuote[[1]] <- "l1c1p2ohgvn"
+#modQuote[[1]] <- "l1c1p2ohgvn" comment out because gave some fail wrt 'regularMarketTime'
 try({
   iday_breakouts <- getQuote2clean(getQuote(signals$signal_up, what=modQuote))
+  colnames(iday_breakouts)[4] <- "%-Change" # otherwise it labels as 'X..change'
   kable(iday_breakouts, caption='Werte mit Upmove heute ("weiße Kerze")')
 })
 try({
   iday_breakouts <- getQuote2clean(getQuote(signals$signal_dn, what=modQuote))
+  colnames(iday_breakouts)[4] <- "%-Change" # otherwise it labels as 'X..change'
   kable(iday_breakouts, caption='Werte mit Downmove heute ("schwarze Kerze")')
   })
 ```  
