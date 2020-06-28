@@ -39,11 +39,13 @@ modQuote <- standardQuote()
 try({
   iday_breakouts <- getQuote2clean(getQuote(signals$signal_up, what=modQuote))
   colnames(iday_breakouts)[4] <- "%-Change" # otherwise it labels as 'X..change'
+  rownames(iday_breakouts) <- load_full_names(rownames(iday_breakouts))$Name
   kable(iday_breakouts, caption='Werte mit Upmove heute ("weiße Kerze")')
 })
 try({
   iday_breakouts <- getQuote2clean(getQuote(signals$signal_dn, what=modQuote))
   colnames(iday_breakouts)[4] <- "%-Change" # otherwise it labels as 'X..change'
+  rownames(iday_breakouts) <- load_full_names(rownames(iday_breakouts))$Name
   kable(iday_breakouts, caption='Werte mit Downmove heute ("schwarze Kerze")')
   })
 ```  
