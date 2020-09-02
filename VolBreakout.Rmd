@@ -93,6 +93,9 @@ for (i in 1:length(signals$signal_up$Ticker)) {
   try(
     chartSeries(get(as.character(signals$signal_up$Ticker[i]), envir=stocks), subset='last 4 months', name=paste0(as.character(signals$signal_up$Name[i]), "(", signals$signal_up$Ticker[i], ")") ) 
     )
+    try(message(paste0(as.character(signals$signal_up$Name[i]), "(", signals$signal_up$Ticker[i], ")",
+                 index(tail(get(as.character(signals$signal_up$Ticker[i]), envir=stocks),1))))
+    )
 }
 ```
    
@@ -105,6 +108,9 @@ for (i in 1:length(signals$signal_dn$Ticker)) {
   try(
     chartSeries(get(as.character(signals$signal_dn$Ticker[i]), envir=stocks), subset='last 4 months', name=paste0(as.character(signals$signal_dn$Name[i]), "(", signals$signal_dn$Ticker[i], ")")) 
     )
+  try(message(paste0(as.character(signals$signal_dn$Name[i]), "(", signals$signal_dn$Ticker[i], ")",
+                 index(tail(get(as.character(signals$signal_dn$Ticker[i]), envir=stocks),1))))
+  )
 }
 ```
   
