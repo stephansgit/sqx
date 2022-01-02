@@ -1,0 +1,17 @@
+# Benötige ich hier noch PHONY oder .all oder .clean?
+# ---------------------------------------------------------------------
+
+
+Charts_Overview.html: Charts_Overview.Rmd data/EOD-Data.RData
+	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Deutschland', path_to_eod_data='data/EOD-Data.RData'))"
+
+
+/var/www/html/sqx.servebeer.com/VolBreakout.html: VolBreakout.html
+	mv $< $@
+
+#/var/www/html/sqx.servebeer.com/VolBreakout_files: VolBreakout.html
+#	rm -rf /var/www/html/sqx.servebeer.com/VolBreakout_files/
+#	cp -rf VolBreakout_files/ /var/www/html/sqx.servebeer.com/VolBreakout_files/ 
+
+
+#-------------------------------------------------------------------------

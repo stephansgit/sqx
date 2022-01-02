@@ -1,0 +1,10 @@
+# Notizen um Werners Wunsch nach kleinen Charts zu erfüllen
+
+- Ich benötige gültige EoD Daten.
+- Ich kann nutzen was da ist undsozusagen ein neues Makefile machen und wie folgt einstiegen:
+Werners_Webseite.html: NEUES_SKRIPT.Rmd data/EOD-Data.RData
+	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Deutschland', path_to_eod_data='data/EOD-Data.RData'))"
+
+- Ich müsste die Daten lediglich foltern nach bspw. DAX30 Tikern, die hab ich abgelegt unter DAX40_tiker.csv
+- Dann male ich charts mit quantmod::chartSeries
+- Frage; Wie bringe ich das schön auf eine Übersicht, d.h. kline Charts als 10x3 Raster?

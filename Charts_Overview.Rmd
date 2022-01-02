@@ -1,0 +1,133 @@
+---
+title: "Charts Overview"
+params:
+  exchanges: Deutschland
+  path_to_eod_data: data/EOD-Data.RData
+---
+
+
+```{r load, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+
+
+options("getSymbols.warning4.0"=FALSE)
+suppressPackageStartupMessages(library(googleVis))
+library(xts)
+library(quantmod)
+library(googleVis)
+library(ggplot2)
+library(reshape2)
+library(bdscale)
+library(RColorBrewer)
+#library(RGoogleDocs)
+library(knitr)
+
+
+op <- options(gvis.plot.tag='chart')
+
+# Lies Funktionen ein
+source(file="01_functions.R")
+
+
+
+#
+
+```
+
+Das Tool identifziert Aktien mit einem Volumenausbruch. Details siehe [hier](http://sqx.servebeer.com/vbt/methode.html).  
+
+__Börsen: `r params$exchanges`__ 
+
+### Daten
+
+```Letzte Ausführung: `r Sys.time()` ```   
+```Eingelesene Werte: `r dim(de_vbt)[2]` ```  
+```Letzter berücksichtigter Close: `r end(de_vbt)` ```   
+
+``` `r length(setdiff(stocks_requested, stocks_loaded))` ``` Werte konnten nicht eingelesen werden:     
+``` `r setdiff(stocks_requested, stocks_loaded)` ```  
+
+Berücksichtigung der letzten `r lookback_vbt` Handelstage.
+
+
+### Ergebnisse  
+
+```{r last}
+signals <- calc_signal(vb_vector=de_vbt, trigger=trigger_vbt)
+```
+
+Die folgenden Aktien haben am vergangen Closing einen _VB_-Wert von __über__ `r trigger_vbt` bzw. __kleiner als__ -`r trigger_vbt` gezeigt (was einem Volumen über dem `r trigger_vbt`fachen Durchschnittsvolumen entspricht).
+
+```{r table_vbts, results='asis'}
+signals$signal_up <- merge(data.frame(Ticker=signals$signal_up), fullnames)
+signals$signal_dn <- merge(data.frame(Ticker=signals$signal_dn), fullnames)
+kable(signals$signal_up, caption='Werte mit Upmove heute ("weiße Kerze")')
+print("")
+kable(signals$signal_dn, caption='Werte mit Downmove heute ("schwarze Kerze")')
+```
+
+(_Leer_ bedeutet, dass kein Wert den Volumendurchschnitt 'durchbrochen' hat.)  
+
+_Beachte: Tickersymbole, die mit einer Zahl beginnen, werden momentan noch mit einem X versehen - daher wird auch ihr Klarname nicht richtig gefunden._
+
+### Charts  
+
+Für die gefundenen Werte werden die Charts dargestellt.  
+
+__Charts für Werte mit VB > +3:__
+
+```{r charts1}
+for (i in 1:length(signals$signal_up$Ticker)) {
+  try(
+    chartSeries(get(as.character(signals$signal_up$Ticker[i]), envir=stocks), subset='last 4 months', name=paste0(as.character(signals$signal_up$Name[i]), "(", signals$signal_up$Ticker[i], ")") ) 
+    )
+    try(message(paste0(as.character(signals$signal_up$Name[i]), "(", signals$signal_up$Ticker[i], ")",
+                 index(tail(get(as.character(signals$signal_up$Ticker[i]), envir=stocks),1))))
+    )
+}
+```
+   
+-----
+  
+__Charts für Werte mit VB < -3:__
+
+```{r charts2}
+for (i in 1:length(signals$signal_dn$Ticker)) {
+  try(
+    chartSeries(get(as.character(signals$signal_dn$Ticker[i]), envir=stocks), subset='last 4 months', name=paste0(as.character(signals$signal_dn$Name[i]), "(", signals$signal_dn$Ticker[i], ")")) 
+    )
+  try(message(paste0(as.character(signals$signal_dn$Name[i]), "(", signals$signal_dn$Ticker[i], ")",
+                 index(tail(get(as.character(signals$signal_dn$Ticker[i]), envir=stocks),1))))
+  )
+}
+```
+  
+  
+  
+-----  
+
+### Tabelle  
+
+Die Tabelle zeigt die VB-Werte für die letzten fünf Handelstage an. 
+Klicken auf die Spaltenköpfe sortiert die Werte und man kann bspw. Werte über drei identifizieren.
+
+```{r plot_tbl, results='asis'}
+#cut, clean and transpose the vbt_de object
+de_vbt_t <- zoo::fortify.zoo(tail(round(de_vbt,2),5))
+nm <- de_vbt_t$Index
+de_vbt_t <- as.data.frame(t(de_vbt_t[,-1]))
+colnames(de_vbt_t) <- nm
+de_vbt_t$Ticker <- rownames(de_vbt_t)
+
+tbl <- merge(fullnames, de_vbt_t)
+
+Table <- googleVis::gvisTable(tbl)
+plot(Table)
+```
+
+
+
+-----
+``` `r Sys.time()` ```   
+
+END OF FILE
