@@ -27,6 +27,9 @@ navbar:
           href: HBT-Tacho.html
         - text: "Assets"
           href: HBT-Asset.html
+    - text: "Chart Übersicht"
+      icon: fa-bullseye
+      href: Charts-Overview.html
     - text: "Über"
       icon: fa-question
       href: about.html
