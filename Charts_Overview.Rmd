@@ -36,6 +36,10 @@ dat <- read.csv("DAX40_ticker.csv")
 
 ```
 
+## Charts und technische Indikatoren für eine Auswahl von Aktien
+
+__Hier dargestellt: Die "alten DAX30" Unternehmen.__
+
 ```{r plot_charts, fig.show='hold', out.width="50%"}
 for (i in 1:length(dat$Ticker)) {
   try(
