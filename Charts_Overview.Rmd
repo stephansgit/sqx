@@ -36,11 +36,12 @@ dat <- read.csv("DAX40_ticker.csv")
 
 ```
 
-```{r}
+```{r plot_charts, fig.show='hold', out.width="50%"}
 for (i in 1:length(dat$Ticker)) {
   try(
     chartSeries(get(as.character(dat$Ticker[i]), envir=stocks), subset='last 4 months', 
                 name=paste0(as.character(dat$Name[i]), "(", dat$Ticker[i], ")"),
+                theme = chartTheme("white"),
                 TA = c(addMACD(), addSMA(n = c(50,150, 200)))) 
     )
     try(message(paste0(as.character(dat$Name[i]), "(", dat$Ticker[i], ")",

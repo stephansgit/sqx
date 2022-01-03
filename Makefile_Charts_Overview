@@ -1,17 +1,21 @@
-# Benötige ich hier noch PHONY oder .all oder .clean?
-# ---------------------------------------------------------------------
+.PHONY: all clean /var/www/html/sqx.servebeer.com/Charts_Overview_files 
+
+all: /var/www/html/sqx.servebeer.com/Charts_Overview.html  /var/www/html/sqx.servebeer.com/Charts_Overview_files 
+
+clean: 
+	rm -fr data/SetupData.RData data/EOD-Data.RData Charts_Overview.html Charts_Overview_files/figure-html/* 
 
 
 Charts_Overview.html: Charts_Overview.Rmd data/EOD-Data.RData
 	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Deutschland', path_to_eod_data='data/EOD-Data.RData'))"
 
 
-/var/www/html/sqx.servebeer.com/VolBreakout.html: VolBreakout.html
+/var/www/html/sqx.servebeer.com/Charts_Overview.html: Charts_Overview.html
 	mv $< $@
 
-#/var/www/html/sqx.servebeer.com/VolBreakout_files: VolBreakout.html
-#	rm -rf /var/www/html/sqx.servebeer.com/VolBreakout_files/
-#	cp -rf VolBreakout_files/ /var/www/html/sqx.servebeer.com/VolBreakout_files/ 
+/var/www/html/sqx.servebeer.com/Charts_Overview_files: Charts_Overview.html
+	rm -rf /var/www/html/sqx.servebeer.com/Charts_Overview_files/
+	cp -rf Charts_Overview_files/ /var/www/html/sqx.servebeer.com/Charts_Overview_files/ 
 
 
 #-------------------------------------------------------------------------
