@@ -4,8 +4,6 @@ title: "sqx tools"
 ---
 
 
-## 20. Oktober 2018: Stabilisierung der Schnittstelle zu _yahoo!_  
+## 03. Januar 2022: Neue Chart-Übersicht  
 
-Änderungen seitens _yahoo!_ im letzen Jahr haben immer wieder zu Anpassungen geführt. Diese wurden nun konsolidiert.  
-Für den User sollte das nicht weiter sichtbar sein.  
-__EINZIGE ÄNDERUNG:__ Tickersymbole, die mit einer Zahl begannen (bspw. Covestro `1COV.DE`) wurden nicht richtig dargestellt; u.a. wurde der Klarname nicht gefunden. Dies ist nun gefixt.
+Unter dem Menü "Chart Übersicht" werden nun für eine Auswahl von Aktien die Charts inklusiver ausgewählter technischer Indikatoren dargestellt. 
