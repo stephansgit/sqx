@@ -1,31 +1,41 @@
 Ticker,Name
-FME.DE,Fresenius Medical Care AG & Co. KGaA
-BAYN.DE,Bayer Aktiengesellschaft
-VOW3.DE,Volkswagen AG
-SY1.DE,Symrise AG
-CON.DE,Continental Aktiengesellschaft
-MTX.DE,MTU Aero Engines AG
-ALV.DE,Allianz SE
-FRE.DE,Fresenius SE & Co. KGaA
-AIR.DE,Airbus SE
-DHER.DE,Delivery Hero SE
-ADS.DE,adidas AG
-DB1.DE,Deutsche Börse AG
-PUM.DE,PUMA SE
-SHL.DE,Siemens Healthineers AG
-DPW.DE,Deutsche Post AG
-BAS.DE,BASF SE
-DTE.DE,Deutsche Telekom AG
-HEI.DE,HeidelbergCement AG
-SIE.DE,Siemens Aktiengesellschaft
-ZAL.DE,Zalando SE
-IFX.DE,Infineon Technologies AG
-1COV.DE,Covestro AG
-BEI.DE,Beiersdorf Aktiengesellschaft
-BMW.DE,Bayerische Motoren Werke Aktiengesellschaft
-MRK.DE,MERCK Kommanditgesellschaft auf Aktien
-DBK.DE,Deutsche Bank Aktiengesellschaft
-RWE.DE,RWE Aktiengesellschaft
-LIN.DE,Linde plc
-ENR.DE,Siemens Energy AG
-HFG.DE,HelloFresh SE
+ADS.DE,Adidas
+AIR.DE,Airbus
+ALV.DE,Allianz
+BAS.DE,BASF
+BAYN.DE,Bayer
+BMW.DE,BMW
+BNR.DE,Brenntag
+CON.DE,Continental
+1COV.DE,Covestro
+DTG.DE,Daimler Truck
+DHER.DE,Delivery Hero
+DBK.DE,Deutsche Bank
+DB1.DE,Deutsche Börse
+DPW.DE,Deutsche Post
+DTE.DE,Deutsche Telekom
+EOAN.DE,E.ON
+FRE.DE,Fresenius
+FME.DE,Fresenius Medical Care
+HNR1.DE,Hannover Re
+HEI.DE,HeidelbergCement
+HFG.DE,HelloFresh
+HEN3.DE,Henkel
+IFX.DE,Infineon Technologies
+LIN.DE,Linde
+MBG.DE,Mercedes-Benz Group
+MRK.DE,Merck
+MTX.DE,MTU Aero Engines
+MUV2.DE,Munich Re
+PAH3.DE,Porsche
+PUM.DE,Puma
+QIA.DE,Qiagen
+RWE.DE,RWE
+SAP.DE,SAP
+SRT3.DE,Sartorius
+SIE.DE,Siemens
+SHL.DE,Siemens Healthineers
+SY1.DE,Symrise
+VOW3.DE,Volkswagen Group
+VNA.DE,Vonovia
+ZAL.DE,Zalando

@@ -38,7 +38,7 @@ dat <- read.csv("DAX40_ticker.csv")
 
 ## Charts und technische Indikatoren für eine Auswahl von Aktien
 
-__Hier dargestellt: Die "alten DAX30" Unternehmen.__
+__Hier: Die DAX40 Unternehmen__
 
 * Candlestick-Charts
 * Einfache gleitende Durchschnitte (simple moving average SMA) für 50, 150, 200 Tage

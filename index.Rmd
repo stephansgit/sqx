@@ -4,6 +4,12 @@ title: "sqx tools"
 ---
 
 
+## 01. Mai 2022: Änderungen
+
+* Die Schnittstelle zu Yahoo! hat sich wieder einmal geändert, was zu Fehelrn geführt hat. Das Tool sollte nun wieder durchlaufen.
+* Die Chart-Übersicht sollte nun alle DAX40-Aktien zeigen.
+
+
 ## 03. Januar 2022: Neue Chart-Übersicht  
 
 Unter dem Menü "Chart Übersicht" werden nun für eine Auswahl von Aktien die Charts inklusiver ausgewählter technischer Indikatoren dargestellt. 
