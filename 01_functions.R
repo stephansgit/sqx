@@ -65,7 +65,9 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   # Entferne die nicht mehr benötigten Vektoren mit Tickersymbolen
   rm(de_stocks)
   rm(de_stocks2)
-  
+  # mache einen Debug Save
+  save(stocks_requested, stocks_loaded, stocks, file="EoD_Debug.RData")
+
   message("Tidying the data....")
   de_vol <- eapply(stocks, volUpDn) #volUpDn ist eine Eigendefinierte Funktion
   de_vol <- lapply(de_vol, VolUpDn_extract) #volUpDn_extract ist eine Eigendefinierte Funktion
