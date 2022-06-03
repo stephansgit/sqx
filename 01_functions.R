@@ -67,9 +67,39 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   rm(de_stocks2)
   # mache einen Debug Save
   save(stocks_requested, stocks_loaded, stocks, file="EoD_Debug.RData")
-
+  
+  #check for non.numeric data
+  stocks.l <- eapply(stocks, "[") # convert environment to list
+  message("-------------------------------------------------------------")
+  message('the following stocks come over as non-numeric - pls check!')
+  which(!sapply(stocks.l, is.numeric))
+  message("-------------------------------------------------------------")
+  
   message("Tidying the data....")
-  de_vol <- eapply(stocks, volUpDn) #volUpDn ist eine Eigendefinierte Funktion
+  de_vol <- tryCatch(
+    {
+      res <- eapply(stocks, volUpDn) #volUpDn ist eine Eigendefinierte Funktion
+      return(res)
+    },
+    error = function(cond) {
+      message("Extracting VolUpDn from data failed")
+      message("Here's the original error message:")
+      message(cond)
+      message("\nI'll try to work around that:")
+      
+      ##do the workaround
+      #ids_of_nonnumeric <- which(!sapply(stocks.l, is.numeric))[[1]]
+      name_of_nonnumeric <- which(!sapply(stocks.l, is.numeric)) %>% names()
+      rm(list=c(name_of_nonnumeric), envir = stocks)
+      message("I have deleted the following stocks from the list:")
+      message(name_of_nonnumeric)
+      res <- eapply(stocks, volUpDn)
+      return(res)
+    },
+    finally = message("Finally, succesfull calculation")
+  )
+
+  
   de_vol <- lapply(de_vol, VolUpDn_extract) #volUpDn_extract ist eine Eigendefinierte Funktion
   de_vol <- as.xts(do.call(merge, de_vol))
   # adjust column names are re-order columns
