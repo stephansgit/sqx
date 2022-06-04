@@ -32,7 +32,7 @@ read_ticker_data <- function(path_from_upload="/var/www/html/sqx.servebeer.com/v
   
 }
 
-load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-Data.RData") {
+load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-Data_raw.RData") {
   load(daten)
   source("02_parameters.R")
   
@@ -66,8 +66,11 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   rm(de_stocks)
   rm(de_stocks2)
   # mache einen Debug Save
-  save(stocks_requested, stocks_loaded, stocks, file="EoD_Debug.RData")
-  
+  save(stocks_requested, stocks_loaded, stocks, file=output_eod)
+}
+
+prep_EoD_Data <- function(daten = "data/EOD-Data_raw.RData", output_eod="data/EOD-Data.RData") {
+  load(daten)
   #check for nonnumerics and clean
   check_clean_nonnumerics(stocks) #see below, it's a defined function
   
