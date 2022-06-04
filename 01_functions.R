@@ -69,8 +69,11 @@ load_EoD_data <- function(daten = "data/SetupData.RData", output_eod="data/EOD-D
   save(stocks_requested, stocks_loaded, stocks, file=output_eod)
 }
 
-prep_EoD_Data <- function(daten = "data/EOD-Data_raw.RData", output_eod="data/EOD-Data.RData") {
+prep_EoD_data <- function(daten = "data/EOD-Data_raw.RData", output_eod="data/EOD-Data.RData") {
+  #message(paste("Raw data to load:",daten))
   load(daten)
+  #message(paste("Content of data file:",ls()))
+
   #check for nonnumerics and clean
   check_clean_nonnumerics(stocks) #see below, it's a defined function
   
@@ -136,7 +139,7 @@ check_clean_nonnumerics <- function(x) {
   message(paste('Diese: ',which(!sapply(stocks.l, is.numeric))))
   message("-------------------------------------------------------------")
   name_of_nonnumeric <- names(which(!sapply(stocks.l, is.numeric)))
-  rm(list=c(name_of_nonnumeric), envir = stocks)
+  rm(list=c(name_of_nonnumeric)) #when calling this fct, the envir=stocks ist uebergeben
   message("I have deleted the following stocks from the list:")
   message(name_of_nonnumeric)
 }
