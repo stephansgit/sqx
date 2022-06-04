@@ -17,8 +17,11 @@ data/SetupData.RData: 03_ticker.R
 #data/SetupData_swbr.RData: 03_ticker.R 
 #	Rscript $< NULL data/ticker_swbr.csv data/SetupData_swbr.RData
 
-data/EOD-Data.RData: 04_load_EOD.R data/SetupData.RData
-	Rscript $< data/SetupData.RData data/EOD-Data.RData
+data/EOD-Data_raw.RData: 04_load_EOD.R data/SetupData.RData
+	Rscript $< data/SetupData.RData data/EOD-Data_raw.RData
+
+data/EOD-Data.RData: 04_prep_EOD.R data/EOD-Data_raw.RData
+	Rscript $< data/EOD-Data_raw.RData data/EOD-Data.RData
 
 #data/EOD-Data_swbr.RData: 04_load_EOD.R data/SetupData_swbr.RData
 #	Rscript $< data/SetupData_swbr.RData data/EOD-Data_swbr.RData
