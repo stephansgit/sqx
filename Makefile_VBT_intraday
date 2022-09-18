@@ -17,7 +17,7 @@ data/Intraday-Data.RData: 05_load_intraday.R data/EOD-Data.RData clean_intraday_
 
 
 VolBreakout-Intraday.html: VolBreakout-Intraday.Rmd data/Intraday-Data.RData
-	Rscript -e "rmarkdown::render('$<')"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<")'
 
 
 /var/www/html/sqx.servebeer.com/VolBreakout-Intraday.html: VolBreakout-Intraday.html

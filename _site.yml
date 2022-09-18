@@ -10,23 +10,23 @@ navbar:
         - text: "---------"
         - text: "End of Day Deutschland"
           href: VolBreakout.html
-        - text: "End of Day Schweiz/Belgien"
-          href: VolBreakout_swbr.html
+#        - text: "End of Day Schweiz/Belgien"
+#          href: VolBreakout_swbr.html
         - text: "Intraday Deutschland"
           href: VolBreakout-Intraday.html
         - text: "---------"
         - text: "Upload Ticker"
           href: vbt/upload/upload.html
-    - text: "Börsentacho"
-      icon: glyphicon-dashboard
-      menu:
-        - text: "Methodik"
-          href: HBT-Methodik.html
-        - text: "---------"
-        - text: "Aktienindizes"
-          href: HBT-Tacho.html
-        - text: "Assets"
-          href: HBT-Asset.html
+#    - text: "Börsentacho"
+#      icon: glyphicon-dashboard
+#      menu:
+#        - text: "Methodik"
+#          href: HBT-Methodik.html
+#        - text: "---------"
+#        - text: "Aktienindizes"
+#          href: HBT-Tacho.html
+#        - text: "Assets"
+#          href: HBT-Asset.html
     - text: "Chart Übersicht"
       icon: fa-bullseye
       href: Charts_Overview.html
@@ -38,7 +38,7 @@ navbar:
       href: admin.html
 output:
   html_document:
-    theme: cerulean
+    theme: sandstone
     self_contained: false
     lib_dir: libs
     include:

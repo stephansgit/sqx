@@ -4,6 +4,12 @@ title: "sqx tools"
 ---
 
 
+## 04. Oktober 2022: Website unter neuem Server erreichbar
+
+* Der alte Server wurde gekündigt; das Tool ist somit 'umgezogen'
+* Für den User änder sich **nichts**; lediglich das Aussehen ist nun 'schwarz'.    
+
+
 ## 01. Mai 2022: Änderungen
 
 * Die Schnittstelle zu Yahoo! hat sich wieder einmal geändert, was zu Fehelrn geführt hat. Das Tool sollte nun wieder durchlaufen.

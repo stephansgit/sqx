@@ -27,7 +27,7 @@ data/EOD-Data.RData: 04_prep_EOD.R data/EOD-Data_raw.RData
 #	Rscript $< data/SetupData_swbr.RData data/EOD-Data_swbr.RData
 
 VolBreakout.html: VolBreakout.Rmd data/EOD-Data.RData
-	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Deutschland', path_to_eod_data='data/EOD-Data.RData'))"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<", params=list(exchanges="Deutschland", path_to_eod_data="data/EOD-Data.RData"))' --verbose
 
 #VolBreakout_swbr.html: VolBreakout.Rmd data/EOD-Data_swbr.RData
 #	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Schweiz, Belgien', path_to_eod_data='data/EOD-Data_swbr.RData'), output_file = 'VolBreakout_swbr.html')"

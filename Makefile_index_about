@@ -11,7 +11,7 @@ clean:
 
 # Index
 index.html: index.Rmd
-	Rscript -e "rmarkdown::render('$<')"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<")'
 	
 
 /var/www/html/sqx.servebeer.com/index.html: index.html
@@ -21,27 +21,27 @@ index.html: index.Rmd
 
 # About
 about.html: about.Rmd
-	Rscript -e "rmarkdown::render('$<')"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<")'
 
 /var/www/html/sqx.servebeer.com/about.html: about.html
 	mv $< $@
 # Admin
 admin.html: admin.Rmd
-	Rscript -e "rmarkdown::render('$<')"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<")'
 
 /var/www/html/sqx.servebeer.com/admin.html: admin.html
 	mv $< $@
 
 # HBT-Methodik
 HBT-Methodik.html: HBT-Methodik.Rmd
-	Rscript -e "rmarkdown::render('$<')"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<")'
 
 /var/www/html/sqx.servebeer.com/HBT-Methodik.html: HBT-Methodik.html
 	mv $< $@
 
 # VBT-Methodik
 VolBreakout-Methodik.html: VolBreakout-Methodik.Rmd
-	Rscript -e "rmarkdown::render('$<')"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<")'
 
 /var/www/html/sqx.servebeer.com/VolBreakout-Methodik.html: VolBreakout-Methodik.html
 	mv $< $@

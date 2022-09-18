@@ -5,11 +5,11 @@ title: "Admin"
 
 Links zu den log-Dateien der Makefiles:  
 
-HBT: 			http://sqx.servebeer.com/make_hbt.log  
+HBT: 			[HBT Log](make_hbt.log)  
 
-VBT:			http://sqx.servebeer.com/make_vbt.log  
+VBT:			[VBT Log](make_vbt.log)  
 
-VBT-intraday: 		http://sqx.servebeer.com/make_vbt-intraday.log
+VBT-intraday: 		[VBT Intraday Log](make_vbt-intraday.log)
 
 Release:
 
