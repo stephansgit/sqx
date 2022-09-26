@@ -205,7 +205,11 @@ calc_signal <- function(vb_vector, trigger) {
 }
 
 
+# Berechne Minervini
 
+calc_minervini <- function(dat) {
+  TTR::SMA()
+}
 #### HBT ####
 
 # berechnet HBT Wert

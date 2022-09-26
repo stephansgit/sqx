@@ -4,7 +4,7 @@
 #############################
 
 # Startdatum für Historie VBT
-StartDate_vbt <- as.Date("2015-01-01")
+StartDate_vbt <- as.Date("2021-01-01")
 StartDate_hbt <- as.Date("2007-01-01")
 
 #### Symbole für HBT Indizes

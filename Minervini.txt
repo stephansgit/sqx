@@ -1,0 +1,10 @@
+Minervini Strategy
+
+* stocks hält alle Daten; hier muss ich über quantmod::Cl() den Close rausnehen
+* Es scheinen viele NA drin zu sein, die kann ich üner na.approx() interpolieren
+* Dennoch scheint es bei manchen Aktien dann zu wenige Beobachtungen zu geben?!
+* Wie kann ich also eine Funktion schreiben, die hier sinnvoll filtert?
+* ich brauche GD 150, 200, 50
+* GD seit einem Monat aufwärts - was heißt das?
+
+
