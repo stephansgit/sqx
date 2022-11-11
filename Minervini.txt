@@ -1,10 +1,10 @@
 Minervini Strategy
 
-* stocks hält alle Daten; hier muss ich über quantmod::Cl() den Close rausnehen
-* Es scheinen viele NA drin zu sein, die kann ich üner na.approx() interpolieren
-* Dennoch scheint es bei manchen Aktien dann zu wenige Beobachtungen zu geben?!
-* Wie kann ich also eine Funktion schreiben, die hier sinnvoll filtert?
-* ich brauche GD 150, 200, 50
-* GD seit einem Monat aufwärts - was heißt das?
+Offen
+* Makefile + Cronjob, damit der täglich durchläuft
+* Für die Ergebistabelle noch die Namen der Aktien einfügen und ebenfalls in Charts darstellen (wie beim VBT auch)
+* Kriterien 3, 6, und 7
+* Noch Tabelle hinzufügen ALLER Aktien mit den GDs etc
+* In die Charts noch GDS einfügen und die Tiefs etc. Sollte ich dafür das xts-ploitting nutzen, wie ich in Minervini.R schon irgendwo gemachh hatte?
 
 

@@ -1,0 +1,125 @@
+---
+title: "Minervini Scanner"
+params:
+  exchanges: Deutschland
+  path_to_eod_data: data/EOD-Data.RData
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+
+library(xts)
+library(magrittr)
+
+
+# Lies die EoD Daten ein 
+#load(file=params$path_to_eod_data)
+load("data/EOD-Data.RData")
+
+# Lies Funktionen ein
+source(file="01_functions.R")
+
+```
+
+![ACHTUNG](http://st2.depositphotos.com/1847353/11937/v/170/depositphotos_119373460-stock-illustration-attention-sign-or-icon.jpg)
+
+# BETA-Version - noch in Entwicklung
+
+-----------------------------------------
+
+### Kriterien
+
+#### Trend Template nach Minervini laut _Traderfox_
+
+**!!! Durchgestrichene Kriterien sind noch nicht implementiert !!!**
+
+1. Der Kurs ist über dem GD 150 und über dem GD 200
+2. Der GD 150 ist über dem GD 200
+3. ~~Der GD 200 bewegt sich seit über einem Monat aufwärts~~
+4. Der GD 50 ist über dem GD 150 und über dem GD 200
+5. der aktuelle Kurs ist über dem GD 50.
+6. ~~Der Aktuelle Kurs ist mindestens 30% über dem 250 Tage Tief~~
+7. ~~Der aktuelle Kurs ist nicht mehr als 25% von seinem 250 Tage Hoch entfernt~~
+
+
+### Bereinigung der Daten - stelle Historie sicher
+
+```{r prep_data}
+stocks_cl <- eapply(stocks, FUN=quantmod::Cl)
+stocks_cl <- lapply(stocks_cl, FUN=function(x) x["2021-09::"])
+stocks_cl <- lapply(stocks_cl, setNames, "Close") # set all colnames to "Close"
+
+
+#stocks_nas(stocks_cl) %>% print(n=Inf)
+
+stocks_cleaned <- clean_data_for_technical_indicators(stocks_cl, obs = 250)
+
+print(paste(c("Folgende Aktien sind gelöscht aufgrund zu geringerer Kurshistorie: ", stocks_cleaned$deleted_stocks), collapse="; "))
+
+```
+
+```Letzte Ausführung: `r Sys.time()` ```   
+```Letzter berücksichtigter Close: `r end(de_vol)` ```   
+```Berücksichtigte Werte (nach Bereinigung): `r length(stocks_cleaned$stocks)` ```
+
+```{r prep_TA}
+sma_200 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 200)})
+sma_150 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 150)})
+sma_50 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 50)})
+min_200 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=min, na.rm=TRUE)})
+max_200 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=max, na.rm=TRUE)})
+sma_up <- NA
+
+minervini <- Map(xts::merge.xts, stocks_cleaned$stocks, sma_200, sma_150, sma_50, min_200, max_200, sma_up)
+columnames <- c("Close", "SMA_200", "SMA_150", "SMA_50", "Minimum_200", "Maximum_200", "SMA_200_up")
+minervini <- lapply(minervini, setNames, columnames)
+
+```
+
+
+### Ergebnis
+
+```{r calc_minervini}
+min_1 <- lapply(minervini, minervini_1)
+min_2 <- lapply(minervini, minervini_2)
+min_4 <- lapply(minervini, minervini_4)
+min_5 <- lapply(minervini, minervini_5)
+
+crits <- Map(xts::merge.xts, min_1, min_2, min_4, min_5)
+columnames <- c("Krit_1", "Krit_2", "Krit_4", "Krit_5") 
+crits <- lapply(crits, setNames, columnames)
+#minervini <- Map(xts::merge.xts, minervini, crits) sollte vllt nicht mergen, denn dann habe ich eine standalon 'crits' Liste und kann schön die hits summieren...
+
+
+crits_sum <- lapply(crits, xts_rowsums)
+
+crits_res <- data.frame(Count=sort(sapply(crits_sum, FUN=tail, n=1), decreasing = TRUE))
+crits_res$Ticker <- rownames(crits_res)
+
+ttt <- crits_res %>% dplyr::filter(Count >= 4)
+
+```
+
+Tabelle der Aktien, die alle 4 Kriterien erfüllen:
+
+
+```{r table}
+knitr::kable(ttt)
+```
+
+Charts der Aktien, die alle 4 Kriterien erfüllen:    
+    
+
+
+```{r charts1}
+for (i in 1:length(ttt$Count)) {
+  try(
+    chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), subset='last 12 months', name=paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")") ) 
+    )
+    try(message(paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")",
+                 index(tail(get(as.character(ttt$Ticker[i]), envir=stocks),1))))
+    )
+}
+```

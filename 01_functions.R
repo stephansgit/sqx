@@ -205,11 +205,6 @@ calc_signal <- function(vb_vector, trigger) {
 }
 
 
-# Berechne Minervini
-
-calc_minervini <- function(dat) {
-  TTR::SMA()
-}
 #### HBT ####
 
 # berechnet HBT Wert
@@ -217,4 +212,47 @@ hbt_calc <- function(indices, lookback_hbt, smoothper_hbt) {
   tmp <- indices / (rollapply(indices, width=lookback_hbt, FUN=mean, na.rm=T, align="right")) # calc the RSL
   tmp <- rollapply(tmp, width=smoothper_hbt, FUN=mean, na.rm=TRUE, align="right") # add a smoother
   return(tmp)
+}
+
+
+#### Minervini #####
+stocks_nas <- function(x) { #function counts the NAs and shows them in table, descending
+  stopifnot(is.list(x)) # should be a list!
+  aa <- sapply(x, FUN=function(y) {colSums(is.na(y))}, simplify = FALSE)
+  nas <- dplyr::bind_rows(aa, .id="Aktie") # gibt DF mit Anzahl der NAs. Disen sollte ich filtern und präsentieren
+  nas %>% dplyr::filter(Close!=0) %>% dplyr::arrange(., desc(Close))
+}
+
+
+clean_data_for_technical_indicators <- function(x, obs=200) { #function interpolates missing values 'sledgehammer' and deletes values with less than x observations
+  message("Interpolating linearly missing values")
+  stocks_approx <- lapply(x, FUN=zoo::na.approx)
+  stocks_enough_history <- stocks_approx[!(lapply(stocks_approx, length) < obs)]
+  names_of_stocks_with_too_little_history <- names(which(lapply(stocks_approx, length) < obs))
+  message(paste(c("Deleted Stocks due to little history: ", names_of_stocks_with_too_little_history), collapse="; "))
+  return(list(stocks=stocks_enough_history, deleted_stocks=names_of_stocks_with_too_little_history))
+}
+
+
+minervini_1 <- function(x) {
+  x$Close > x$SMA_200 & x$Close > x$SMA_150
+}
+
+minervini_2 <- function(x) {
+  x$SMA_150 > x$SMA_200
+}
+
+minervini_4 <- function(x) {
+  x$SMA_50 > x$SMA_200 & x$SMA_50 > x$SMA_150
+}
+
+minervini_5 <- function(x) {
+  x$Close > x$SMA_50 
+}
+
+
+xts_rowsums <- function(x) { # see https://stackoverflow.com/questions/44222272/preserve-xts-index-when-using-rowsums-on-xts
+  library(xts)  
+  res <- .xts(x = rowSums(x), .index(x))
+  return(res)
 }
