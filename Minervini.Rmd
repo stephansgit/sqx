@@ -16,7 +16,7 @@ library(magrittr)
 
 # Lies die EoD Daten ein 
 #load(file=params$path_to_eod_data)
-load("data/EOD-Data.RData")
+load("data/archive/EOD-Data.RData_20220927040002")
 
 # Lies Funktionen ein
 source(file="01_functions.R")
