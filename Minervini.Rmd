@@ -114,12 +114,20 @@ Charts der Aktien, die alle 4 Kriterien erfüllen:
 
 
 ```{r charts1}
+
+BRKB.EMA.20<- EMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n=20)
+
 for (i in 1:length(ttt$Count)) {
-  try(
-    chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), subset='last 12 months', name=paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")") ) 
-    )
-    try(message(paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")",
-                 index(tail(get(as.character(ttt$Ticker[i]), envir=stocks),1))))
-    )
+  
+    GD50 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 50)
+    GD150 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 150)
+    GD200 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 200)
+
+    chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme ="white",
+                subset='last 12 months', 
+                name=paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")"),
+                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "red"), addTA(GD200, on=1, col = "darkblue")))
+  
+    
 }
 ```
