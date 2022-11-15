@@ -95,10 +95,12 @@ crits <- lapply(crits, setNames, columnames)
 
 crits_sum <- lapply(crits, xts_rowsums)
 
-crits_res <- data.frame(Count=sort(sapply(crits_sum, FUN=tail, n=1), decreasing = TRUE))
+crits_res <- data.frame(Count = sort(sapply(crits_sum, FUN=tail, n=1), decreasing = TRUE))
 crits_res$Ticker <- rownames(crits_res)
 
 ttt <- crits_res %>% dplyr::filter(Count >= 4)
+ttt <- merge(fullnames, data.frame(ttt))
+colnames(ttt) <- c("Ticker", "Name", "Anzahl Kriterien")
 
 ```
 
@@ -115,18 +117,18 @@ Charts der Aktien, die alle 4 Kriterien erfüllen:
 
 ```{r charts1}
 
-BRKB.EMA.20<- EMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n=20)
 
-for (i in 1:length(ttt$Count)) {
+for (i in 1:length(ttt$`Anzahl Kriterien`)) {
   
-    GD50 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 50)
+    GD50 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 50) # ich defeiniere die hier und fuege unten mit addTA hinzu, weil ich beo addSMA keine Legende in den Chart bekomme
     GD150 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 150)
     GD200 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 200)
 
-    chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme ="white",
-                subset='last 12 months', 
+    chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme = chartTheme('white',up.col='gray',dn.col='red'),
+                subset='last 9 months', 
                 name=paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")"),
-                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "red"), addTA(GD200, on=1, col = "darkblue")))
+                #TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "red"), addTA(GD200, on=1, col = "darkblue"))
+                )
   
     
 }

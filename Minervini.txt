@@ -1,7 +1,7 @@
 Minervini Strategy
 
 Offen
-* Makefile + Cronjob, damit der täglich durchläuft
+* ~~Makefile + Cronjob, damit der täglich durchläuft~~
 * Für die Ergebistabelle noch die Namen der Aktien einfügen und ebenfalls in Charts darstellen (wie beim VBT auch)
 * Kriterien 3, 6, und 7
 * Noch Tabelle hinzufügen ALLER Aktien mit den GDs etc
