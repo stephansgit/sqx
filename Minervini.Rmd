@@ -94,6 +94,7 @@ crits <- lapply(crits, setNames, columnames)
 
 
 crits_sum <- lapply(crits, xts_rowsums)
+crits_sum <- lapply(crits_sum, setNames, "Kriterien_positiv")
 
 crits_res <- data.frame(Count = sort(sapply(crits_sum, FUN=tail, n=1), decreasing = TRUE))
 crits_res$Ticker <- rownames(crits_res)
@@ -127,9 +128,28 @@ for (i in 1:length(ttt$`Anzahl Kriterien`)) {
     chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme = chartTheme('white',up.col='gray',dn.col='red'),
                 subset='last 9 months', 
                 name=paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")"),
-                #TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "red"), addTA(GD200, on=1, col = "darkblue"))
+                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "red"), addTA(GD200, on=1, col = "darkblue"))
                 )
   
     
 }
 ```
+
+
+### Detailsicht
+
+```{r detail_table}
+tmp <- Map(xts::merge.xts, minervini, crits, crits_sum)
+ll <- sapply(tmp, FUN=tail, n=1, simplify = FALSE)
+ll <- dplyr::bind_rows(ll, .id = "Ticker") %>% dplyr::arrange(desc(Kriterien_positiv))
+```
+
+
+```{r googletable, results='asis'}
+library(googleVis)
+op <- options(gvis.plot.tag='chart') # is important for rendering in knitr; see github googlevis vignette
+
+Table <- googleVis::gvisTable(ll)
+plot(Table)
+```
+
