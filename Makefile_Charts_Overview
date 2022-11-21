@@ -7,7 +7,7 @@ clean:
 
 
 Charts_Overview.html: Charts_Overview.Rmd data/EOD-Data.RData
-	Rscript -e "rmarkdown::render('$<', params=list(exchanges='Deutschland', path_to_eod_data='data/EOD-Data.RData'))"
+	Rscript -e 'Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc"); rmarkdown::render("$<", params=list(exchanges="Deutschland", path_to_eod_data="data/EOD-Data.RData"))'
 
 
 /var/www/html/sqx.servebeer.com/Charts_Overview.html: Charts_Overview.html

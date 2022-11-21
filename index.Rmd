@@ -4,18 +4,10 @@ title: "sqx tools"
 ---
 
 
-## 04. Oktober 2022: Website unter neuem Server erreichbar
+## 04. Oktober 2022: Website unter neuer Adresse auf neuem Server erreichbar
 
-* Der alte Server wurde gekündigt; das Tool ist somit 'umgezogen'
-* Für den User änder sich **nichts**; lediglich das Aussehen ist nun 'schwarz'.    
-
-
-## 01. Mai 2022: Änderungen
-
-* Die Schnittstelle zu Yahoo! hat sich wieder einmal geändert, was zu Fehelrn geführt hat. Das Tool sollte nun wieder durchlaufen.
-* Die Chart-Übersicht sollte nun alle DAX40-Aktien zeigen.
+* Das Tool ist auf einen neuen Server 'umgezogen' und unter neuer Adresse erreichbar: [sqx.boersenanalytik.de](http://sqx.boersenanalytik.de)
+* Die alte Adresse sqx.servebeer.com gilt noch bis zum 26.10.2022 (!)
 
 
-## 03. Januar 2022: Neue Chart-Übersicht  
 
-Unter dem Menü "Chart Übersicht" werden nun für eine Auswahl von Aktien die Charts inklusiver ausgewählter technischer Indikatoren dargestellt. 

@@ -11,6 +11,8 @@ VBT:			[VBT Log](make_vbt.log)
 
 VBT-intraday: 		[VBT Intraday Log](make_vbt-intraday.log)
 
+Charts Overview:	[Charts Overview Log](make_charts_overview.log)
+
 Release:
 
 ```{r, echo=FALSE, results='asis'}
