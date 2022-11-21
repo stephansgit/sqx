@@ -120,7 +120,7 @@ Charts der Aktien, die alle 7 Kriterien erfüllen:
     
 
 
-```{r charts1}
+```{r charts1, fig.width=10}
 
 
 for (i in 1:length(ttt$`Anzahl Kriterien`)) {
