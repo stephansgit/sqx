@@ -33,15 +33,13 @@ source(file="01_functions.R")
 
 #### Trend Template nach Minervini laut _Traderfox_
 
-**!!! Durchgestrichene Kriterien sind noch nicht implementiert !!!**
-
 1. Der Kurs ist über dem GD 150 und über dem GD 200
 2. Der GD 150 ist über dem GD 200
-3. ~~Der GD 200 bewegt sich seit über einem Monat aufwärts~~
+3. Der GD 200 bewegt sich seit über einem Monat aufwärts (implementiert als "GD200 ist heute höher als vor 20 Tagen")
 4. Der GD 50 ist über dem GD 150 und über dem GD 200
-5. der aktuelle Kurs ist über dem GD 50.
-6. ~~Der Aktuelle Kurs ist mindestens 30% über dem 250 Tage Tief~~
-7. ~~Der aktuelle Kurs ist nicht mehr als 25% von seinem 250 Tage Hoch entfernt~~
+5. der aktuelle Kurs ist über dem GD 50
+6. Der Aktuelle Kurs ist mindestens 30% über dem 250 Tage Tief
+7. Der aktuelle Kurs ist nicht mehr als 25% von seinem 250 Tage Hoch entfernt
 
 
 ### Bereinigung der Daten - stelle Historie sicher
@@ -68,12 +66,11 @@ print(paste(c("Folgende Aktien sind gelöscht aufgrund zu geringerer Kurshistori
 sma_200 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 200)})
 sma_150 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 150)})
 sma_50 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 50)})
-min_200 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=min, na.rm=TRUE)})
-max_200 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=max, na.rm=TRUE)})
-sma_up <- NA
+min_250 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=min, na.rm=TRUE)})
+max_250 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=max, na.rm=TRUE)})
 
-minervini <- Map(xts::merge.xts, stocks_cleaned$stocks, sma_200, sma_150, sma_50, min_200, max_200, sma_up)
-columnames <- c("Close", "SMA_200", "SMA_150", "SMA_50", "Minimum_200", "Maximum_200", "SMA_200_up")
+minervini <- Map(xts::merge.xts, stocks_cleaned$stocks, sma_200, sma_150, sma_50, min_250, max_250)
+columnames <- c("Close", "SMA_200", "SMA_150", "SMA_50", "Minimum_250", "Maximum_250")
 minervini <- lapply(minervini, setNames, columnames)
 
 ```
@@ -84,11 +81,14 @@ minervini <- lapply(minervini, setNames, columnames)
 ```{r calc_minervini}
 min_1 <- lapply(minervini, minervini_1)
 min_2 <- lapply(minervini, minervini_2)
+min_3 <- lapply(minervini, minervini_3)
 min_4 <- lapply(minervini, minervini_4)
 min_5 <- lapply(minervini, minervini_5)
+min_6 <- lapply(minervini, minervini_6)
+min_7 <- lapply(minervini, minervini_7)
 
-crits <- Map(xts::merge.xts, min_1, min_2, min_4, min_5)
-columnames <- c("Krit_1", "Krit_2", "Krit_4", "Krit_5") 
+crits <- Map(xts::merge.xts, min_1, min_2, min_3, min_4, min_5, min_6, min_7)
+columnames <- c("Krit_1", "Krit_2", "Krit_3", "Krit_4", "Krit_5", "Krit_6", "Krit_7") 
 crits <- lapply(crits, setNames, columnames)
 #minervini <- Map(xts::merge.xts, minervini, crits) sollte vllt nicht mergen, denn dann habe ich eine standalon 'crits' Liste und kann schön die hits summieren...
 
@@ -99,13 +99,13 @@ crits_sum <- lapply(crits_sum, setNames, "Kriterien_positiv")
 crits_res <- data.frame(Count = sort(sapply(crits_sum, FUN=tail, n=1), decreasing = TRUE))
 crits_res$Ticker <- rownames(crits_res)
 
-ttt <- crits_res %>% dplyr::filter(Count >= 4)
+ttt <- crits_res %>% dplyr::filter(Count >= 7)
 ttt <- merge(fullnames, data.frame(ttt))
 colnames(ttt) <- c("Ticker", "Name", "Anzahl Kriterien")
 
 ```
 
-Tabelle der Aktien, die alle 4 Kriterien erfüllen:
+Tabelle der Aktien, die alle 7 Kriterien erfüllen:
 
 
 ```{r table}
@@ -126,8 +126,9 @@ for (i in 1:length(ttt$`Anzahl Kriterien`)) {
     GD200 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 200)
 
     chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme = chartTheme('white',up.col='gray',dn.col='red'),
-                subset='last 9 months', 
-                name=paste0(as.character(ttt$Ticker[i]), "(", ttt$Ticker[i], ")"),
+                subset='last 6 months', 
+                name = paste0(as.character(ttt$Name[i]), " (", ttt$Ticker[i], ")"),
+                minor.ticks = FALSE,
                 TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "red"), addTA(GD200, on=1, col = "darkblue"))
                 )
   
@@ -137,6 +138,10 @@ for (i in 1:length(ttt$`Anzahl Kriterien`)) {
 
 
 ### Detailsicht
+
+Die Tabelle zeigt den Stand der Erfüllung der Kriterien für jede Aktie. Ist ein Kriterium erfüllt, zeigt die Tabelle eine "1", sonst eine "0".    
+"Kriterien positiv" zählt die positiven Kriterien zusammen. Sind alle 7 Kriterien erfüllt, taucht die Aktie im Scanner auf.    
+
 
 ```{r detail_table}
 tmp <- Map(xts::merge.xts, minervini, crits, crits_sum)

@@ -2,7 +2,7 @@ Minervini Strategy
 
 Offen
 * ~~Makefile + Cronjob, damit der täglich durchläuft~~
-* ~~Für die Ergebistabelle~~ noch die Namen der Aktien einfügen und ebenfalls in Charts darstellen (wie beim VBT auch)
+* ~~Für die Ergebistabelle noch die Namen der Aktien einfügen und ebenfalls in Charts darstellen (wie beim VBT auch) ~~
 * Kriterien 3, 6, und 7
 * ~~Noch Tabelle hinzufügen ALLER Aktien mit den GDs etc~~
 * ~~In die Charts noch GDS einfügen und die Tiefs etc. Sollte ich dafür das xts-ploitting nutzen, wie ich in Minervini.R schon irgendwo gemachh hatte?~~

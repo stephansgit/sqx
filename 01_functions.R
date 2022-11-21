@@ -242,12 +242,24 @@ minervini_2 <- function(x) {
   x$SMA_150 > x$SMA_200
 }
 
+minervini_3 <- function(x) {
+  x$SMA_200 > lag.xts(x$SMA_200, n=20)
+}
+
 minervini_4 <- function(x) {
   x$SMA_50 > x$SMA_200 & x$SMA_50 > x$SMA_150
 }
 
 minervini_5 <- function(x) {
   x$Close > x$SMA_50 
+}
+
+minervini_6 <- function(x) {
+  x$Close > x$Minimum_250 * 1.3
+}
+
+minervini_7 <- function(x) {
+  x$Close > x$Maximum_250 * 0.75
 }
 
 
