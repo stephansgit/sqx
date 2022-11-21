@@ -44,6 +44,10 @@ source(file="01_functions.R")
 
 ### Bereinigung der Daten - stelle Historie sicher
 
+Zur Berechnung der Kriterien nach Minervini ist eine hinreichende Historie notwendig. Daher werden die Aktien, die keine ausreichende Historie haben, verworfen.    
+Ebenso wird im Falle von fehlende Werten (bspw. für den Fall, dass Yahoo keinen Closing-Preis für einen oder mehrere Tage zeigt) _linear interpoliert_.    
+    
+    
 ```{r prep_data}
 stocks_cl <- eapply(stocks, FUN=quantmod::Cl)
 stocks_cl <- lapply(stocks_cl, FUN=function(x) x["2021-09::"])
