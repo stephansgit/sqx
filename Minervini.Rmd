@@ -116,7 +116,7 @@ Tabelle der Aktien, die alle 7 Kriterien erfüllen:
 knitr::kable(ttt)
 ```
 
-Charts der Aktien, die alle 4 Kriterien erfüllen:    
+Charts der Aktien, die alle 7 Kriterien erfüllen:    
     
 
 

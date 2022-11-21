@@ -243,7 +243,7 @@ minervini_2 <- function(x) {
 }
 
 minervini_3 <- function(x) {
-  x$SMA_200 > lag.xts(x$SMA_200, n=20)
+  x$SMA_200 > lag.xts(x$SMA_200, k=20)
 }
 
 minervini_4 <- function(x) {
