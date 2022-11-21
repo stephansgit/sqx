@@ -116,7 +116,7 @@ Tabelle der Aktien, die alle 7 Kriterien erfüllen:
 knitr::kable(ttt)
 ```
 
-Charts der Aktien, die alle 4 Kriterien erfüllen:    
+Charts der Aktien, die alle 7 Kriterien erfüllen:    
     
 
 
@@ -133,7 +133,7 @@ for (i in 1:length(ttt$`Anzahl Kriterien`)) {
                 subset='last 6 months', 
                 name = paste0(as.character(ttt$Name[i]), " (", ttt$Ticker[i], ")"),
                 minor.ticks = FALSE,
-                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "red"), addTA(GD200, on=1, col = "darkblue"))
+                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "darkblue"), addTA(GD200, on=1, col = "red"))
                 )
   
     
