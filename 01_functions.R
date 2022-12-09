@@ -263,8 +263,20 @@ minervini_7 <- function(x) {
 }
 
 
+
 xts_rowsums <- function(x) { # see https://stackoverflow.com/questions/44222272/preserve-xts-index-when-using-rowsums-on-xts
   library(xts)  
   res <- .xts(x = rowSums(x), .index(x))
   return(res)
+}
+
+calculate_age_of_signal <- function(x) {
+  cdf <- coredata(x$signal)
+  comp <- cbind(TRUE, t(cdf[-nrow(x$signal), ] < cdf[-1,"signal"])) #https://stackoverflow.com/questions/16573131/last-occurrence-of-value-change
+  comp[is.na(comp)] <- FALSE
+  #message(comp)
+  timediff <- tail(index(x),1) - index(x[max.col(comp, "last"),])
+  
+  return(as.numeric(timediff))
+  
 }

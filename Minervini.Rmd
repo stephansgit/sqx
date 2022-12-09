@@ -16,7 +16,7 @@ library(magrittr)
 
 # Lies die EoD Daten ein 
 load(file=params$path_to_eod_data)
-#load("data/archive/EOD-Data.RData_20220927040002")
+#load("data/EOD-Data.RData")
 
 # Lies Funktionen ein
 source(file="01_functions.R")
@@ -100,6 +100,7 @@ crits <- lapply(crits, setNames, columnames)
 crits_sum <- lapply(crits, xts_rowsums)
 crits_sum <- lapply(crits_sum, setNames, "Kriterien_positiv")
 
+
 crits_res <- data.frame(Count = sort(sapply(crits_sum, FUN=tail, n=1), decreasing = TRUE))
 crits_res$Ticker <- rownames(crits_res)
 
@@ -107,12 +108,21 @@ ttt <- crits_res %>% dplyr::filter(Count >= 7)
 ttt <- merge(fullnames, data.frame(ttt))
 colnames(ttt) <- c("Ticker", "Name", "Anzahl Kriterien")
 
+## Teil, der das Alter des Signals hinzufügt
+  crits_sum <- lapply(crits_sum, function(x) {x$signal <- diff(x$Kriterien_positiv);return(x)}) # füge Signal Spalte hinzu
+  crits_res_list <- crits_sum[as.character(ttt$Ticker)]
+  yyy <- sapply(crits_res_list, FUN = calculate_age_of_signal, simplify = TRUE)
+  ttt <- cbind(ttt, yyy)
+  colnames(ttt)[4] <- "Alter des Signals"
+
+ttt <- dplyr::arrange(ttt, `Alter des Signals`)
 ```
 
 Tabelle der Aktien, die alle 7 Kriterien erfüllen:
-
+(sortiert nach dem Alter des Signals, d.h. vo wie vielen Tagen das Signal erfolgte)
 
 ```{r table}
+
 knitr::kable(ttt)
 ```
 

@@ -1,6 +1,6 @@
 Minervini Strategy
 
 Offen
-* Füge in erste Tabelle ein, wie lange das Signal bereits hält
+* Kriterium 3: Ändere, so dass SMA200 20 Tage steigend ist.
 * Plotte in zweiter Reihe auch die Aktein, die erst 6 Kriterien erfüllt haben.
 
