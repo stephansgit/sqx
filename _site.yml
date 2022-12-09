@@ -17,11 +17,9 @@ navbar:
         - text: "---------"
         - text: "Upload Ticker"
           href: vbt/upload/upload.html
-#    - text: "Börsentacho"
-#      icon: glyphicon-dashboard
-#      menu:
-#        - text: "Methodik"
-#          href: HBT-Methodik.html
+    - text: "Minervini Scanner"
+      icon: glyphicon-search
+      href: Minervini.html
 #        - text: "---------"
 #        - text: "Aktienindizes"
 #          href: HBT-Tacho.html

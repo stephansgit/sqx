@@ -4,6 +4,11 @@ title: "sqx tools"
 ---
 
 
+## 12. Dezember 2022: Minervini Scanner live
+* Unter dem entsprechenden Menüpunkt ist jetzt der Minervini Scanner live
+
+
+
 ## 04. Oktober 2022: Website unter neuer Adresse auf neuem Server erreichbar
 
 * Das Tool ist auf einen neuen Server 'umgezogen' und unter neuer Adresse erreichbar: [sqx.boersenanalytik.de](http://sqx.boersenanalytik.de)

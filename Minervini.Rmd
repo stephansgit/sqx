@@ -23,11 +23,7 @@ source(file="01_functions.R")
 
 ```
 
-![ACHTUNG](http://st2.depositphotos.com/1847353/11937/v/170/depositphotos_119373460-stock-illustration-attention-sign-or-icon.jpg)
 
-# BETA-Version - noch in Entwicklung
-
------------------------------------------
 
 ### Kriterien
 
@@ -118,8 +114,18 @@ colnames(ttt) <- c("Ticker", "Name", "Anzahl Kriterien")
 ttt <- dplyr::arrange(ttt, `Alter des Signals`)
 ```
 
-Tabelle der Aktien, die alle 7 Kriterien erfüllen:
-(sortiert nach dem Alter des Signals, d.h. vo wie vielen Tagen das Signal erfolgte)
+#### Übersicht, wieviele Aktien jeweils die Kriterien erfüllen. Die Anzahl der Aktien, die alle sieben Kriterien für Minervini erfüllen, sind rot dargestellt.
+
+```{r uebersicht}
+hist(crits_res$Count, labels=TRUE, breaks = -1:7, 
+     main = paste("Verteilung der erzielten Kriterien\n", "Anzahl Aktien:" ,length(stocks_cleaned$stocks)), 
+     col=c(rep("grey",7), "red"), xlab="Anzahl Kriterien erfüllt", ylab="Häufigkeit")
+
+
+```
+
+#### Tabelle der Aktien, die alle 7 Kriterien erfüllen    
+(sortiert nach dem Alter des Signals, d.h. vor wie vielen (Wochen-)Tagen das Signal erfolgte)
 
 ```{r table}
 
