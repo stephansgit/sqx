@@ -5,11 +5,16 @@ title: "sqx tools"
 
 
 ## 12. Dezember 2022: Minervini Scanner live
+![](http://www.hotelaltspeyer.de/wp-content/uploads/2019/02/NEU-Button.png)
+
 * Unter dem entsprechenden Menüpunkt ist jetzt der Minervini Scanner live
 
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
 
-
-## 04. Oktober 2022: Website unter neuer Adresse auf neuem Server erreichbar
+### 04. Oktober 2022: Website unter neuer Adresse auf neuem Server erreichbar
 
 * Das Tool ist auf einen neuen Server 'umgezogen' und unter neuer Adresse erreichbar: [sqx.boersenanalytik.de](http://sqx.boersenanalytik.de)
 * Die alte Adresse sqx.servebeer.com gilt noch bis zum 26.10.2022 (!)
