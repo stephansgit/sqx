@@ -129,7 +129,8 @@ hist(crits_res$Count, labels=TRUE, breaks = -1:7,
 
 ```{r table}
 
-knitr::kable(ttt)
+#knitr::kable(ttt)
+DT::datatable(ttt, rownames = FALSE, style = "bootstrap", caption = 'Tabelle der gefundenen Aktien; Tabelle ist sortierbar und durchsuchbar')
 ```
 
 Charts der Aktien, die alle 7 Kriterien erfüllen:    
