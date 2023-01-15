@@ -37,7 +37,7 @@ navbar:
 output:
   html_document:
     theme: sandstone
-    self_contained: false
+    self_contained: true
     lib_dir: libs
     include:
       after_body: footer.html
