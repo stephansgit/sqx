@@ -139,12 +139,25 @@ Charts der Aktien, die alle 7 Kriterien erfüllen:
 
 ```{r charts1, fig.width=10}
 
+# Das Plotten geht nicht, wenn NAs enthalten sind (genauer gesagt: Der SMA kann nicht berechnet werden)
+# Ich zige also hier die Aktien, die hinten ein NA haben
+# Das plotten löse ich über ein na.locf vor dem Aufruf
+
+trail_na <- vector() # wird ein Vektor sein mit Elementen, die NA haben
+for (i in 1:length(ttt$`Anzahl Kriterien`)) {
+    dat <- Cl(get(as.character(ttt$Ticker[i]), envir=stocks))
+    if (any(is.na(dat))) {
+      trail_na <- c(trail_na, as.character(ttt$Ticker[i]))
+    }
+}
+
+
 
 for (i in 1:length(ttt$`Anzahl Kriterien`)) {
   
-    GD50 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 50) # ich defeiniere die hier und fuege unten mit addTA hinzu, weil ich beo addSMA keine Legende in den Chart bekomme
-    GD150 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 150)
-    GD200 <-  SMA(Cl(get(as.character(ttt$Ticker[i]), envir=stocks)), n = 200)
+    GD50 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 50) # ich defeiniere die hier und fuege unten mit addTA hinzu, weil ich beo addSMA keine Legende in den Chart bekomme
+    GD150 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 150)
+    GD200 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 200)
 
     chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme = chartTheme('white',up.col='gray',dn.col='red'),
                 subset='last 6 months', 
@@ -157,6 +170,7 @@ for (i in 1:length(ttt$`Anzahl Kriterien`)) {
 }
 ```
 
+Folgende Charts haben in der letzten Beobachtung ein _NA_: `r trail_na`    
 
 ### Detailsicht
 
