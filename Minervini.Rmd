@@ -12,7 +12,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
 library(xts)
 library(magrittr)
-
+library(DT)
 
 # Lies die EoD Daten ein 
 load(file=params$path_to_eod_data)
@@ -130,7 +130,8 @@ hist(crits_res$Count, labels=TRUE, breaks = -1:7,
 ```{r table}
 
 #knitr::kable(ttt)
-DT::datatable(ttt, rownames = FALSE, style = "bootstrap", caption = 'Tabelle der gefundenen Aktien; Tabelle ist sortierbar und durchsuchbar')
+DT::datatable(ttt, rownames = FALSE, caption = 'Tabelle der gefundenen Aktien; Tabelle ist sortierbar und durchsuchbar')
+
 ```
 
 Charts der Aktien, die alle 7 Kriterien erfüllen:    
