@@ -1,9 +1,9 @@
 .PHONY: all clean /var/www/html/sqx.servebeer.com/Minervini_files 
 
-all: /var/www/html/sqx.servebeer.com/Minervini.html  /var/www/html/sqx.servebeer.com/Minervini_files 
+all: /var/www/html/sqx.servebeer.com/Minervini.html  #/var/www/html/sqx.servebeer.com/Minervini_files 
 
 clean: 
-	rm -fr data/EOD-Data.RData Minervini.html Minervini_files/figure-html/* 
+	rm -fr data/EOD-Data.RData Minervini.html #Minervini_files/figure-html/* 
 
 
 Minervini.html: Minervini.Rmd data/EOD-Data.RData
@@ -13,9 +13,9 @@ Minervini.html: Minervini.Rmd data/EOD-Data.RData
 /var/www/html/sqx.servebeer.com/Minervini.html: Minervini.html
 	mv $< $@
 
-/var/www/html/sqx.servebeer.com/Minervini_files: Minervini.html
-	rm -rf /var/www/html/sqx.servebeer.com/Minervini_files/
-	cp -rf Minervini_files/ /var/www/html/sqx.servebeer.com/Minervini_files/ 
+#/var/www/html/sqx.servebeer.com/Minervini_files: Minervini.html
+#	rm -rf /var/www/html/sqx.servebeer.com/Minervini_files/
+#	cp -rf Minervini_files/ /var/www/html/sqx.servebeer.com/Minervini_files/ 
 
 
 #-------------------------------------------------------------------------

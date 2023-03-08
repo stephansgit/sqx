@@ -2,10 +2,10 @@
 
 
 
-all: /var/www/html/sqx.servebeer.com/VolBreakout.html  /var/www/html/sqx.servebeer.com/VolBreakout_files 
+all: /var/www/html/sqx.servebeer.com/VolBreakout.html  #/var/www/html/sqx.servebeer.com/VolBreakout_files 
 
 clean: 
-	rm -fr data/SetupData.RData data/EOD-Data.RData VolBreakout.html data/SetupData_swbr.RData data/EOD-Data_swbr.RData VolBreakout_files/figure-html/* VolBreakout_swbr_files/figure-html/*
+	rm -fr data/SetupData.RData data/EOD-Data.RData VolBreakout.html data/SetupData_swbr.RData data/EOD-Data_swbr.RData #VolBreakout_files/figure-html/* VolBreakout_swbr_files/figure-html/*
 
 # ---------------------------------------------------------------------
 
@@ -35,9 +35,9 @@ VolBreakout.html: VolBreakout.Rmd data/EOD-Data.RData
 /var/www/html/sqx.servebeer.com/VolBreakout.html: VolBreakout.html
 	mv $< $@
 
-/var/www/html/sqx.servebeer.com/VolBreakout_files: VolBreakout.html
-	rm -rf /var/www/html/sqx.servebeer.com/VolBreakout_files/
-	cp -rf VolBreakout_files/ /var/www/html/sqx.servebeer.com/VolBreakout_files/ 
+#/var/www/html/sqx.servebeer.com/VolBreakout_files: VolBreakout.html
+#	rm -rf /var/www/html/sqx.servebeer.com/VolBreakout_files/
+#	cp -rf VolBreakout_files/ /var/www/html/sqx.servebeer.com/VolBreakout_files/ 
 
 #/var/www/html/sqx.servebeer.com/VolBreakout_swbr.html: VolBreakout_swbr.html
 #	mv $< $@
