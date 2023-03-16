@@ -262,6 +262,9 @@ minervini_7 <- function(x) {
   x$Close > x$Maximum_250 * 0.75
 }
 
+minervini_8 <- function(x) {
+  x$Close > x$SMA_21
+}
 
 
 xts_rowsums <- function(x) { # see https://stackoverflow.com/questions/44222272/preserve-xts-index-when-using-rowsums-on-xts

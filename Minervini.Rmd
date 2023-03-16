@@ -68,9 +68,10 @@ sma_150 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x
 sma_50 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 50)})
 min_250 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=min, na.rm=TRUE)})
 max_250 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=max, na.rm=TRUE)})
+sma_21 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 21)})
 
-minervini <- Map(xts::merge.xts, stocks_cleaned$stocks, sma_200, sma_150, sma_50, min_250, max_250)
-columnames <- c("Close", "SMA_200", "SMA_150", "SMA_50", "Minimum_250", "Maximum_250")
+minervini <- Map(xts::merge.xts, stocks_cleaned$stocks, sma_200, sma_150, sma_50, min_250, max_250, sma_21)
+columnames <- c("Close", "SMA_200", "SMA_150", "SMA_50", "Minimum_250", "Maximum_250", "SMA_21")
 minervini <- lapply(minervini, setNames, columnames)
 
 ```
@@ -87,8 +88,10 @@ min_5 <- lapply(minervini, minervini_5)
 min_6 <- lapply(minervini, minervini_6)
 min_7 <- lapply(minervini, minervini_7)
 
-crits <- Map(xts::merge.xts, min_1, min_2, min_3, min_4, min_5, min_6, min_7)
-columnames <- c("Krit_1", "Krit_2", "Krit_3", "Krit_4", "Krit_5", "Krit_6", "Krit_7") 
+min_8 <- lapply(minervini, minervini_8) #nicht Minervini, sondern Werners Anfrage
+
+crits <- Map(xts::merge.xts, min_1, min_2, min_3, min_4, min_5, min_6, min_7, min_8)
+columnames <- c("Krit_1", "Krit_2", "Krit_3", "Krit_4", "Krit_5", "Krit_6", "Krit_7", "Krit_8") 
 crits <- lapply(crits, setNames, columnames)
 #minervini <- Map(xts::merge.xts, minervini, crits) sollte vllt nicht mergen, denn dann habe ich eine standalon 'crits' Liste und kann schön die hits summieren...
 
@@ -117,7 +120,7 @@ ttt <- dplyr::arrange(ttt, `Alter des Signals`)
 #### Übersicht, wieviele Aktien jeweils die Kriterien erfüllen. Die Anzahl der Aktien, die alle sieben Kriterien für Minervini erfüllen, sind rot dargestellt.
 
 ```{r uebersicht}
-hist(crits_res$Count, labels=TRUE, breaks = -1:7, 
+hist(crits_res$Count, labels=TRUE, breaks = -1:8, 
      main = paste("Verteilung der erzielten Kriterien\n", "Anzahl Aktien:" ,length(stocks_cleaned$stocks)), 
      col=c(rep("grey",7), "red"), xlab="Anzahl Kriterien erfüllt", ylab="Häufigkeit")
 
@@ -159,12 +162,13 @@ for (i in 1:length(ttt$`Anzahl Kriterien`)) {
     GD50 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 50) # ich defeiniere die hier und fuege unten mit addTA hinzu, weil ich beo addSMA keine Legende in den Chart bekomme
     GD150 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 150)
     GD200 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 200)
+    GD21 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 21)
 
     chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme = chartTheme('white',up.col='gray',dn.col='red'),
                 subset='last 6 months', 
                 name = paste0(as.character(ttt$Name[i]), " (", ttt$Ticker[i], ")"),
                 minor.ticks = FALSE,
-                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "darkblue"), addTA(GD200, on=1, col = "red"))
+                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "darkblue"), addTA(GD200, on=1, col = "red"), addTA(GD21, on=1, col = "green"))
                 )
   
     
