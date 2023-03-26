@@ -263,7 +263,7 @@ minervini_7 <- function(x) {
 }
 
 minervini_8 <- function(x) {
-  x$Close > x$SMA_21
+  x$Close > x$EMA_21
 }
 
 

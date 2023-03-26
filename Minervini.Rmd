@@ -68,10 +68,10 @@ sma_150 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x
 sma_50 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 50)})
 min_250 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=min, na.rm=TRUE)})
 max_250 <- lapply(stocks_cleaned$stocks, FUN=function(x){rollapply(x, width=250, FUN=max, na.rm=TRUE)})
-sma_21 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::SMA(quantmod::Cl(x), n = 21)})
+ema_21 <- lapply(stocks_cleaned$stocks, FUN=function(x){TTR::EMA(quantmod::Cl(x), n = 21)})
 
-minervini <- Map(xts::merge.xts, stocks_cleaned$stocks, sma_200, sma_150, sma_50, min_250, max_250, sma_21)
-columnames <- c("Close", "SMA_200", "SMA_150", "SMA_50", "Minimum_250", "Maximum_250", "SMA_21")
+minervini <- Map(xts::merge.xts, stocks_cleaned$stocks, sma_200, sma_150, sma_50, min_250, max_250, ema_21)
+columnames <- c("Close", "SMA_200", "SMA_150", "SMA_50", "Minimum_250", "Maximum_250", "EMA_21")
 minervini <- lapply(minervini, setNames, columnames)
 
 ```
@@ -114,21 +114,22 @@ colnames(ttt) <- c("Ticker", "Name", "Anzahl Kriterien")
   ttt <- cbind(ttt, yyy)
   colnames(ttt)[4] <- "Alter des Signals"
 
-ttt <- dplyr::arrange(ttt, `Alter des Signals`)
+ttt <- dplyr::arrange(ttt, desc(`Anzahl Kriterien`),   `Alter des Signals`)
 ```
 
 #### Übersicht, wieviele Aktien jeweils die Kriterien erfüllen. Die Anzahl der Aktien, die alle sieben Kriterien für Minervini erfüllen, sind rot dargestellt.
+Zusätzlich fügen wir noch einen EMA 21 als achtes Kriterium hinzu. 
 
 ```{r uebersicht}
 hist(crits_res$Count, labels=TRUE, breaks = -1:8, 
      main = paste("Verteilung der erzielten Kriterien\n", "Anzahl Aktien:" ,length(stocks_cleaned$stocks)), 
-     col=c(rep("grey",7), "red"), xlab="Anzahl Kriterien erfüllt", ylab="Häufigkeit")
+     col=c(rep("grey",7), "red", "red"), xlab="Anzahl Kriterien erfüllt", ylab="Häufigkeit")
 
 
 ```
 
 #### Tabelle der Aktien, die alle 7 Kriterien erfüllen    
-(sortiert nach dem Alter des Signals, d.h. vor wie vielen (Wochen-)Tagen das Signal erfolgte)
+(sortiert nach _acht_ oder _sieben_ Kriterien sowie dem Alter des Signals, d.h. vor wie vielen (Wochen-)Tagen das Signal erfolgte)
 
 ```{r table}
 
@@ -139,7 +140,6 @@ DT::datatable(ttt, rownames = FALSE, caption = 'Tabelle der gefundenen Aktien; T
 
 Charts der Aktien, die alle 7 Kriterien erfüllen:    
     
-
 
 ```{r charts1, fig.width=10}
 
@@ -162,13 +162,13 @@ for (i in 1:length(ttt$`Anzahl Kriterien`)) {
     GD50 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 50) # ich defeiniere die hier und fuege unten mit addTA hinzu, weil ich beo addSMA keine Legende in den Chart bekomme
     GD150 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 150)
     GD200 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 200)
-    GD21 <-  SMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 21)
+    EMA21 <-  EMA(na.locf(Cl(get(as.character(ttt$Ticker[i]), envir=stocks))), n = 21)
 
     chartSeries(get(as.character(ttt$Ticker[i]), envir=stocks), theme = chartTheme('white',up.col='gray',dn.col='red'),
                 subset='last 6 months', 
                 name = paste0(as.character(ttt$Name[i]), " (", ttt$Ticker[i], ")"),
                 minor.ticks = FALSE,
-                TA = c(addTA(GD50, on=1, col ="black"), addTA(GD150, on=1, col = "darkblue"), addTA(GD200, on=1, col = "red"), addTA(GD21, on=1, col = "green"))
+                TA = c(addTA(GD50, on=1, col ="darkgreen"), addTA(GD150, on=1, col = "darkblue"), addTA(GD200, on=1, col = "red"), addTA(EMA21, on=1, col = "black"))
                 )
   
     
@@ -180,7 +180,7 @@ Folgende Charts haben in der letzten Beobachtung ein _NA_: `r trail_na`
 ### Detailsicht
 
 Die Tabelle zeigt den Stand der Erfüllung der Kriterien für jede Aktie. Ist ein Kriterium erfüllt, zeigt die Tabelle eine "1", sonst eine "0".    
-"Kriterien positiv" zählt die positiven Kriterien zusammen. Sind alle 7 Kriterien erfüllt, taucht die Aktie im Scanner auf.    
+"Kriterien positiv" zählt die positiven Kriterien zusammen. Sind alle 7 Kriterien erfüllt, taucht die Aktie im Scanner auf. Sind acht Kriterien erfüllt, bedeutet das auch, dass die Aktie über dem EMA 21 liegt (und somit 'aufwärts trendet').   
 
 
 ```{r detail_table}
